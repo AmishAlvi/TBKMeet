@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+//Please use "react-router-dom": "^6.0.0-beta.0" version 
+//npm install react-router-dom@^6.0.0-beta.0
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <BrowserRouter>
     <App />
-  </React.StrictMode>,
+    </BrowserRouter>,
   document.getElementById('root')
 );
 
