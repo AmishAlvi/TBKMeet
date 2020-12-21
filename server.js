@@ -3,9 +3,15 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const socket = require("socket.io");
+const cors = require("cors");
 const io = socket(server);
 
 const users = {};
+
+app.use(cors({
+    credentials: true,
+    origin: /.*/
+}));
 
 io.on('connection', socket => {
     if (!users[socket.id]) {
