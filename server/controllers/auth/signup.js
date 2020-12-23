@@ -13,8 +13,6 @@ module.exports = async (req, res, _next) => {
     password,
     email,
     companyName,
-    projectTitle,
-    projectDescription
   } = req.fields;
 
 
@@ -42,19 +40,13 @@ module.exports = async (req, res, _next) => {
           var mailOptions = { from: email1, to: user.email, subject: 'Account Verification', text: 'Hello,\n\n' + 'Please verify your remotify account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/auth\/confirmation\/' + token.token + '\n' };
           transporter.sendMail(mailOptions, function (err) {
               if (err) { return res.status(500).send({ msg: err.message }); }
-              return res.send('A verification email has been sent to ' + user.email + '.');
+              return res
+                .status(400)
+                .json({status: "success", message: 'A verification email has been sent to ' + user.email + '.'})
           });
       });
   }); // no error raises, as the document is validated before
     await company.save();
-    if (projectDescription && projectTitle) {
-      await new Project({
-        title: projectTitle,
-        description: projectDescription,
-        company
-      }).save();
-    }
-    
   } catch (error) {
     return res.status(400).json({status: "error", message: error.message});
   }

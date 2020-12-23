@@ -43,9 +43,47 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const RegisterView = () => {
+const RegisterView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
+
+  // The function that handles the logic when submitting the form
+  const handleSubmit = async values => {
+    // This function received the values from the form
+    // The line below extract the two fields from the values object.
+    const { email, password, firstName, lastName, companyName } = values;
+    var body = {
+      password: password,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      companyName: companyName
+    };
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(body)
+    };
+    const url = "http://localhost:81/auth/signup";
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      console.log(text)
+
+      if (text.status == "success") {
+        console.log("success")
+        navigate('/app/dashboard', { replace: true });
+      } else {
+        console.log(text.message);
+        window.alert(text.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   
   return (
     <Page
@@ -91,6 +129,8 @@ const RegisterView = () => {
               companyName: '',
               policy: false
             }}
+            onSubmit={handleSubmit}
+
             validationSchema={
               Yup.object().shape({
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
@@ -101,19 +141,18 @@ const RegisterView = () => {
                 policy: Yup.boolean().oneOf([true], 'This field must be checked')
               })
             }
-            onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
-            }}
           >
-            {({
-              errors,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
+            {props => {
+              const {
+              values,
               touched,
-              values
-            }) => (
+              errors,
+              isSubmitting,
+              handleChange,
+              handleBlur,
+              handleSubmit
+            } = props;
+            return (
               <form onSubmit={handleSubmit}>
                 <Box mb={3}>
                   <Typography
@@ -251,7 +290,7 @@ const RegisterView = () => {
                   </Link>
                 </Typography>
               </form>
-            )}
+            )}}
           </Formik>
         </Container>
       </Box>
