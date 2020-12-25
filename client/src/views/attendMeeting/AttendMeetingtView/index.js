@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  makeStyles
+  makeStyles,
+  Button
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import io from "socket.io-client";
@@ -114,6 +115,7 @@ const AttendMeeting = () => {
 
   function acceptCall() {
     setCallAccepted(true);
+    setReceivingCall(false);
     const peer = new Peer({
       initiator: false,
       trickle: false,
@@ -148,8 +150,8 @@ const AttendMeeting = () => {
   if (receivingCall) {
     incomingCall = (
       <div>
-        <h1>{caller} is calling you</h1>
-        <button onClick={acceptCall}>Accept</button>
+        <h1>Amish Alvi is inviting you to attend a meeting</h1>
+        <Button variant="contained" onClick={acceptCall}>Accept</Button>
       </div>
     )
   }
@@ -165,7 +167,9 @@ const AttendMeeting = () => {
             return null;
           }
           return (
-            <button onClick={() => callPeer(key)}>Call {key}</button>
+            < Button variant= "contained"  onClick={() => callPeer(key)}> 
+            Start Meeting 
+              </Button>
           );
         })}
       </Row>
