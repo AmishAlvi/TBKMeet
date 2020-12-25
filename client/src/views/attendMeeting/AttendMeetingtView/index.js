@@ -51,7 +51,7 @@ const AttendMeeting = () => {
   const socket = useRef();
 
   useEffect(() => {
-    socket.current = io.connect("http://localhost:81/meeting");
+    socket.current = io.connect("http://localhost:8000");
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
       setStream(stream);
       if (userVideo.current) {
