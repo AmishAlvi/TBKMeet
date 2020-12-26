@@ -150,7 +150,7 @@ const AttendMeeting = () => {
   if (receivingCall) {
     incomingCall = (
       <div>
-        <h1>Amish Alvi is inviting you to attend a meeting</h1>
+        <h1>A User is inviting you to attend a meeting</h1>
         <Button variant="contained" onClick={acceptCall}>Accept</Button>
       </div>
     )
