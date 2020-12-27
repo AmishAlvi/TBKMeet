@@ -75,7 +75,7 @@ const RegisterView = props => {
 
       if (text.status == "success") {
         console.log("success")
-        navigate('/app/dashboard', { replace: true });
+        navigate('/login', { replace: true });
       } else {
         console.log(text.message);
         window.alert(text.message);

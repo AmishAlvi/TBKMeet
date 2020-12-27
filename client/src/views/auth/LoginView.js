@@ -78,8 +78,8 @@ const LoginView = props => {
         <Container maxWidth="sm">
     <Formik
       initialValues={{
-        email: 'demo@devias.io',
-        password: 'Password123'
+        email: '',
+        password: ''
       }}
       onSubmit={handleSubmit}
 
