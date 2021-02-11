@@ -57,7 +57,7 @@ const items = [
     title: 'Settings'
   },
   {
-    href: '/404',
+    href: '/app/createTopic',
     icon: CreateTopicIcon,
     title: 'Create Topic'
   },

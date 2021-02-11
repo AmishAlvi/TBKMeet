@@ -5,7 +5,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
-import LatestOrders from './upcomingMeetings';
+import CreateTopicForm from './createTopicForm';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,14 +16,14 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(3)
   }
 }));
-//deneme
-const Dashboard = () => {
+
+const CreateTopic = () => {
   const classes = useStyles();
 
   return (
     <Page
       className={classes.root}
-      title="Dashboard"
+      title="Create Topic"
     >
       <Container maxWidth={false}>
         <Grid
@@ -37,7 +37,7 @@ const Dashboard = () => {
             xl={9}
             xs={12}
           >
-            <LatestOrders />
+            <CreateTopicForm />
           </Grid>
         </Grid>
       </Container>
@@ -45,4 +45,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default CreateTopic;

@@ -10,7 +10,7 @@ import NotFoundView from 'src/views/errors/NotFoundView';
 import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
-
+import CreateTopic from 'src/views/createTopic';
 const routes = [
   {
     path: 'app',
@@ -21,6 +21,7 @@ const routes = [
       { path: 'dashboard', element: <DashboardView /> },
       { path: 'attendMeeting', element: <AttendMeetingView /> },
       { path: 'settings', element: <SettingsView /> },
+      { path: 'createTopic', element: <CreateTopic/> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
