@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Drawer,
   Hidden,
@@ -13,7 +12,6 @@ import {
   makeStyles
 } from '@material-ui/core';
 import {
-  AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
   User as UserIcon,
@@ -46,16 +44,7 @@ const items = [
     icon: AttendMeetingIcon,
     title: 'Attend Meeting'
   },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Account'
-  },
-  {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'Settings'
-  },
+  
   {
     href: '/app/createTopic',
     icon: CreateTopicIcon,
@@ -70,6 +59,16 @@ const items = [
     href: '/404',
     icon: CheckHistoryIcon,
     title: 'Check Meeting History'
+  },
+  {
+    href: '/app/account',
+    icon: UserIcon,
+    title: 'Account'
+  },
+  {
+    href: '/app/settings',
+    icon: SettingsIcon,
+    title: 'Settings'
   },
 
 ];
