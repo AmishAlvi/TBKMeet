@@ -51,6 +51,11 @@ const items = [
     title: 'Create Topic'
   },
   {
+    href: '/app/createMeeting',
+    icon: CreateTopicIcon,
+    title: 'Create Meeting'
+  },
+  {
     href: '/404',
     icon: CheckTopicPoolIcon,
     title: 'Check Topic Pool'
