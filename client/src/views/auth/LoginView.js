@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Container,
-  Grid,
   Link,
   TextField,
   Typography,
@@ -14,7 +13,7 @@ import {
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
-
+import { Alert, AlertTitle } from '@material-ui/lab';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(3)
   }
 }));
-
+var errorMessage;
 const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -46,6 +45,7 @@ const LoginView = props => {
       body: JSON.stringify(body)
     };
     const url = "http://localhost:81/auth/login";
+   
     try {
       const response = await fetch(url, options);
       const text = await response.json();
@@ -53,9 +53,16 @@ const LoginView = props => {
       if (text.status == "success") {
         console.log("success")
         navigate('/app/dashboard', { replace: true });
+        errorMessage=null;
       } else {
         console.log(text.message);
         window.alert(text.message);
+       /* errorMessage= <Alert severity="error">
+       <AlertTitle>Error</AlertTitle>
+       This is an error alert — <strong>check it out!</strong>
+     </Alert>; */
+       console.log(errorMessage);
+       
       }
     } catch (error) {
       console.error(error);
@@ -69,6 +76,7 @@ const LoginView = props => {
       className={classes.root}
       title="Login"
     >
+      
       <Box
         display="flex"
         flexDirection="column"
