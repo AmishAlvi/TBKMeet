@@ -11,10 +11,10 @@ import {
   InputLabel ,
   MenuItem,
   TextField,
-  Typography,
+  Divider,
   makeStyles,
   Card,
-  CardActions,
+  CardHeader,
   CardContent,
   FormControl
 } from '@material-ui/core';
@@ -117,15 +117,12 @@ const CreateTopicForm = props => {
             <form onSubmit={handleSubmit} noValidate>
             <Card>
             <CardContent>
-                <Box mb={3}>
-                  <Typography
-                    color="textPrimary"
-                    variant="h2"
-                  >
-                    Create Topic
-                  </Typography>
-                  
-                </Box>
+            <CardHeader
+          subheader="Please enter the necessary information for creating a topic"
+          title="Create Topic"
+        />
+        <Divider />
+                
               <TextField
                 error={Boolean(touched.title && errors.title)}
                 fullWidth
@@ -171,19 +168,21 @@ const CreateTopicForm = props => {
           <MenuItem value={30}>45 minutes</MenuItem>
         </Select>
       </FormControl>
-      
-              <Box my={2}>
-                <Button 
-                className={linearGradient().root}
-                    disabled={isSubmitting}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained" >
-                      Create Topic
-                </Button>
-              </Box>
+  
               </CardContent>
+              <Divider />
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          p={3}
+        >
+          <Button
+            color="primary"
+            variant="contained"
+          >
+           Create Topic
+          </Button>
+        </Box>
               </Card>
             </form>
           </>
