@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+
 import './App.css';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import React from 'react';

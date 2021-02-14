@@ -9,11 +9,13 @@ import {
   Link,
   TextField,
   Typography,
+  Snackbar,
   makeStyles
 } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -22,10 +24,24 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(3)
   }
 }));
-var errorMessage;
+
 const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  var errorMessage="hello";
+
+  //Alert Function 
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+//Close func for closing the alert
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
@@ -53,16 +69,12 @@ const LoginView = props => {
       if (text.status == "success") {
         console.log("success")
         navigate('/app/dashboard', { replace: true });
-        errorMessage=null;
+        
       } else {
         console.log(text.message);
-        window.alert(text.message);
-       /* errorMessage= <Alert severity="error">
-       <AlertTitle>Error</AlertTitle>
-       This is an error alert — <strong>check it out!</strong>
-     </Alert>; */
-       console.log(errorMessage);
-       
+        errorMessage=text.message;
+        console.log(errorMessage)
+        setOpen(true);    
       }
     } catch (error) {
       console.error(error);
@@ -178,8 +190,14 @@ const LoginView = props => {
         );
       }}
     </Formik>
-  </Container>
+  </Container>  
 </Box>
+<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="Error">
+           {/* {errorMessage}  */}
+           No email password match
+        </Alert>
+      </Snackbar>
 </Page>
   );
 };

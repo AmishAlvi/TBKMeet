@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import {
   Box,
   Card,
@@ -13,7 +12,6 @@ import {
   Switch
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
-import EventIcon from '@material-ui/icons/Event';
 const Toolbar = ({ className, ...rest }) => {
 const [state, setState] = React.useState({
     checkedA: true,
