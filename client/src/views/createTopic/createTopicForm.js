@@ -18,8 +18,7 @@ import {
   CardContent,
   FormControl
 } from '@material-ui/core';
-import Page from 'src/components/Page';
-import linearGradient from 'src/components/linearGradient';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,29 +47,7 @@ const CreateTopicForm = props => {
         description: description,
         duration: duration
     };
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify(body)
-    };
-    const url = "http://localhost:81/app/createTopic";
-    try {
-      const response = await fetch(url, options);
-      const text = await response.json();
-
-      if (text.status == "success") {
-        console.log("success")
-        navigate('/app/dashboard', { replace: true });
-      } else {
-        console.log(text.message);
-        window.alert(text.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    
   };
 
   //For updating the selector -duration time-
@@ -82,9 +59,7 @@ const CreateTopicForm = props => {
   // Just set handleSubmit as the handler for the onSubmit call.
   return (
     
-  
-      
-      <Container maxWidth={false}>
+   <Container maxWidth={false}>
     <Formik
       initialValues={{
         title: '',
@@ -159,10 +134,7 @@ const CreateTopicForm = props => {
           value={duration}
           onChange={updateDuration}
           label="Duration"
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
+        >    
           <MenuItem value={10}>10 minutes</MenuItem>
           <MenuItem value={20}>30 minutes</MenuItem>
           <MenuItem value={30}>45 minutes</MenuItem>
@@ -178,6 +150,9 @@ const CreateTopicForm = props => {
         >
           <Button
             color="primary"
+            variant="contained"
+            disabled={isSubmitting}
+            type="submit"
             variant="contained"
           >
            Create Topic

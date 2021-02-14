@@ -1,12 +1,5 @@
 
-import React, { useState } from 'react';
 import {
-  AppBar,
-  Badge,
-  Box,
-  Hidden,
-  IconButton,
-  Toolbar,
   makeStyles
 } from '@material-ui/core';
 

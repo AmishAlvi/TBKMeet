@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Container,
   Grid,
-  Box,
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
