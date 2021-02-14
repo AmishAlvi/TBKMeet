@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -29,7 +29,7 @@ const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  var errorMessage="hello";
+  var [errorMessage,setErrorMessage]=useState("");
 
   //Alert Function 
   function Alert(props) {
@@ -72,7 +72,7 @@ const LoginView = props => {
         
       } else {
         console.log(text.message);
-        errorMessage=text.message;
+        setErrorMessage(text.message)
         console.log(errorMessage)
         setOpen(true);    
       }
@@ -194,8 +194,7 @@ const LoginView = props => {
 </Box>
 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="Error">
-           {/* {errorMessage}  */}
-           No email password match
+            {errorMessage}  
         </Alert>
       </Snackbar>
 </Page>
