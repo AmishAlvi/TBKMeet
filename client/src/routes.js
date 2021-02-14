@@ -11,6 +11,7 @@ import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 import CreateTopic from 'src/views/createTopic';
+import CreateMeeting from 'src/views/createMeeting';
 const routes = [
   {
     path: 'app',
@@ -22,6 +23,7 @@ const routes = [
       { path: 'attendMeeting', element: <AttendMeetingView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: 'createTopic', element: <CreateTopic/> },
+      { path: 'createMeeting', element: <CreateMeeting/> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
