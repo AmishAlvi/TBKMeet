@@ -61,21 +61,7 @@ const CreateMeetingForm = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://http://localhost:3000/app/createMeeting";
-    try {
-      const response = await fetch(url, options);
-      const text = await response.json();
-
-      if(text.status == "success"){
-        console.log("success")
-        navigate('/app/dashboard', {replace: true});
-      } else {
-        console.log(text.message);
-        window.alert(text.message);
-      }
-    } catch (error){
-      console.error(error);
-    }
+    
   };
 
   //Update the Topic selection
@@ -108,13 +94,10 @@ return (
 
   // Using Yup for validation
 
-  validationScheme={Yup.object().shape({
-    title: Yup.string().max(150).required('Title field is required.'),
-    description: Yup.string().max(500),
-    topics: Yup.string().required('Topics field is required.'),
-    duration: Yup.string().required('Duration field is required.'),
-    date: Yup.date().required('Date field is required.'),
-    location: Yup.string().required('Location field is required.')
+  validationSchema={Yup.object().shape({
+    title: Yup.string().max(100).required('Title is required'),
+    description: Yup.string().max(255),
+    duration: Yup.string().required("Duration is required")
   })}
   >
     {props => {
@@ -122,6 +105,7 @@ return (
         values,
         touched,
         errors,
+        isSubmitting,
         handleChange,
         handleBlur,
         handleSubmit
@@ -263,7 +247,10 @@ return (
           <Button 
           color="primary"
           variant="contained"
-          justifyContent="flex-end">
+          justifyContent="flex-end"
+          disabled={isSubmitting}
+            type="submit"
+            variant="contained">
             Create Meeting
           </Button>
           </Box>
