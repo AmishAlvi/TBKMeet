@@ -2,6 +2,13 @@ import React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import DatePicker from "react-date-picker";
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns'; //instal this version npm i @date-io/date-fns@1.3.13
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 
 import { Formik } from 'formik';
@@ -75,6 +82,12 @@ const CreateMeetingForm = props => {
   const updateLocation = (event) => {
     setLocation(event.target.value);
   }
+  //update date
+  const [selectedDate, setSelectedDate] = React.useState(new Date('2021-02-14T21:11:54'));
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
 return (
     
@@ -175,9 +188,9 @@ return (
 
         {/* Meeting Date */}
        
-        <label>Date</label>
+        {/* <label>Date</label> */}
 
-        <DatePicker
+        {/* <DatePicker
           error={Boolean.date && errors.date}
           label="Date"
           name="meetingDate"
@@ -189,7 +202,34 @@ return (
           selected="startDate"
           margin="normal"
         >
-        </DatePicker>
+        </DatePicker> */}
+
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="MM/dd/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Meeting Date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+
+        <KeyboardTimePicker
+          margin="normal"
+          id="time-picker"
+          label="Meeting Time"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+        />
+        </MuiPickersUtilsProvider>
         
         {/* Meeting Duration */}
         <TextField
