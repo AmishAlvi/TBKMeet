@@ -35,6 +35,11 @@ const items = [
     title: 'Dashboard'
   },
   {
+    href: '/app/createMeeting',
+    icon: CreateTopicIcon,
+    title: 'Create Meeting'
+  },
+  {
     href: '/app/meetings',
     icon: CheckMeetingIcon,
     title: 'Check Meeting '
@@ -50,11 +55,7 @@ const items = [
     icon: CreateTopicIcon,
     title: 'Create Topic'
   },
-  {
-    href: '/app/createMeeting',
-    icon: CreateTopicIcon,
-    title: 'Create Meeting'
-  },
+  
   {
     href: '/404',
     icon: CheckTopicPoolIcon,
