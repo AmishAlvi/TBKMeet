@@ -12,9 +12,12 @@ import {
   MenuItem,
   TextField,
   Divider,
+  FormLabel ,
   makeStyles,
   Card,
   CardHeader,
+  Checkbox,
+  FormControlLabel ,
   CardContent,
   FormControl
 } from '@material-ui/core';
@@ -41,20 +44,31 @@ const CreateTopicForm = props => {
   const handleSubmit = async values => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
-    const { title, description,duration } = values;
+    const { title, description,category,duration } = values;
     var body = {
         title: title,
         description: description,
+        category: category,
         duration: duration
     };
     
   };
 
   //For updating the selector -duration time-
-  const [duration, setDuration] = React.useState('');
-  const updateDuration = (event) => {
-    setDuration(event.target.value);
+  const [category, setCategory] = React.useState('');
+  const updateCategory = (event) => {
+    setCategory(event.target.value);
   };
+  const [state, setState] = React.useState({
+    checkedDecision: false,
+    checkedInfo: false,
+  });
+
+  const handleCB = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+  const { checkedDecision, checkedInfo } = state;
+  const error = [checkedDecision, checkedInfo].filter((v) => v).length < 1;
   // Returning the part that should be rendered
   // Just set handleSubmit as the handler for the onSubmit call.
   return (
@@ -64,6 +78,7 @@ const CreateTopicForm = props => {
       initialValues={{
         title: '',
         description: '',
+        category:"",
         duration:''
       }}
       onSubmit={handleSubmit}
@@ -125,22 +140,46 @@ const CreateTopicForm = props => {
                 multiline
                 rows={5}
               />
-              
+              <TextField
+          error={Boolean(touched.duration && errors.duration)}
+          fullWidth
+          helperText={touched.duration && errors.duration}
+          label="Duration in minutes"
+          margin="normal"
+          name="duration"
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.duration}
+          variant="outlined"
+        />
+        
         <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">Duration</InputLabel>
+        <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
         <Select
           labelId="demo-simple-select-outlined-label"
           id="demo-simple-select-outlined"
-          value={duration}
-          onChange={updateDuration}
-          label="Duration"
+          value={category}
+          onChange={updateCategory}
+          label="Category"
         >    
-          <MenuItem value={10}>10 minutes</MenuItem>
-          <MenuItem value={20}>30 minutes</MenuItem>
-          <MenuItem value={30}>45 minutes</MenuItem>
+          <MenuItem value={"budget"}>Budget Meeting</MenuItem>
+          <MenuItem value={"hr"}>HR Meeting</MenuItem>
+          <MenuItem value={"project"}>Project Meeting</MenuItem>
         </Select>
       </FormControl>
-  
+          <br/><br/>
+      <FormControl required error={error} component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Select at least one meeting output</FormLabel>
+      <FormControlLabel
+        control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" />}
+        label="Decision"
+      /> 
+       <FormControlLabel
+      control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" />}
+      label="Information "
+    />
+    </FormControl>
+
               </CardContent>
               <Divider />
         <Box
