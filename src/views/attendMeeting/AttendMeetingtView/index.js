@@ -52,7 +52,7 @@ const AttendMeeting = () => {
   const socket = useRef();
 
   useEffect(() => {
-    socket.current = io.connect("http://localhost:8000");
+    socket.current = io.connect("https://tbkmeet-videoserver.herokuapp.com/");
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
       setStream(stream);
       if (userVideo.current) {
