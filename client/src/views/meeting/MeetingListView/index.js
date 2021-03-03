@@ -8,6 +8,7 @@ import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
 import data from './data';
+import CalendarView from './calendarView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +34,7 @@ const MeetingListView = () => {
           <Results meetings={meetings} />
         </Box>
       </Container>
+      <CalendarView></CalendarView>
     </Page>
   );
 };
