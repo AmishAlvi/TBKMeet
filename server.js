@@ -5,6 +5,8 @@ const server = http.createServer(app);
 const socket = require("socket.io");
 const cors = require("cors");
 const io = socket(server);
+const PORT = process.env.PORT || 5000
+
 
 const users = {};
 
@@ -28,4 +30,4 @@ io.on('connection', socket => {
     })
 });
 
-server.listen(8000, () => console.log('server is running on port 8000'));
+server.listen(PORT, () => console.log(`server is running on port ${PORT}`));
