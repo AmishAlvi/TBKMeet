@@ -110,7 +110,8 @@ return (
   validationSchema={Yup.object().shape({
     title: Yup.string().max(100).required('Title is required'),
     description: Yup.string().max(255),
-    duration: Yup.string().required("Duration is required")
+    duration: Yup.string().required("Duration is required"),
+    topics: Yup.string().ensure().required("Topic is required")
   })}
   >
     {props => {
