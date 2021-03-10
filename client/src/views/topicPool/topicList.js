@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Box,
@@ -12,10 +11,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-  Button
+  makeStyles
+  
 } from '@material-ui/core';
-
+import Async from 'react-async';
+import { CompareArrowsOutlined } from '@material-ui/icons';
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
@@ -23,55 +23,85 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, meetings, ...rest }) => {
+/* 
+const deneme=(async res=>{
+const url="http://localhost:81/topic/getTopic";
+response = await fetch(url);
+const data = await response.json();
+console.log(data);}) */
+
+const TopicList = ({ className,  ...rest }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-  const emptyRows = limit - Math.min(limit, meetings.length-1 - page * limit);
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
+    setPage(0);
   };
-
+  const [topic, setTopic]=useState([]);    
+  const emptyRows = limit - Math.min(limit, topic.length-1 - page * limit);
+  
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+  const getTopics = async values => {
+    const url = "http://localhost:81/topic/getTopic";
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
+      console.log(data)
 
+      if (data.status == "success") {
+        console.log("success");
+        setTopic(data.data)
+        console.log(topic)
+        
+      } else {
+        console.log("error");
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  };
+
+   
+  
   return (
     <Card
       className={clsx(classes.root, className)}
       {...rest}
     >
+     
       <PerfectScrollbar>
         <Box minWidth={1050}>
+        <Async promiseFn={getTopics}>
           <Table>
             <TableHead>
               <TableRow>
                
               <TableCell>
-                  Meeting Name
+                  Title
                 </TableCell>
                 <TableCell>
-                  Meeting Topic
+                  Duration
                 </TableCell>
                 <TableCell>
-                  Location
+                  Category
                 </TableCell>
                 <TableCell>
-                  Date
+                  Meeting Output
                 </TableCell>
                 <TableCell>
-                  Time
-                </TableCell>
-                <TableCell>
-                  Attend
+                  
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {meetings.slice(page* limit, page * limit + limit).map((meetings) => (
+               {topic.slice( page* limit, page * limit + limit).map((topic) => (
                 <TableRow
                   hover
-                  key={meetings.id}
+                 // key={meetings.id}
                   
                 >
                  
@@ -85,41 +115,38 @@ const Results = ({ className, meetings, ...rest }) => {
                         color="textPrimary"
                         variant="body1"
                       >
-                        {meetings.meetingName}
+                        {topic.title}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {meetings.meetingTopic}
+                     {topic.totalTime} 
                   </TableCell>
                   <TableCell>
-                    {`${meetings.address.city}, ${meetings.address.building}, ${meetings.address.room}`}  
+                  {topic.category}  
                   </TableCell>
                   <TableCell>
-                    {meetings.date}
+                  {topic.info} 
                   </TableCell>
                   <TableCell>
-                    {meetings.time}
+                 {/*  {topic.description} */} 
                   </TableCell>
-                  <TableCell>
-                  <Button href="#text-buttons" color="primary">
-  Attend Meeting
-</Button>
-                  </TableCell>
+                  
                 </TableRow>
-              ))}
+              ))} 
                {emptyRows > 0 && (
                 <TableRow style={{ height:  56 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={5} />
                 </TableRow>
               )}
             </TableBody>
           </Table>
+          </Async>
         </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={meetings.length-1}
+        count={topic.length-1}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -130,9 +157,5 @@ const Results = ({ className, meetings, ...rest }) => {
   );
 };
 
-Results.propTypes = {
-  className: PropTypes.string,
-  meetings: PropTypes.array.isRequired
-};
 
-export default Results;
+export default TopicList;

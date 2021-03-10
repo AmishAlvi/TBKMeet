@@ -13,7 +13,7 @@ module.exports = async (req, res, _next) => {
   } = req.fields;
 
 
-  const topic = new Topic({title,description,totalTime});
+  const topic = new Topic({title,description,totalTime,category,decision,information});
   try {
 
     await topic.save(async  (err) => {
