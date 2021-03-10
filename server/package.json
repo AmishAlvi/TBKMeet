@@ -23,7 +23,7 @@
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-session": "^1.17.0",
-    "helmet": "^3.21.2",
+    "helmet": "^3.23.3",
     "http-errors": "~1.6.2",
     "mongoose": "^5.7.10",
     "mongoose-autopopulate": "^0.9.1",
