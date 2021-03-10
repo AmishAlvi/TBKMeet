@@ -6,7 +6,10 @@ module.exports = async (req, res, _next) => {
   const {
     title,
     description,
-    totalTime
+    totalTime,
+    category,
+    decision,
+    information
   } = req.fields;
 
 

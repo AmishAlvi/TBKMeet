@@ -5,7 +5,7 @@ const {requireAuthentication,validateJson} = require("../middleware");
 
 const router = Router();
 
-router.post("/topicSave", [requireAuthentication,topic]);
+router.post("/topicSave", [topic]);
 router.get("/getTopic", [getTopic]);
 
 
