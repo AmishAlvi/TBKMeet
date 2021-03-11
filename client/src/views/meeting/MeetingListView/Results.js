@@ -119,7 +119,7 @@ const Results = ({ className, meetings, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={meetings.length-1}
+        count={meetings.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}

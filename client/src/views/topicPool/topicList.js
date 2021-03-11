@@ -18,9 +18,10 @@ import Async from 'react-async';
 import { CompareArrowsOutlined } from '@material-ui/icons';
 const useStyles = makeStyles((theme) => ({
   root: {},
-  avatar: {
-    marginRight: theme.spacing(2)
-  }
+
+  /* tableRow: {
+    height: 30
+  }, */
 }));
 
 /* 
@@ -39,7 +40,7 @@ const TopicList = ({ className,  ...rest }) => {
     setPage(0);
   };
   const [topic, setTopic]=useState([]);    
-  const emptyRows = limit - Math.min(limit, topic.length-1 - page * limit);
+  const emptyRows = limit - Math.min(limit, topic.length - page * limit);
   
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -102,7 +103,7 @@ const TopicList = ({ className,  ...rest }) => {
                 <TableRow
                   hover
                  // key={meetings.id}
-                  
+                 className={classes.tableRow}
                 >
                  
                   <TableCell>
@@ -126,10 +127,16 @@ const TopicList = ({ className,  ...rest }) => {
                   {topic.category}  
                   </TableCell>
                   <TableCell>
-                  {topic.info} 
+                  {topic.information &&(
+                    <p>Information Meeting</p>
+                  )}
+                  {topic.decision &&(
+                    <p>Decision Meeting</p>
+                  )}
+                 
                   </TableCell>
                   <TableCell>
-                 {/*  {topic.description} */} 
+                   
                   </TableCell>
                   
                 </TableRow>
@@ -146,7 +153,7 @@ const TopicList = ({ className,  ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={topic.length-1}
+        count={topic.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}

@@ -46,6 +46,12 @@ const CreateTopicForm = props => {
   var [errorMessage,setErrorMessage]=useState("");
   var [successMessage,setSuccessMessage]=useState("");
   const [category, setCategory] = React.useState('');
+  const [state, setState] = React.useState({
+    checkedDecision: false,
+    checkedInfo: false,
+  });
+  const { checkedDecision, checkedInfo } = state;
+  const error = [checkedDecision, checkedInfo].filter((v) => v).length < 1;
 
   //Alert Function
 function Alert(props) {
@@ -62,14 +68,14 @@ const handleClose = (event, reason) => {
   const handleSubmit = async values => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
-    const { title, description,totalTime,category,decision,info } = values;
+    const { title, description,totalTime } = values;
     var body = {
         title: title,
         description: description,
         totalTime: totalTime,
         category: category,
-        decision:decision,
-        info: info
+        decision:checkedDecision,
+        information: checkedInfo
     };
     const options = {
       method: "POST",
@@ -90,8 +96,8 @@ const handleClose = (event, reason) => {
         setSuccessMessage(text.message);
         setOpen(true);
         //Form reset must be done!!!
-        console.log(values.category)
-        console.log(category)
+        console.log(checkedDecision)
+        console.log(checkedInfo)
       } else {
         console.log(text.message);
         setErrorMessage(text.message);
@@ -108,17 +114,13 @@ const handleClose = (event, reason) => {
     setCategory(event.target.value);
     console.log(category);
   };
-  const [state, setState] = React.useState({
-    checkedDecision: false,
-    checkedInfo: false,
-  });
+  
 
   const handleCB = (event,value) => {
     setState({ ...state, [event.target.name]: event.target.checked });
     
   };
-  const { checkedDecision, checkedInfo } = state;
-  const error = [checkedDecision, checkedInfo].filter((v) => v).length < 1;
+  
   // Returning the part that should be rendered
   // Just set handleSubmit as the handler for the onSubmit call.
   return (
@@ -222,11 +224,11 @@ const handleClose = (event, reason) => {
       <FormControl required error={error} component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">Select at least one meeting output</FormLabel>
       <FormControlLabel
-        control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={values.decision}/>}
+        control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={checkedDecision}/>}
         label="Decision"
       /> 
        <FormControlLabel
-      control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={values.info} />}
+      control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={checkedInfo} />}
       label="Information "
     />
     </FormControl>
