@@ -9,6 +9,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { Formik } from 'formik';
+import Async from "react-async"
 import {
   Box,
   Button,
@@ -61,11 +62,11 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
+
 const columns = [
-  
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
+  { field: 'firstName', headerName: 'First name', width: 200 },
+  { field: 'lastName', headerName: 'Last name', width: 200 },
+  /* {
     field: 'fullName',
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
@@ -73,19 +74,10 @@ const columns = [
     width: 160,
     valueGetter: (params) =>
       `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
-  },
+  }, */
+  { field: 'email', headerName: 'Email', width: 200 }
 ];
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerysseymayseymaseyma', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
+
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -113,10 +105,30 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
+ 
 const CreateMeetingForm = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  let userData=[];
+  const [select, setSelection] = React.useState([]);
+  /* const loadUser = async () => {
+    const res = await fetch(`http://localhost:81/meeting/getEmails`)
+    if (!res.ok) throw new Error(res.statusText)
+     const data=await res.json();
+    userData.push(777);
+    //return data.data;
+    
+  } */
+  const loadUser = () =>
+  fetch(`http://localhost:81/meeting/getEmails`)
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+    const loadTopics = () =>
+    fetch(`http://localhost:81/topic/getTopic`)
+      .then(res => (res.ok ? res : Promise.reject(res)))
+      .then(res => res.json())
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -125,7 +137,7 @@ const CreateMeetingForm = props => {
   };
   //Function that handles the form submission
   const handleSubmit = async values => {
-    const {title, topic, description, date, duration, location} = values;
+    const {title, description, date, duration} = values;
     var body = {
       title: title,
       description: description,
@@ -142,13 +154,14 @@ const CreateMeetingForm = props => {
       },
       body: JSON.stringify(body)
     };
-    
+    console.log(select);
   };
 
   //Update the Topic selection
   const [topic, setTopic] = React.useState('');
   const updateTopic = (event) => {
     setTopic(event.target.value);
+    console.log("topic");
   };
 
   //update the location selection
@@ -162,7 +175,6 @@ const CreateMeetingForm = props => {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-
   
 
 return (
@@ -226,7 +238,15 @@ return (
         {/* Meeting Topic */}
         <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="topic-input-label">Topic</InputLabel>
-        <Select
+      
+        
+            <Async promiseFn={loadTopics}>
+            {({data,err,isLoading})=>{
+            if(isLoading) return "Loading..."
+            if(err) return `Something went wrong: ${err.message}`
+            if (data)
+            return (
+              <Select
           labelId="topic-input-label"
           id="topic-input"
           value={topic}
@@ -236,12 +256,16 @@ return (
           variant="outlined"
           margin="normal"
           >
-            <MenuItem value=""> <em>None</em></MenuItem>
-            <MenuItem value={1}>Budget</MenuItem>
-            <MenuItem value={2}>Schedule</MenuItem>
-            <MenuItem value={3}>Senior Project</MenuItem>
-            <MenuItem value={4}>Team Building</MenuItem>
-        </Select>
+              
+              {data.data.map(topic=> (
+                  <MenuItem value={topic.title}>{topic.title}</MenuItem>
+              ))}
+          </Select>          
+          )
+          }}
+          </Async>
+        
+        
         </FormControl>
 
         {/* Meeting Description */}
@@ -358,21 +382,49 @@ return (
           onClick={handleClickOpen}>
             Invite Participants
           </Button>
+
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Invite Participants
         </DialogTitle>
         <DialogContent dividers>
-        <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
-    </div>
+          
+        <Async promiseFn={loadUser}>
+          {({data,err,isLoading})=>{
+            if(isLoading) return "Loading..."
+            if(err) return `Something went wrong: ${err.message}`
+            if (data)
+            return (
+              <div style={{ height: 400, width: '100%' }}>
+              {console.log(data.data)}
+              
+                <DataGrid 
+                 rows={data.data}
+                  columns={columns}
+                   pageSize={5} 
+                   checkboxSelection 
+                   getRowId={(row) => row._id}
+                   onSelectionChange={(newSelection) => {
+                    setSelection(newSelection.rows);
+                   
+                  }}
+                      />  
+       <h1>{select.map((val) => val.firstName)}</h1>
+  
+            </div>
+            )
+          }}
+        
+    </Async>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Save Participants
           </Button>
+
         </DialogActions>
       </Dialog>
+
     </div>
 
         {/* Cretae Meeting button */}
