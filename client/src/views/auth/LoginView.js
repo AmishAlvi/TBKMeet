@@ -73,7 +73,6 @@ const LoginView = props => {
       } else {
         console.log(text.message);
         setErrorMessage(text.message)
-        console.log(errorMessage)
         setOpen(true);    
       }
     } catch (error) {
