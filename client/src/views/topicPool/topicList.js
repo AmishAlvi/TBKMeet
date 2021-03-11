@@ -77,6 +77,7 @@ const TopicList = ({ className,  ...rest }) => {
       <PerfectScrollbar>
         <Box minWidth={1050}>
         <Async promiseFn={getTopics}>
+          
           <Table>
             <TableHead>
               <TableRow>

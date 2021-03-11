@@ -4,12 +4,12 @@ const {ObjectId} = Schema.Types;
 const MeetingSchema = new Schema(
   {
     title: { type: String,require:true},
-    time: { type: String,},
+    time: { type: String,require:true},
     date: { type: String,require:true} ,
-    topic: { type:  ObjectId,required:true,ref:'Topic' },
-    members:{type:[ObjectId],required:false,ref:"User"},
+    topic: { type:  ObjectId,require:true,ref:'Topic' },
+    members:{type:[ObjectId],require:false,ref:"User"},
     notes:{type:String},
-    oSwner:{type:ObjectId,required:false,ref:"User"}
+    oSwner:{type:ObjectId,require:false,ref:"User"}
   }
 );
 
