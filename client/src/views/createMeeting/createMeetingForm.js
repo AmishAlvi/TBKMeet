@@ -3,6 +3,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns'; //instal this version npm i @date-io/date-fns@1.3.13
+import {useAsync } from "react-async";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -61,6 +62,12 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
+
+const loadUser = async ({ email }, { user }) => {
+  const res = await fetch(`http://localhost:81/topic/getTopic/${email}`, { user })
+  if (!res.ok) throw new Error(res.statusText)
+  return res.json()
+}
 const columns = [
   
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -260,24 +267,7 @@ return (
           rows={3}
         />
 
-        {/* Meeting Date */}
-       
-        {/* <label>Date</label> */}
-
-        {/* <DatePicker
-          error={Boolean.date && errors.date}
-          label="Date"
-          name="meetingDate"
-          value={values.date}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          inputPlaceholder="Select a date"
-          shouldHighlightWeekends
-          selected="startDate"
-          margin="normal"
-        >
-        </DatePicker> */}
-
+      {/* Meeting Date */}
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
           disableToolbar
@@ -292,7 +282,7 @@ return (
             'aria-label': 'change date',
           }}
         />
-
+        <br></br>
         <KeyboardTimePicker
           margin="normal"
           id="time-picker"
