@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import 'date-fns';
@@ -11,14 +11,25 @@ import {
 import { Formik } from 'formik';
 import Async from "react-async"
 import {
-  Box, Button,Container,
-  Select, InputLabel,
-  MenuItem,TextField,
-  Divider, makeStyles,
-  Card,CardHeader,
-  CardContent,FormControl
+  Box,
+  Button,
+  Container,
+  Select,
+  InputLabel ,
+  MenuItem,
+  TextField,
+  Divider,
+  makeStyles,
+  Card,
+  CardHeader,
+  CardContent,
+  FormControl,
+  Snackbar
+
 } from '@material-ui/core';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 import Dialog from '@material-ui/core/Dialog';
+import MuiAlert from '@material-ui/lab/Alert';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -27,6 +38,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -55,6 +67,11 @@ const styles = (theme) => ({
   },
 });
 
+const topicColumns = [
+  { field: 'title', headerName: 'Topic Title', width: 180},
+  { field: 'totalTime', headerName: 'Duration', width: 180 }
+  
+];
 const columns = [
   { field: 'firstName', headerName: 'First name', width: 180},
   { field: 'lastName', headerName: 'Last name', width: 180 },
@@ -65,11 +82,10 @@ const columns = [
     sortable: false,
     width: 160,
     valueGetter: (params) =>
-      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      ${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''},
   }, */
   { field: 'email', headerName: 'Email', width: 180 }
 ];
-
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -100,41 +116,133 @@ const DialogActions = withStyles((theme) => ({
  
 const CreateMeetingForm = props => {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  let userData=[];
-  const [select, setSelection] = React.useState([]);
-  /* const loadUser = async () => {
-    const res = await fetch(`http://localhost:81/meeting/getEmails`)
-    if (!res.ok) throw new Error(res.statusText)
-     const data=await res.json();
-    userData.push(777);
-    //return data.data;
-    
-  } */
-  const loadUser = () =>
-    fetch(`http://localhost:81/meeting/getEmails`)
-      .then(res => (res.ok ? res : Promise.reject(res)))
-      .then(res => res.json())
-  const loadTopics = () =>
-    fetch(`http://localhost:81/topic/getTopic`)
-      .then(res => (res.ok ? res : Promise.reject(res)))
-      .then(res => res.json())
-  
-  const handleClickOpen = () => {
-    setOpen(true);
+  const [openTopic, setOpenTopic] = React.useState(false);
+  const [selectParticipats, setSelectionParticipants] = React.useState([]);
+  let dt = new Date();
+  const minDate = dt.setDate(dt.getDate() );
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [openAlert, setOpenAlert] = React.useState(false);
+  var [errorMessage,setErrorMessage]=useState("");
+  var [successMessage,setSuccessMessage]=useState("");
+  const[user,setUser]=useState([]);
+  const[member,setMember]=useState([]);
+  const[topic,setTopic]=useState([]);
+  const[selectedTopic,setSelectedTopic]=useState([]);
+  const[topicsArr,setTopicsArr]=useState([]);
+  const[participantsArr,setParticipantsArr]=useState([]);
+
+  const loadUser = async values => {
+    const url = "http://localhost:81/meeting/getEmails";
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
+      console.log(data)
+
+      if (data.status == "success") {
+        console.log("success");
+        setUser(data.data)
+        console.log(user)
+        
+      } else {
+        console.log("error");
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
   };
+  const loadTopic = async values => {
+    const url = "http://localhost:81/topic/getTopic";
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
+      //console.log(data)
+
+      if (data.status == "success") {
+        console.log("success");
+        setTopic(data.data)
+        //console.log(topic)
+        
+      } else {
+        console.log("error");
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  };
+
+      //function for displaying alert
+      function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+      }
+//Open Participants Dialog
+  const handleClickOpen = () => {
+    loadUser();
+    setOpen(true);
+    
+  };
+  
+  const handleClickOpenTopic =()=>{
+    loadTopic();
+    console.log(topic);
+    setOpenTopic(true);
+  }
   const handleClose = () => {
     setOpen(false);
   };
+  const handleCloseTopic = () => {
+    setOpenTopic(false);
+    console.log(topicsArr);
+  };
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenAlert(false);
+  };
+ /*  const addId=(data)=>{
+    var ln = data.length;
+    console.log("add id starts")
+    for(var i=0; i<ln;i++)
+    {
+      console.log(i);
+      data[i].id=i;
+    }
+    return data;
+  } */
+  const SaveParticipants=()=>
+  {
+    setParticipantsArr(member);
+    console.log(participantsArr);
+    handleClose();
+  }
+  const SaveTopics=()=>
+  {
+    setTopicsArr(selectedTopic);
+    handleCloseTopic();
+    console.log(calculateTotalDuration())
+    
+  }
+  const calculateTotalDuration=()=>{
+    var totalDuration=0;
+    topicsArr.map((val) => 
+    totalDuration+=parseInt(val.totalTime)
+    );
+    console.log(totalDuration);
+    return totalDuration;
+  }
   //Function that handles the form submission
   const handleSubmit = async values => {
-    const {title, description, date, duration} = values;
+    const {title, description, duration} = values;
     var body = {
       title: title,
       description: description,
-      topics: topic,
-      date: date,
+      topic: topicsArr,
+      members:participantsArr,
+      date: selectedDate.toLocaleDateString(),
+      time: selectedDate.toLocaleTimeString(),
       location: location,
       duration: duration
     };
@@ -146,14 +254,27 @@ const CreateMeetingForm = props => {
       },
       body: JSON.stringify(body)
     };
-    console.log(select);
-  };
+    const url = "http://localhost:81/meeting/meetingSave";
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      console.log(text)
 
-  //Update the Topic selection
-  const [topic, setTopic] = React.useState('');
-  const updateTopic = (event) => {
-    setTopic(event.target.value);
-    console.log("topic");
+      if (text.status == "success") {
+        console.log("success")
+        setSuccessMessage(text.message);
+        setOpenAlert(true); 
+  
+      } else {
+        console.log(text.message);
+         setErrorMessage(text.message);
+        setOpenAlert(true); 
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+ /*  console.log(selectedTime.toLocaleDateString());
+  console.log(selectedTime.toLocaleTimeString()); */
   };
 
   //update the location selection
@@ -162,8 +283,6 @@ const CreateMeetingForm = props => {
     setLocation(event.target.value);
   }
   //update date
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -183,10 +302,16 @@ return (
   onSubmit={handleSubmit}
 
   // Using Yup for validation
+
   validationSchema={Yup.object().shape({
     title: Yup.string().max(100).required('Title is required'),
     description: Yup.string().max(255),
-    duration: Yup.string().required("Duration is required")
+    duration: Yup.string().required("Duration is required").matches(/^\d+$/, 'The field should have digits only').test(
+      "DOB",
+      "Duration must be greater than total topic durations",
+      value => {
+        return value >= calculateTotalDuration();
+      })
   })}
   >
     {props => {
@@ -207,10 +332,12 @@ return (
             <CardContent>
               <CardHeader title="Create A Meeting">
               </CardHeader>
-              {/* </Card> */}
-              <Divider/>
-              {/* Meeting Title */}
-              <TextField
+          {/* </Card> */}
+
+          <Divider/>
+
+          {/* Meeting Title */}
+          <TextField
                 error={Boolean(touched.title && errors.title)}
                 fullWidth
                 helperText={touched.title && errors.title}
@@ -220,117 +347,135 @@ return (
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.title}
-                variant="outlined"  
-              />
-              {/* Meeting Topic */}
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="topic-input-label">Topic</InputLabel>
-
-                <Async promiseFn={loadTopics}>
-                {({data,err,isLoading})=>{
-                  if(isLoading) return "Loading..."
-                  if(err) return `Something went wrong: ${err.message}`
-                  if (data)
-                    return (
-                      <Select
-                        labelId="topic-input-label"
-                        id="topic-input"
-                        value={topic}
-                        onChange={updateTopic}
-                        label="Topics"
-                        fullWidth
-                        variant="outlined"
-                        margin="normal"
-                      >
-              
-                      {data.data.map(topic=> (
-                        <MenuItem value={topic.title}>{topic.title}</MenuItem>
-                      ))}
-                      </Select>          
-                    )
-                }}
-                </Async>
-              </FormControl>
-
-              {/* Meeting Description */}
-              <TextField
-                error={Boolean(touched.description && errors.description)}
-                fullWidth
-                helperText={touched.description && errors.description}
-                label="Description"
-                margin="normal"
-                name="description"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.description}
                 variant="outlined"
-                multiline
-                rows={3}
+                
               />
+        {/* Meeting Topic */}  
+      {/* Invite Topics Button */}
+       <Button 
+          color="primary"
+          variant="contained"
+          justifyContent="flex-start"
+          onClick={handleClickOpenTopic}>
+            Select topic
+          </Button> 
+      <Dialog onClose={handleCloseTopic} aria-labelledby="customized-dialog-title" open={openTopic}>
+        <DialogTitle id="customized-dialog-title" onClose={handleCloseTopic}>
+          Select Topics
+        </DialogTitle>
+        <DialogContent dividers> 
+             <div style={{ height: 400, width: '100%' }}> 
+            
+                <DataGrid 
+                  rows={topic}
+                  columns={topicColumns}
+                  pageSize={5} 
+                  checkboxSelection 
+                  onSelectionChange={
+                  (newSelection) => {
+                  setSelectedTopic(newSelection.rows);
+                  console.log(selectedTopic) 
+                       /* console.log(newSelection.rows)  */
+                    }} 
+                  
+                      />   
+                      
+       <h1>{selectedTopic.map((val) => val.title)}</h1> 
+  
+            </div>
+            
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={SaveTopics} color="primary">
+            Save Topics
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-              {/* Meeting Date */}
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  variant="inline"
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="date-picker-inline"
-                  label="Meeting Date"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                />
-                <br></br>
-                <KeyboardTimePicker
-                  margin="normal"
-                  id="time-picker"
-                  label="Meeting Time"
-                  value={selectedDate}
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                  }}
-                />
+    {/* </div>  */}
 
-              </MuiPickersUtilsProvider>
+
+        {/* Meeting Description */}
+        <TextField
+          error={Boolean(touched.description && errors.description)}
+          fullWidth
+          helperText={touched.description && errors.description}
+          label="Description"
+          margin="normal"
+          name="description"
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.description}
+          variant="outlined"
+          multiline
+          rows={3}
+        />
+
+
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          minDate={minDate}
+          id="date-picker-inline"
+          label="Meeting Date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+        <br></br>
+        <KeyboardTimePicker
+          margin="normal"
+          id="time-picker"
+          label="Meeting Time"
+          minDate={minDate}
+          value={selectedDate}
+          keyboardIcon={<ScheduleIcon />}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+        />
+        </MuiPickersUtilsProvider>
         
-              {/* Meeting Duration */}
-              <TextField
-                error={Boolean(touched.duration && errors.duration)}
-                fullWidth
-                helperText={touched.duration && errors.duration}
-                label="Duration in minutes"
-                margin="normal"
-                name="duration"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.duration}
-                variant="outlined"
-              />
+        {/* Meeting Duration */}
+        <TextField
+          error={Boolean(touched.duration && errors.duration)}
+          fullWidth
+          helperText={touched.duration && errors.duration}
+          label="Duration in minutes"
+          margin="normal"
+          name="duration"
+          onBlur={handleBlur}
+          onChange={handleChange}
+          value={values.duration}
+          variant="outlined"
+        />
 
-              {/* Meeting Location */}
-              <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="location-input-label">Location</InputLabel>
-              <Select
-                labelId="topic-input-label"
-                id="location-input"
-                value={location}
-                onChange={updateLocation}
-                label="Topics"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                >
-                  <MenuItem value=""> <em>None</em></MenuItem>
-                  <MenuItem value={1}>Meeting Room 1</MenuItem>
-                  <MenuItem value={2}>Meeting Room 2</MenuItem>
-                  <MenuItem value={3}>Meeting Room 3</MenuItem>
-                  <MenuItem value={4}>Meeting Room 4</MenuItem>
-              </Select>
-              </FormControl>
+        {/* Meeting Location */}
+        <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel id="location-input-label">Location</InputLabel>
+        <Select
+          labelId="topic-input-label"
+          id="location-input"
+          value={location}
+          onChange={updateLocation}
+          label="Topics"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+          >
+            <MenuItem value=""> <em>None</em></MenuItem>
+            <MenuItem value={1}>Meeting Room 1</MenuItem>
+            <MenuItem value={2}>Meeting Room 2</MenuItem>
+            <MenuItem value={3}>Meeting Room 3</MenuItem>
+            <MenuItem value={4}>Meeting Room 4</MenuItem>
+        </Select>
+        </FormControl>
 
         </CardContent>
 
@@ -341,83 +486,86 @@ return (
           justifyContent="space-between"
           p={3}
         >
-      <div>
-        {/* Invite Participants Button */}
-        <Button 
+          <div>
+      {/* Invite Participants Button */}
+      <Button 
           color="primary"
           variant="contained"
           justifyContent="flex-start"
           onClick={handleClickOpen}>
             Invite Participants
-        </Button>
+          </Button>
 
-        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-          <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Invite Participants
-          </DialogTitle>
-          <DialogContent dividers>
-          
-            <Async promiseFn={loadUser}>
-            {({data,err,isLoading})=>{
-              if(isLoading) return "Loading..."
-              if(err) return `Something went wrong: ${err.message}`
-              if (data)
-              return (
-                <div style={{ height: 400, width: '100%' }}>
-                  {console.log(data.data)}
-              
-                  <DataGrid 
-                    rows={data.data}
-                    columns={columns}
-                    pageSize={5} 
-                    checkboxSelection={true}
-                    // getRowId={(row) => row._id}
-                    onSelectionChange={(newSelection) => {
-                      console.log(newSelection.rows);
-                      // setSelection(newSelection.rows);
-                      console.log("HIHI");
-                    }}
-                  />  
-                  {/* {console.log("HELLOOOOOO")} */}
-                  {/* {console.log(select)} */}
-                  <h1>{select.map((val) => val.firstName)}</h1>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Invite Participants
+        </DialogTitle>
+        <DialogContent dividers>
+
+              <div style={{ height: 400, width: '100%' }}>
+            
+                <DataGrid 
+                
+                 rows={user}
+                 columns={columns}
+                 pageSize={5} 
+                 checkboxSelection 
+                 onSelectionChange={
+                 (newSelection) => {
+                      setMember(newSelection.rows);
+                       console.log(member) 
+                       /* console.log(newSelection.rows)  */}}             
+                      />  
+                      
+       <h1>{member.map((val) => val.firstName)}</h1> 
   
-              </div>
-              )
-            }}
-        
-            </Async>
-          </DialogContent>
-          <DialogActions>
-            <Button autoFocus onClick={handleClose} color="primary">
-              Save Participants
-            </Button>
-          </DialogActions>
-        </Dialog>
+            </div>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={SaveParticipants} color="primary">
+            Save Participants
+          </Button>
+
+        </DialogActions>
+      </Dialog>
 
     </div>
 
-      {/* Cretae Meeting button */}
-      <Button 
-        color="primary"
-        variant="contained"
-        justifyContent="flex-end"
-        disabled={isSubmitting}
-        type="submit"
-        variant="contained">
-        Create Meeting
-      </Button>
-    </Box>
-  </Card>
-</form>
-</>
-);
-}}
+        {/* Cretae Meeting button */}
+          <Button 
+          color="primary"
+          variant="contained"
+          justifyContent="flex-end"
+          disabled={isSubmitting}
+            type="submit"
+            variant="contained">
+            Create Meeting
+          </Button>
+          </Box>
+
+        </Card>
+        </form>
+        </>
+      );
+    }}
+  
+  </Formik>
+
+    <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+    {!Object.keys(errorMessage).length == 0 ? 
      
-</Formik>
+         (<Alert onClose={handleCloseAlert} severity="Error">
+         {errorMessage}  
+     </Alert>)
+        :(<Alert onClose={handleCloseAlert} severity="success">
+            {successMessage}  
+        </Alert>)}
+        
+        
+      </Snackbar>
 </Container>
 
-);
+  );
 };
 
 export default CreateMeetingForm;
