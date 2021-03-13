@@ -11,20 +11,12 @@ import {
 import { Formik } from 'formik';
 import Async from "react-async"
 import {
-  Box,
-  Button,
-  Container,
-  Select,
-  InputLabel ,
-  MenuItem,
-  TextField,
-  Divider,
-  makeStyles,
-  Card,
-  CardHeader,
-  CardContent,
-  FormControl
-  
+  Box, Button,Container,
+  Select, InputLabel,
+  MenuItem,TextField,
+  Divider, makeStyles,
+  Card,CardHeader,
+  CardContent,FormControl
 } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -64,8 +56,8 @@ const styles = (theme) => ({
 });
 
 const columns = [
-  { field: 'firstName', headerName: 'First name', width: 200 },
-  { field: 'lastName', headerName: 'Last name', width: 200 },
+  { field: 'firstName', headerName: 'First name', width: 180},
+  { field: 'lastName', headerName: 'Last name', width: 180 },
   /* {
     field: 'fullName',
     headerName: 'Full name',
@@ -75,7 +67,7 @@ const columns = [
     valueGetter: (params) =>
       `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   }, */
-  { field: 'email', headerName: 'Email', width: 200 }
+  { field: 'email', headerName: 'Email', width: 180 }
 ];
 
 const DialogTitle = withStyles(styles)((props) => {
@@ -121,10 +113,10 @@ const CreateMeetingForm = props => {
     
   } */
   const loadUser = () =>
-  fetch(`http://localhost:81/meeting/getEmails`)
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
-    const loadTopics = () =>
+    fetch(`http://localhost:81/meeting/getEmails`)
+      .then(res => (res.ok ? res : Promise.reject(res)))
+      .then(res => res.json())
+  const loadTopics = () =>
     fetch(`http://localhost:81/topic/getTopic`)
       .then(res => (res.ok ? res : Promise.reject(res)))
       .then(res => res.json())
@@ -170,12 +162,11 @@ const CreateMeetingForm = props => {
     setLocation(event.target.value);
   }
   //update date
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2021-02-14T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  
 
 return (
     
@@ -192,7 +183,6 @@ return (
   onSubmit={handleSubmit}
 
   // Using Yup for validation
-
   validationSchema={Yup.object().shape({
     title: Yup.string().max(100).required('Title is required'),
     description: Yup.string().max(255),
@@ -217,12 +207,10 @@ return (
             <CardContent>
               <CardHeader title="Create A Meeting">
               </CardHeader>
-          {/* </Card> */}
-
-          <Divider/>
-
-          {/* Meeting Title */}
-          <TextField
+              {/* </Card> */}
+              <Divider/>
+              {/* Meeting Title */}
+              <TextField
                 error={Boolean(touched.title && errors.title)}
                 fullWidth
                 helperText={touched.title && errors.title}
@@ -232,137 +220,117 @@ return (
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.title}
-                variant="outlined"
-                
+                variant="outlined"  
               />
-        {/* Meeting Topic */}
-        <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="topic-input-label">Topic</InputLabel>
-      
-        
-            <Async promiseFn={loadTopics}>
-            {({data,err,isLoading})=>{
-            if(isLoading) return "Loading..."
-            if(err) return `Something went wrong: ${err.message}`
-            if (data)
-            return (
-              <Select
-          labelId="topic-input-label"
-          id="topic-input"
-          value={topic}
-          onChange={updateTopic}
-          label="Topics"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-          >
+              {/* Meeting Topic */}
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="topic-input-label">Topic</InputLabel>
+
+                <Async promiseFn={loadTopics}>
+                {({data,err,isLoading})=>{
+                  if(isLoading) return "Loading..."
+                  if(err) return `Something went wrong: ${err.message}`
+                  if (data)
+                    return (
+                      <Select
+                        labelId="topic-input-label"
+                        id="topic-input"
+                        value={topic}
+                        onChange={updateTopic}
+                        label="Topics"
+                        fullWidth
+                        variant="outlined"
+                        margin="normal"
+                      >
               
-              {data.data.map(topic=> (
-                  <MenuItem value={topic.title}>{topic.title}</MenuItem>
-              ))}
-          </Select>          
-          )
-          }}
-          </Async>
+                      {data.data.map(topic=> (
+                        <MenuItem value={topic.title}>{topic.title}</MenuItem>
+                      ))}
+                      </Select>          
+                    )
+                }}
+                </Async>
+              </FormControl>
+
+              {/* Meeting Description */}
+              <TextField
+                error={Boolean(touched.description && errors.description)}
+                fullWidth
+                helperText={touched.description && errors.description}
+                label="Description"
+                margin="normal"
+                name="description"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.description}
+                variant="outlined"
+                multiline
+                rows={3}
+              />
+
+              {/* Meeting Date */}
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Meeting Date"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+                <br></br>
+                <KeyboardTimePicker
+                  margin="normal"
+                  id="time-picker"
+                  label="Meeting Time"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change time',
+                  }}
+                />
+
+              </MuiPickersUtilsProvider>
         
-        
-        </FormControl>
+              {/* Meeting Duration */}
+              <TextField
+                error={Boolean(touched.duration && errors.duration)}
+                fullWidth
+                helperText={touched.duration && errors.duration}
+                label="Duration in minutes"
+                margin="normal"
+                name="duration"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.duration}
+                variant="outlined"
+              />
 
-        {/* Meeting Description */}
-        <TextField
-          error={Boolean(touched.description && errors.description)}
-          fullWidth
-          helperText={touched.description && errors.description}
-          label="Description"
-          margin="normal"
-          name="description"
-          onBlur={handleBlur}
-          onChange={handleChange}
-          value={values.description}
-          variant="outlined"
-          multiline
-          rows={3}
-        />
-
-        {/* Meeting Date */}
-       
-        {/* <label>Date</label> */}
-
-        {/* <DatePicker
-          error={Boolean.date && errors.date}
-          label="Date"
-          name="meetingDate"
-          value={values.date}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          inputPlaceholder="Select a date"
-          shouldHighlightWeekends
-          selected="startDate"
-          margin="normal"
-        >
-        </DatePicker> */}
-
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="MM/dd/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Meeting Date"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-
-        <KeyboardTimePicker
-          margin="normal"
-          id="time-picker"
-          label="Meeting Time"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change time',
-          }}
-        />
-        </MuiPickersUtilsProvider>
-        
-        {/* Meeting Duration */}
-        <TextField
-          error={Boolean(touched.duration && errors.duration)}
-          fullWidth
-          helperText={touched.duration && errors.duration}
-          label="Duration in minutes"
-          margin="normal"
-          name="duration"
-          onBlur={handleBlur}
-          onChange={handleChange}
-          value={values.duration}
-          variant="outlined"
-        />
-
-        {/* Meeting Location */}
-        <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="location-input-label">Location</InputLabel>
-        <Select
-          labelId="topic-input-label"
-          id="location-input"
-          value={location}
-          onChange={updateLocation}
-          label="Topics"
-          fullWidth
-          variant="outlined"
-          margin="normal"
-          >
-            <MenuItem value=""> <em>None</em></MenuItem>
-            <MenuItem value={1}>Meeting Room 1</MenuItem>
-            <MenuItem value={2}>Meeting Room 2</MenuItem>
-            <MenuItem value={3}>Meeting Room 3</MenuItem>
-            <MenuItem value={4}>Meeting Room 4</MenuItem>
-        </Select>
-        </FormControl>
+              {/* Meeting Location */}
+              <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="location-input-label">Location</InputLabel>
+              <Select
+                labelId="topic-input-label"
+                id="location-input"
+                value={location}
+                onChange={updateLocation}
+                label="Topics"
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                >
+                  <MenuItem value=""> <em>None</em></MenuItem>
+                  <MenuItem value={1}>Meeting Room 1</MenuItem>
+                  <MenuItem value={2}>Meeting Room 2</MenuItem>
+                  <MenuItem value={3}>Meeting Room 3</MenuItem>
+                  <MenuItem value={4}>Meeting Room 4</MenuItem>
+              </Select>
+              </FormControl>
 
         </CardContent>
 
@@ -373,82 +341,83 @@ return (
           justifyContent="space-between"
           p={3}
         >
-          <div>
-      {/* Invite Participants Button */}
-      <Button 
+      <div>
+        {/* Invite Participants Button */}
+        <Button 
           color="primary"
           variant="contained"
           justifyContent="flex-start"
           onClick={handleClickOpen}>
             Invite Participants
-          </Button>
+        </Button>
 
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Invite Participants
-        </DialogTitle>
-        <DialogContent dividers>
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+          <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            Invite Participants
+          </DialogTitle>
+          <DialogContent dividers>
           
-        <Async promiseFn={loadUser}>
-          {({data,err,isLoading})=>{
-            if(isLoading) return "Loading..."
-            if(err) return `Something went wrong: ${err.message}`
-            if (data)
-            return (
-              <div style={{ height: 400, width: '100%' }}>
-              {console.log(data.data)}
+            <Async promiseFn={loadUser}>
+            {({data,err,isLoading})=>{
+              if(isLoading) return "Loading..."
+              if(err) return `Something went wrong: ${err.message}`
+              if (data)
+              return (
+                <div style={{ height: 400, width: '100%' }}>
+                  {console.log(data.data)}
               
-                <DataGrid 
-                 rows={data.data}
-                  columns={columns}
-                   pageSize={5} 
-                   checkboxSelection 
-                   getRowId={(row) => row._id}
-                   onSelectionChange={(newSelection) => {
-                    setSelection(newSelection.rows);
-                   
-                  }}
-                      />  
-       <h1>{select.map((val) => val.firstName)}</h1>
+                  <DataGrid 
+                    rows={data.data}
+                    columns={columns}
+                    pageSize={5} 
+                    checkboxSelection={true}
+                    // getRowId={(row) => row._id}
+                    onSelectionChange={(newSelection) => {
+                      console.log(newSelection.rows);
+                      // setSelection(newSelection.rows);
+                      console.log("HIHI");
+                    }}
+                  />  
+                  {/* {console.log("HELLOOOOOO")} */}
+                  {/* {console.log(select)} */}
+                  <h1>{select.map((val) => val.firstName)}</h1>
   
-            </div>
-            )
-          }}
+              </div>
+              )
+            }}
         
-    </Async>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save Participants
-          </Button>
-
-        </DialogActions>
-      </Dialog>
+            </Async>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Save Participants
+            </Button>
+          </DialogActions>
+        </Dialog>
 
     </div>
 
-        {/* Cretae Meeting button */}
-          <Button 
-          color="primary"
-          variant="contained"
-          justifyContent="flex-end"
-          disabled={isSubmitting}
-            type="submit"
-            variant="contained">
-            Create Meeting
-          </Button>
-          </Box>
-
-        </Card>
-        </form>
-        </>
-      );
-    }}
+      {/* Cretae Meeting button */}
+      <Button 
+        color="primary"
+        variant="contained"
+        justifyContent="flex-end"
+        disabled={isSubmitting}
+        type="submit"
+        variant="contained">
+        Create Meeting
+      </Button>
+    </Box>
+  </Card>
+</form>
+</>
+);
+}}
      
-  </Formik>
+</Formik>
 </Container>
 
-  );
+);
 };
 
 export default CreateMeetingForm;
