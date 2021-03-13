@@ -140,8 +140,11 @@ const handleClose = (event, reason) => {
       validationSchema={Yup.object().shape({
         title: Yup.string().max(100).required('Title is required'),
         description: Yup.string().max(255).required('Description is required'),
-        totalTime: Yup.string().required("Duration is required")
+       
+        totalTime: Yup.string().required("Duration is required").matches(/^\d+$/, 'The field should have digits only')
+        
       })}
+      
     >
       {props => {
         const {
