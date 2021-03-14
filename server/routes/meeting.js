@@ -5,9 +5,8 @@ const {requireAuthentication,validateJson} = require("../middleware");
 
 const router = Router();
 
-router.post("/meetingSave",[requireAuthentication,meeting]);
+router.post("/meetingSave",[meeting]);
 router.get("/getMeetings",[getMeeting]);
 router.get("/getEmails",[getEmails]);
-
 
 module.exports = router;
