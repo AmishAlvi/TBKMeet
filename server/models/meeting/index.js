@@ -4,7 +4,6 @@ const {ObjectId} = Schema.Types;
 const MeetingSchema = new Schema(
   {
     title: { type: String,require:true},
-    //time: { type: String,require:true},
     date: { type: Date,require:true} ,
     location: { type: String,require:false},
     description: { type: String,require:false} ,

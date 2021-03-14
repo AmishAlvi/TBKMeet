@@ -1,6 +1,6 @@
 const {model, Schema} = require("../db");
 const bcrypt = require("bcryptjs");
-
+const opts = { toJSON: { virtuals: true } };
 const {ObjectId} = Schema.Types;
 const UserSchema = new Schema(
   {
@@ -51,9 +51,12 @@ const UserSchema = new Schema(
 
     createrUser: {type: ObjectId, required: false, ref: "User"},
     company: {type: ObjectId, required: false, ref: "Company"}
-  },
+  },opts,
   {timestamps: {createdAt: "createdAt", updatedAt: "updatedAt"}}
 );
+UserSchema.virtual("id").get(function() {
+  return this._id;
+});
 
 function toHashPassword(password) {
   if (password) {
