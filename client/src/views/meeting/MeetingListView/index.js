@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 const MeetingListView = () => {
   const classes = useStyles();
   const [meetings] = useState(data);
-  
+  const [meeting,setMeeting]=useState([]);
     const [state, setState] = React.useState({
         checkedA: true,
         checkedB: false,
@@ -40,6 +40,29 @@ const MeetingListView = () => {
         setState({ ...state, [event.target.name]: event.target.checked });
         console.log(state);
       };
+      const getMeetings = async values => {
+        const url = "http://localhost:81/meeting/getMeetings";
+        try {
+          const result = await fetch(url);
+          const data = await result.json();
+          //console.log(data)
+      
+          if (data.status == "success") {
+            console.log("success");
+            setMeeting(data.data)
+           // console.log(meeting)
+            
+          } else {
+            console.log("error");
+            
+          }
+        } catch (error) {
+          console.error(error);
+        } 
+      };
+      getMeetings();
+      var meetingArr=[];
+      meetingArr.push(meeting);
   return (
     <Page
       className={classes.root}
@@ -101,8 +124,8 @@ const MeetingListView = () => {
     </div>
     <Box mt={3}>
     {!state.checkedB ? ( 
-          <Results meetings={meetings} />
-        ):(<CalendarView></CalendarView>)}
+          <Results meetings={meeting} />
+        ):(<CalendarView meetings={meeting}></CalendarView>)}
  </Box>
       </Container>
       

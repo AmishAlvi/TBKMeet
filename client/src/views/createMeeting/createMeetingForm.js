@@ -205,7 +205,8 @@ const CreateMeetingForm = props => {
   const SaveParticipants=()=>
   {
     setParticipantsArr(member);
-    console.log(participantsArr);
+    //console.log(participantsArr);
+   //console.log(selectedDate);
     handleClose();
   }
   const SaveTopics=()=>
@@ -229,15 +230,38 @@ const CreateMeetingForm = props => {
   //Function that handles the form submission
   const handleSubmit = async values => {
     const {title, description, duration} = values;
+    var participantsTmp=[];
+    var topicsTmp=[];
+    participantsArr.map((val)=>
+    participantsTmp.push(val._id)
+    );
+    topicsArr.map((val)=>
+    topicsTmp.push(val._id)
+    );
+    console.log(topicsTmp);
+    console.log(participantsTmp);
+     if (!topicsTmp.length)
+    {
+      setErrorMessage("Please select at least one topic");
+         setOpenAlert(true); 
+    }
+    else if(!participantsTmp.length)
+    {
+      
+         setErrorMessage("Please select at least one participant");
+         setOpenAlert(true); 
+    }
+    else
+    {
     var body = {
       title: title,
       description: description,
-      topic: topicsArr,
-      members:participantsArr,
-      date: selectedDate.toLocaleDateString(),
-      time: selectedDate.toLocaleTimeString(),
+      topic: topicsTmp,
+      members:participantsTmp,
+      date: selectedDate,
+      //time: selectedDate.toLocaleTimeString(),
       location: location,
-      duration: duration
+      duration: duration.toString()
     };
     const options = {
       method: "POST",
@@ -265,7 +289,7 @@ const CreateMeetingForm = props => {
       }
     } catch (error) {
       console.error(error);
-    } 
+    } }
  /*  console.log(selectedTime.toLocaleDateString());
   console.log(selectedTime.toLocaleTimeString()); */
   };
@@ -540,7 +564,7 @@ return (
   
   </Formik>
 
-    <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+     <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
     {!Object.keys(errorMessage).length == 0 ? 
      
          (<Alert onClose={handleCloseAlert} severity="Error">
@@ -551,7 +575,7 @@ return (
         </Alert>)}
         
         
-      </Snackbar>
+      </Snackbar> 
 </Container>
 
   );

@@ -12,9 +12,10 @@ const TopicSchema = new Schema(
     information:{type:Boolean,default:false} 
   },opts
 );
-TopicSchema.virtual('id').get(function() {
+TopicSchema.virtual("id").get(function() {
   return this._id;
 });
+
 const Topic = model("Topic", TopicSchema);
 
 module.exports = {Topic, TopicSchema};
