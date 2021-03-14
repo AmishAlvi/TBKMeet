@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -13,12 +13,13 @@ import {
   TextField,
   Typography,
   Grid,
+  Snackbar,
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
 import Image from 'src/imgs/meeting_register_img_2.jpg'; // Import using relative path
-
+import MuiAlert from '@material-ui/lab/Alert';
 
 const styles = {
     root: {
@@ -46,7 +47,20 @@ const useStyles = makeStyles((theme) => ({
 const RegisterView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  var [errorMessage,setErrorMessage]=useState("");
 
+  //Alert Function 
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+//Close func for closing the alert
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
     // This function received the values from the form
@@ -78,7 +92,8 @@ const RegisterView = props => {
         navigate('/login', { replace: true });
       } else {
         console.log(text.message);
-        window.alert(text.message);
+        setErrorMessage(text.message)
+        setOpen(true);
       }
     } catch (error) {
       console.error(error);
@@ -293,6 +308,11 @@ const RegisterView = props => {
             )}}
           </Formik>
         </Container>
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="Error">
+            {errorMessage}  
+        </Alert>
+      </Snackbar>
       </Box>
       </Grid>
       

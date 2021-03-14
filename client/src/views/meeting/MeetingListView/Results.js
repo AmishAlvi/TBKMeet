@@ -3,10 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -29,6 +27,7 @@ const Results = ({ className, meetings, ...rest }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const emptyRows = limit - Math.min(limit, meetings.length - page * limit);
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
@@ -52,7 +51,7 @@ const Results = ({ className, meetings, ...rest }) => {
                   Meeting Name
                 </TableCell>
                 <TableCell>
-                  Meeting Topic
+                  Description
                 </TableCell>
                 <TableCell>
                   Location
@@ -69,10 +68,10 @@ const Results = ({ className, meetings, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {meetings.slice(0, limit).map((meetings) => (
+              {meetings.slice(page* limit, page * limit + limit).map((meetings) => (
                 <TableRow
                   hover
-                  key={meetings.id}
+                  key={meetings._id}
                   
                 >
                  
@@ -86,21 +85,21 @@ const Results = ({ className, meetings, ...rest }) => {
                         color="textPrimary"
                         variant="body1"
                       >
-                        {meetings.meetingName}
+                        {meetings.title}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {meetings.meetingTopic}
+                    {meetings.description}
                   </TableCell>
                   <TableCell>
-                    {`${meetings.address.city}, ${meetings.address.building}, ${meetings.address.room}`}  
+                  {meetings.location}
                   </TableCell>
                   <TableCell>
                     {meetings.date}
                   </TableCell>
                   <TableCell>
-                    {meetings.time}
+                    {meetings.date}
                   </TableCell>
                   <TableCell>
                   <Button href="#text-buttons" color="primary">
@@ -109,6 +108,11 @@ const Results = ({ className, meetings, ...rest }) => {
                   </TableCell>
                 </TableRow>
               ))}
+               {emptyRows > 0 && (
+                <TableRow style={{ height:  56 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </Box>

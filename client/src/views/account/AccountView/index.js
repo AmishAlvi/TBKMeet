@@ -7,6 +7,7 @@ import {
 import Page from 'src/components/Page';
 import Profile from './Profile';
 import ProfileDetails from './ProfileDetails';
+import Password from './Password';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,7 @@ const Account = () => {
           container
           spacing={3}
         >
+        {/* item is a class name which provides padding */}
           <Grid
             item
             lg={4}
@@ -46,6 +48,19 @@ const Account = () => {
           >
             <ProfileDetails />
           </Grid>
+          <Grid
+            item
+            lg={4}
+            md={6}
+            xs={12}
+          > </Grid>
+          <Grid 
+          item
+          lg={8}
+          md={6}
+          xs={12}>
+          <Password />
+        </Grid>
         </Grid>
       </Container>
     </Page>

@@ -1,19 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   TextField,
   InputAdornment,
   SvgIcon,
-  makeStyles
+  Grid,
+  FormControlLabel,
+  Switch
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
 const Toolbar = ({ className, ...rest }) => {
-  
+const [state, setState] = React.useState({
+    checkedA: true,
+    checkedB: false,
+  });
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
   return (
     <div
       {...rest}
@@ -21,7 +28,14 @@ const Toolbar = ({ className, ...rest }) => {
       <Box mt={3}>
         <Card>
           <CardContent>
-            <Box maxWidth={500}>
+          <Grid
+          container
+         direction="row"
+        justify="space-between"
+      alignItems="center"
+>
+            <Box maxWidth={500} minWidth={400}>
+
               <TextField
                 fullWidth
                 InputProps={{
@@ -40,6 +54,23 @@ const Toolbar = ({ className, ...rest }) => {
                 variant="outlined"
               />
             </Box>
+            
+            {/* switch component for calendar view */}
+            <Box>
+            <FormControlLabel
+            control={
+          <Switch
+            checked={state.checkedB}
+            onChange={handleChange}
+            name="checkedB"
+            color="primary"
+          />
+        }
+        label="Calendar View"
+      />
+     {/*  <EventIcon></EventIcon> */}
+      </Box>
+      </Grid>
           </CardContent>
         </Card>
       </Box>

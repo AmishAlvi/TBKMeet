@@ -6,15 +6,16 @@ import {
   Box,
   Button,
   Container,
-  Grid,
   Link,
   TextField,
   Typography,
+  Snackbar,
   makeStyles
 } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
-
+import { Alert } from '@material-ui/lab';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -27,6 +28,20 @@ const useStyles = makeStyles((theme) => ({
 const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  var [errorMessage,setErrorMessage]=useState("");
+
+  //Alert Function 
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+//Close func for closing the alert
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
 
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
@@ -46,6 +61,7 @@ const LoginView = props => {
       body: JSON.stringify(body)
     };
     const url = "http://localhost:81/auth/login";
+   
     try {
       const response = await fetch(url, options);
       const text = await response.json();
@@ -53,9 +69,11 @@ const LoginView = props => {
       if (text.status == "success") {
         console.log("success")
         navigate('/app/dashboard', { replace: true });
+        
       } else {
         console.log(text.message);
-        window.alert(text.message);
+        setErrorMessage(text.message)
+        setOpen(true);    
       }
     } catch (error) {
       console.error(error);
@@ -69,6 +87,7 @@ const LoginView = props => {
       className={classes.root}
       title="Login"
     >
+      
       <Box
         display="flex"
         flexDirection="column"
@@ -170,8 +189,13 @@ const LoginView = props => {
         );
       }}
     </Formik>
-  </Container>
+  </Container>  
 </Box>
+<Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="Error">
+            {errorMessage}  
+        </Alert>
+      </Snackbar>
 </Page>
   );
 };

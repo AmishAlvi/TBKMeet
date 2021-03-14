@@ -10,6 +10,9 @@ import NotFoundView from 'src/views/errors/NotFoundView';
 import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
+import CreateTopic from 'src/views/createTopic';
+import CreateMeeting from 'src/views/createMeeting';
+import TopicPool from 'src/views/topicPool';
 
 const routes = [
   {
@@ -21,6 +24,9 @@ const routes = [
       { path: 'dashboard', element: <DashboardView /> },
       { path: 'attendMeeting', element: <AttendMeetingView /> },
       { path: 'settings', element: <SettingsView /> },
+      { path: 'createTopic', element: <CreateTopic/> },
+      { path: 'createMeeting', element: <CreateMeeting/> },
+      { path: 'topics', element: <TopicPool/> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
