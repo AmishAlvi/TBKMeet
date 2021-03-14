@@ -1,6 +1,5 @@
 const {model, Schema} = require("../db");
 const {ObjectId} = Schema.Types;
-
 const TopicSchema = new Schema(
   {
     title: { type: String,require:true},

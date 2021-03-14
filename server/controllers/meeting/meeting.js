@@ -6,6 +6,9 @@ module.exports = async (req, res, _next) => {
   const {
     title,
     time,
+    description,
+    duration,
+    location,
     date,
     topic,
     members,
@@ -15,7 +18,7 @@ module.exports = async (req, res, _next) => {
   } = req.fields;
 
 
-  const meeting = new Meeting({title,time,date,topic,members,notes,owner});
+  const meeting = new Meeting({title,time,description,duration,location,date,topic,members,notes,owner});
   try {
     meeting.owner = req.session.user;
     await meeting.save(async  (err) => {
