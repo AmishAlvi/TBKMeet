@@ -202,16 +202,6 @@ const CreateMeetingForm = props => {
     }
     setOpenAlert(false);
   };
- /*  const addId=(data)=>{
-    var ln = data.length;
-    console.log("add id starts")
-    for(var i=0; i<ln;i++)
-    {
-      console.log(i);
-      data[i].id=i;
-    }
-    return data;
-  } */
   const SaveParticipants=()=>
   {
     setParticipantsArr(member);
@@ -232,6 +222,9 @@ const CreateMeetingForm = props => {
     );
     console.log(totalDuration);
     return totalDuration;
+  }
+  const resetForm = ()=> {
+    setSelectedDate('');
   }
   //Function that handles the form submission
   const handleSubmit = async values => {
@@ -299,7 +292,7 @@ return (
     date: '',
     location: ' '
   }}
-  onSubmit={handleSubmit}
+  onSubmit={handleSubmit, resetForm}
 
   // Using Yup for validation
 
@@ -378,9 +371,7 @@ return (
                        /* console.log(newSelection.rows)  */
                     }} 
                   
-                      />   
-                      
-       <h1>{selectedTopic.map((val) => val.title)}</h1> 
+                      /> 
   
             </div>
             
@@ -516,8 +507,6 @@ return (
                        console.log(member) 
                        /* console.log(newSelection.rows)  */}}             
                       />  
-                      
-       <h1>{member.map((val) => val.firstName)}</h1> 
   
             </div>
         </DialogContent>
