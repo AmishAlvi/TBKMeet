@@ -316,7 +316,7 @@ return (
     date: '',
     location: ' '
   }}
-  onSubmit={handleSubmit, resetForm}
+  onSubmit={handleSubmit}
 
   // Using Yup for validation
 
