@@ -27,7 +27,7 @@ const Results = ({ className, meetings, ...rest }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-  const emptyRows = limit - Math.min(limit, meetings.length-1 - page * limit);
+  const emptyRows = limit - Math.min(limit, meetings.length - page * limit);
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
@@ -51,7 +51,7 @@ const Results = ({ className, meetings, ...rest }) => {
                   Meeting Name
                 </TableCell>
                 <TableCell>
-                  Meeting Topic
+                  Description
                 </TableCell>
                 <TableCell>
                   Location
@@ -71,7 +71,7 @@ const Results = ({ className, meetings, ...rest }) => {
               {meetings.slice(page* limit, page * limit + limit).map((meetings) => (
                 <TableRow
                   hover
-                  key={meetings.id}
+                  key={meetings._id}
                   
                 >
                  
@@ -85,21 +85,21 @@ const Results = ({ className, meetings, ...rest }) => {
                         color="textPrimary"
                         variant="body1"
                       >
-                        {meetings.meetingName}
+                        {meetings.title}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {meetings.meetingTopic}
+                    {meetings.description}
                   </TableCell>
                   <TableCell>
-                    {`${meetings.address.city}, ${meetings.address.building}, ${meetings.address.room}`}  
+                  {meetings.location}
                   </TableCell>
                   <TableCell>
                     {meetings.date}
                   </TableCell>
                   <TableCell>
-                    {meetings.time}
+                    {meetings.date}
                   </TableCell>
                   <TableCell>
                   <Button href="#text-buttons" color="primary">

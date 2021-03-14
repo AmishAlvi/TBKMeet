@@ -215,7 +215,8 @@ const CreateMeetingForm = props => {
   const SaveParticipants=()=>
   {
     setParticipantsArr(member);
-    console.log(participantsArr);
+    //console.log(participantsArr);
+   //console.log(selectedDate);
     handleClose();
   }
   const SaveTopics=()=>
@@ -246,11 +247,16 @@ const CreateMeetingForm = props => {
     );
     console.log(topicsTmp);
     console.log(participantsTmp);
-    if(!topicsTmp.length&&!participantsTmp.length)
+     if (!topicsTmp.length)
+    {
+      setErrorMessage("Please select at least one topic");
+         setOpenAlert(true); 
+    }
+    else if(!participantsTmp.length)
     {
       
-         setErrorMessage("text.message");
-        setOpenAlert(true); 
+         setErrorMessage("Please select at least one participant");
+         setOpenAlert(true); 
     }
     else
     {
@@ -259,8 +265,8 @@ const CreateMeetingForm = props => {
       description: description,
       topic: topicsTmp,
       members:participantsTmp,
-      date: selectedDate.toLocaleDateString(),
-      time: selectedDate.toLocaleTimeString(),
+      date: selectedDate,
+      //time: selectedDate.toLocaleTimeString(),
       location: location,
       duration: duration.toString()
     };
@@ -569,7 +575,7 @@ return (
   
   </Formik>
 
-  {/*   <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+     <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
     {!Object.keys(errorMessage).length == 0 ? 
      
          (<Alert onClose={handleCloseAlert} severity="Error">
@@ -580,7 +586,7 @@ return (
         </Alert>)}
         
         
-      </Snackbar> */}
+      </Snackbar> 
 </Container>
 
   );
