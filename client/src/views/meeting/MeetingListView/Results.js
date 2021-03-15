@@ -16,7 +16,8 @@ import {
   makeStyles,
   Button
 } from '@material-ui/core';
-
+import { v1 as uuid } from "uuid";
+import { useNavigate } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
@@ -32,7 +33,11 @@ const Results = ({ className, meetings, ...rest }) => {
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
-
+  let navigate = useNavigate()
+  function create() {
+      const id = uuid();
+      navigate(`/app/room/${id}`, {id: id});
+  }
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -103,7 +108,7 @@ const Results = ({ className, meetings, ...rest }) => {
                     {moment(meetings.date).format('LT')}
                   </TableCell>
                   <TableCell>
-                  <Button href="#text-buttons" color="primary">
+                  <Button href="#text-buttons" color="primary" onClick={create}>
   Attend Meeting
 </Button>
                   </TableCell>
