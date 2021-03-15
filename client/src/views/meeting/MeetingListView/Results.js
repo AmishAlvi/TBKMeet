@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import moment from "moment";
 import {
   Box,
   Card,
@@ -96,10 +97,10 @@ const Results = ({ className, meetings, ...rest }) => {
                   {meetings.location}
                   </TableCell>
                   <TableCell>
-                    {meetings.date}
+                    {moment(meetings.date).format('DD MMM YYYY')}
                   </TableCell>
                   <TableCell>
-                    {meetings.date}
+                    {moment(meetings.date).format('LT')}
                   </TableCell>
                   <TableCell>
                   <Button href="#text-buttons" color="primary">

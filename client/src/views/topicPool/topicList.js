@@ -50,12 +50,12 @@ const TopicList = ({ className,  ...rest }) => {
     try {
       const result = await fetch(url);
       const data = await result.json();
-      console.log(data)
+      // console.log(data)
 
       if (data.status == "success") {
-        console.log("success");
+        // console.log("success");
         setTopic(data.data)
-        console.log(topic)
+        // console.log(topic)
         
       } else {
         console.log("error");
@@ -103,7 +103,7 @@ const TopicList = ({ className,  ...rest }) => {
                {topic.slice( page* limit, page * limit + limit).map((topic) => (
                 <TableRow
                   hover
-                 // key={meetings.id}
+                 key={topic._id}
                  className={classes.tableRow}
                 >
                  
@@ -122,7 +122,7 @@ const TopicList = ({ className,  ...rest }) => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                     {topic.totalTime} 
+                     {topic.totalTime } minutes 
                   </TableCell>
                   <TableCell>
                   {topic.category}  
