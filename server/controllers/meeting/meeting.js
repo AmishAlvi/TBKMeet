@@ -14,12 +14,14 @@ module.exports = async (req, res, _next) => {
     date,
     topic,
     members,
-    notes
+    notes,
+    owner,
+    isActive
 
   } = req.fields;
 
 
-  const meeting = new Meeting({title,description,duration,location,date,topic,members,notes});
+  const meeting = new Meeting({title,description,duration,location,date,topic,members,notes,owner,isActive});
   try {
     await meeting.save(async  (err) => {
       if (err) { return res.status(500).send({ msg: err.message }); }
