@@ -52,7 +52,7 @@ const CreateTopicForm = props => {
   });
   const { checkedDecision, checkedInfo } = state;
   const error = [checkedDecision, checkedInfo].filter((v) => v).length < 1;
-
+  
   //Alert Function
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -64,10 +64,22 @@ const handleClose = (event, reason) => {
   }
   setOpen(false);
 };
+const clearForm = () => {
+ setCategory("");
+ setState(state.checkedDecision=false);
+ setState(state.checkedInfo=false);
+};
   // The function that handles the logic when submitting the form
-  const handleSubmit = async values => {
+  const handleSubmit = async (values,{resetForm}) => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
+    /*  if(Object.keys(category).length == 0)
+    {
+      
+         setErrorMessage("Please select a category");
+         setOpen(true); 
+    } */
+    
     const { title, description,totalTime } = values;
     var body = {
         title: title,
@@ -92,12 +104,12 @@ const handleClose = (event, reason) => {
       console.log(text)
 
       if (text.status == "success") {
-        console.log("success")
+        //console.log("success")
         setSuccessMessage(text.message);
         setOpen(true);
         //Form reset must be done!!!
-        console.log(checkedDecision)
-        console.log(checkedInfo)
+        resetForm({});
+        clearForm();
       } else {
         console.log(text.message);
         setErrorMessage(text.message);
@@ -106,6 +118,7 @@ const handleClose = (event, reason) => {
     } catch (error) {
       console.error(error);
     } 
+  
   };
 
   //For updating the selector -duration time-
