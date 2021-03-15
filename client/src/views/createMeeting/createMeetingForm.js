@@ -74,8 +74,8 @@ const topicColumns = [
   
 ];
 const columns = [
-  { field: 'firstName', headerName: 'First name', width: 180},
-  { field: 'lastName', headerName: 'Last name', width: 180 },
+  { field: 'firstName', headerName: 'First name', width: 160},
+  { field: 'lastName', headerName: 'Last name', width: 160 },
   /* {
     field: 'fullName',
     headerName: 'Full name',
@@ -85,7 +85,7 @@ const columns = [
     valueGetter: (params) =>
       ${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''},
   }, */
-  { field: 'email', headerName: 'Email', width: 180 }
+  { field: 'email', headerName: 'Email', width: 160 }
 ];
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
@@ -133,7 +133,7 @@ const CreateMeetingForm = props => {
   const[topicsArr,setTopicsArr]=useState([]);
   const[participantsArr,setParticipantsArr]=useState([]);
   const[selectionModelTopic,setSelectionModelTopic]=useState([]);
-  
+  const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
   const loadUser = async values => {
     const url = "http://localhost:81/meeting/getEmails";
@@ -219,17 +219,17 @@ const CreateMeetingForm = props => {
   const SaveParticipants=()=>
   {
     setParticipantsArr(member);
-    //console.log(participantsArr);
-   //console.log(selectedDate);
+    setSelectionModelParticipant(member.map((r) => r.id));
+    console.log(participantsArr);
+   console.log(member);
     handleClose();
   }
   const SaveTopics=()=>
   {
     setTopicsArr(selectedTopic);
-    setSelectionModelTopic(topicsArr.map((r) => r.id));
-    console.log("selected")
-    // console.log(selectionModelTopic)
-    // console.log(topicsArr)
+    setSelectionModelTopic(selectedTopic.map((r) => r.id));
+     console.log(selectionModelTopic)
+     console.log(topicsArr)
     handleCloseTopic();
     //console.log(calculateTotalDuration())
     
@@ -373,7 +373,7 @@ return (
       } = props;
       return (
         <>
-        <h1>{selectionModelTopic}</h1>
+        
         <form onSubmit={handleSubmit} noValidate>
           <Card>
             <CardContent>
@@ -419,23 +419,19 @@ return (
                   columns={topicColumns}
                   pageSize={5} 
                   checkboxSelection
-                  selectionModel={topicsArr} 
-                  onSelectionChange={
-                  (newSelection) => {
-                   setSelectedTopic(newSelection.rows);
-                  // console.log(selectedTopic) 
-                      //  /* console.log(newSelection.rows)  
-                    }}
-                 
-                  // onSelectionModelChange={(e) => {
-                  //   const selectedIDs = new Set(e.selectionModelTopic);
-                  //   const selectedRowData = topic.filter((r) =>
-                  //     selectedIDs.has(r.id)
-                  //   )} }
+                  selectionModel={selectionModelTopic} 
+                  onSelectionModelChange={(e) => {
+                     
+                     const selectedIDs = new Set(e.selectionModel);
+                     console.log(selectedTopic)
+                     setSelectedTopic(topic.filter((r) =>
+                       selectedIDs.has(r.id))
+                       
+                     )} }
                   
                 />   
                       
-       
+                    
   
             </div>
             
@@ -530,10 +526,19 @@ return (
             <MenuItem value={"Meeting Room 4"}>Meeting Room 3</MenuItem>
             <MenuItem value={"Meeting Room 4"}>Meeting Room 4</MenuItem>
         </Select>
+        <br></br>
+        {/* Invite Participants Button */}
+        <Button 
+          color="primary"
+          variant="contained"
+          justifyContent="flex-start"
+          onClick={handleClickOpen}>
+            Invite Participants
+          </Button>
         </FormControl>
 
         </CardContent>
-
+           
         <Box
           display="flex"
           flex="1"
@@ -541,16 +546,9 @@ return (
           justifyContent="space-between"
           p={3}
         >
-          <div>
-      {/* Invite Participants Button */}
-      <Button 
-          color="primary"
-          variant="contained"
-          justifyContent="flex-start"
-          onClick={handleClickOpen}>
-            Invite Participants
-          </Button>
-
+          
+     
+    <div>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Invite Participants
@@ -565,11 +563,15 @@ return (
                  columns={columns}
                  pageSize={5} 
                  checkboxSelection 
-                 onSelectionChange={
-                 (newSelection) => {
-                      setMember(newSelection.rows);
-                       console.log(member) 
-                       /* console.log(newSelection.rows)  */}}             
+                 selectionModel={selectionModelParticipant} 
+                 onSelectionModelChange={(e) => {
+                    
+                    const selectedIDs = new Set(e.selectionModel);
+                    console.log(member)
+                    setMember(user.filter((r) =>
+                      selectedIDs.has(r.id))
+                      
+                    )} }            
                       />  
                       
        
