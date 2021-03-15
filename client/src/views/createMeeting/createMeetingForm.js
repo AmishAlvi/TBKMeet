@@ -68,6 +68,7 @@ const styles = (theme) => ({
 });
 
 const topicColumns = [
+  
   { field: 'title', headerName: 'Topic Title', width: 180},
   { field: 'totalTime', headerName: 'Duration', width: 180 }
   
@@ -131,6 +132,8 @@ const CreateMeetingForm = props => {
   const[selectedTopic,setSelectedTopic]=useState([]);
   const[topicsArr,setTopicsArr]=useState([]);
   const[participantsArr,setParticipantsArr]=useState([]);
+  const[selectionModelTopic,setSelectionModelTopic]=useState([]);
+  
 
   const loadUser = async values => {
     const url = "http://localhost:81/meeting/getEmails";
@@ -222,8 +225,10 @@ const CreateMeetingForm = props => {
   const SaveTopics=()=>
   {
     setTopicsArr(selectedTopic);
+    setSelectionModelTopic(topicsArr.map((r) => r._id));
+    console.log(selectionModelTopic)
     handleCloseTopic();
-    console.log(calculateTotalDuration())
+    //console.log(calculateTotalDuration())
     
   }
   const calculateTotalDuration=()=>{
@@ -234,8 +239,14 @@ const CreateMeetingForm = props => {
     console.log(totalDuration);
     return totalDuration;
   }
+  const clearForm=()=>{
+   setTopicsArr([]);
+   setSelectedDate(new Date());
+   setLocation("");
+   setParticipantsArr([]);
+  }
   //Function that handles the form submission
-  const handleSubmit = async values => {
+  const handleSubmit = async (values,{resetForm}) => {
     const {title, description, duration} = values;
     var participantsTmp=[];
     var topicsTmp=[];
@@ -258,6 +269,11 @@ const CreateMeetingForm = props => {
          setErrorMessage("Please select at least one participant");
          setOpenAlert(true); 
     }
+   /*  else if (Object.keys(location).length==0)
+    {
+      setErrorMessage("Please select a meeting location");
+      setOpenAlert(true); 
+    } */
     else
     {
     var body = {
@@ -285,9 +301,11 @@ const CreateMeetingForm = props => {
       console.log(text)
 
       if (text.status == "success") {
-        console.log("success")
+        //console.log("success")
         setSuccessMessage(text.message);
         setOpenAlert(true); 
+        resetForm({});
+        clearForm();
   
       } else {
         console.log(text.message);
@@ -346,6 +364,7 @@ return (
         isSubmitting,
         handleChange,
         handleBlur,
+        handleReset,
         handleSubmit
       } = props;
       return (
@@ -391,10 +410,12 @@ return (
              <div style={{ height: 400, width: '100%' }}> 
             
                 <DataGrid 
+                  
                   rows={topic}
                   columns={topicColumns}
                   pageSize={5} 
-                  checkboxSelection 
+                  checkboxSelection
+                  selectionModel={["604ea1d2bc6fb04110ac510c"]} 
                   onSelectionChange={
                   (newSelection) => {
                   setSelectedTopic(newSelection.rows);
@@ -404,7 +425,7 @@ return (
                   
                       />   
                       
-       <h1>{selectedTopic.map((val) => val.title)}</h1> 
+       
   
             </div>
             
@@ -541,7 +562,7 @@ return (
                        /* console.log(newSelection.rows)  */}}             
                       />  
                       
-       <h1>{member.map((val) => val.firstName)}</h1> 
+       
   
             </div>
         </DialogContent>
