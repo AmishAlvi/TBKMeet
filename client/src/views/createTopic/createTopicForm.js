@@ -73,12 +73,12 @@ const clearForm = () => {
   const handleSubmit = async (values,{resetForm}) => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
-    /*  if(Object.keys(category).length == 0)
-    {
-      
-         setErrorMessage("Please select a category");
-         setOpen(true); 
-    } */
+    //   if(Object.keys(category).length == 0)
+    // {
+    //      setErrorMessage("Please select a category");
+    //      setOpen(true); 
+    // } 
+    // else {
     
     const { title, description,totalTime } = values;
     var body = {
@@ -118,8 +118,8 @@ const clearForm = () => {
     } catch (error) {
       console.error(error);
     } 
-  
-  };
+  // }
+  }; 
 
   //For updating the selector -duration time-
   
@@ -230,7 +230,8 @@ const clearForm = () => {
           onChange={updateCategory}
           label="Category"
           
-        >    
+        > 
+          <MenuItem value={""}></MenuItem>  
           <MenuItem value={"Budget Meeting"}>Budget Meeting</MenuItem>
           <MenuItem value={"HR Meeting"}>HR Meeting</MenuItem>
           <MenuItem value={"Project Meeting"}>Project Meeting</MenuItem>

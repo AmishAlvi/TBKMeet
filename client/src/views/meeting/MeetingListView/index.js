@@ -48,7 +48,7 @@ const MeetingListView = () => {
           //console.log(data)
       
           if (data.status == "success") {
-            console.log("success");
+            // console.log("success");
             setMeeting(data.data)
            // console.log(meeting)
             

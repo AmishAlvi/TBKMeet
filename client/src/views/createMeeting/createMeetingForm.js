@@ -198,6 +198,7 @@ const CreateMeetingForm = props => {
   const handleCloseTopic = () => {
     setOpenTopic(false);
     console.log(topicsArr);
+    // console.log(selectionModelTopic);
   };
   const handleCloseAlert = (event, reason) => {
     if (reason === 'clickaway') {
@@ -225,8 +226,10 @@ const CreateMeetingForm = props => {
   const SaveTopics=()=>
   {
     setTopicsArr(selectedTopic);
-    setSelectionModelTopic(topicsArr.map((r) => r._id));
-    console.log(selectionModelTopic)
+    setSelectionModelTopic(topicsArr.map((r) => r.id));
+    console.log("selected")
+    // console.log(selectionModelTopic)
+    // console.log(topicsArr)
     handleCloseTopic();
     //console.log(calculateTotalDuration())
     
@@ -256,26 +259,25 @@ const CreateMeetingForm = props => {
     topicsArr.map((val)=>
     topicsTmp.push(val._id)
     );
-    console.log(topicsTmp);
+    //console.log(topicsTmp);
     console.log(participantsTmp);
-     if (!topicsTmp.length)
-    {
-      setErrorMessage("Please select at least one topic");
-         setOpenAlert(true); 
-    }
-    else if(!participantsTmp.length)
-    {
-      
-         setErrorMessage("Please select at least one participant");
-         setOpenAlert(true); 
-    }
+    //  if (!topicsTmp.length)
+    // {
+    //   setErrorMessage("Please select at least one topic");
+    //      setOpenAlert(true); 
+    // }
+    // else if(!participantsTmp.length)
+    // {
+    //      setErrorMessage("Please select at least one participant");
+    //      setOpenAlert(true); 
+    // }
    /*  else if (Object.keys(location).length==0)
     {
       setErrorMessage("Please select a meeting location");
       setOpenAlert(true); 
     } */
-    else
-    {
+    
+    
     var body = {
       title: title,
       description: description,
@@ -314,7 +316,7 @@ const CreateMeetingForm = props => {
       }
     } catch (error) {
       console.error(error);
-    } }
+    } 
  /*  console.log(selectedTime.toLocaleDateString());
   console.log(selectedTime.toLocaleTimeString()); */
   };
@@ -369,7 +371,7 @@ return (
       } = props;
       return (
         <>
- 
+        <h1>{selectionModelTopic}</h1>
         <form onSubmit={handleSubmit} noValidate>
           <Card>
             <CardContent>
@@ -408,22 +410,28 @@ return (
         </DialogTitle>
         <DialogContent dividers> 
              <div style={{ height: 400, width: '100%' }}> 
-            
+             {/* {console.log(topicsArr)} */}
                 <DataGrid 
                   
                   rows={topic}
                   columns={topicColumns}
                   pageSize={5} 
                   checkboxSelection
-                  selectionModel={["604ea1d2bc6fb04110ac510c"]} 
+                  selectionModel={topicsArr} 
                   onSelectionChange={
                   (newSelection) => {
-                  setSelectedTopic(newSelection.rows);
-                  console.log(selectedTopic) 
-                       /* console.log(newSelection.rows)  */
-                    }} 
+                   setSelectedTopic(newSelection.rows);
+                  // console.log(selectedTopic) 
+                      //  /* console.log(newSelection.rows)  
+                    }}
+                 
+                  // onSelectionModelChange={(e) => {
+                  //   const selectedIDs = new Set(e.selectionModelTopic);
+                  //   const selectedRowData = topic.filter((r) =>
+                  //     selectedIDs.has(r.id)
+                  //   )} }
                   
-                      />   
+                />   
                       
        
   
