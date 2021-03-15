@@ -118,7 +118,6 @@ const CreateMeetingForm = props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openTopic, setOpenTopic] = React.useState(false);
-  const [selectParticipats, setSelectionParticipants] = React.useState([]);
   let dt = new Date();
   const minDate = dt.setDate(dt.getDate() );
   const [selectedDate, setSelectedDate] = React.useState(new Date());
@@ -131,6 +130,9 @@ const CreateMeetingForm = props => {
   const[selectedTopic,setSelectedTopic]=useState([]);
   const[topicsArr,setTopicsArr]=useState([]);
   const[participantsArr,setParticipantsArr]=useState([]);
+  const[title,setTitle]=useState(); 
+  const[description,setDescription]=useState(); 
+  const[duration,set]=useState(); 
 
   const loadUser = async values => {
     const url = "http://localhost:81/meeting/getEmails";
@@ -225,7 +227,8 @@ const CreateMeetingForm = props => {
     return totalDuration;
   }
   const resetForm = ()=> {
-    setSelectedDate('');
+    setSelectedDate(new Date());
+    
   }
   //Function that handles the form submission
   const handleSubmit = async values => {
@@ -281,6 +284,7 @@ const CreateMeetingForm = props => {
         console.log("success")
         setSuccessMessage(text.message);
         setOpenAlert(true); 
+        resetForm();
   
       } else {
         console.log(text.message);
