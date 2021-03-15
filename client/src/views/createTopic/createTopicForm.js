@@ -209,17 +209,17 @@ const clearForm = () => {
                 rows={5}
               />
               <TextField
-          error={Boolean(touched.totalTime && errors.totalTime)}
-          fullWidth
-          helperText={touched.totalTime && errors.totalTime}
-          label="Duration in minutes"
-          margin="normal"
-          name="totalTime"
-          onBlur={handleBlur}
-          onChange={handleChange}
-          value={values.totalTime}
-          variant="outlined"
-        />
+                error={Boolean(touched.totalTime && errors.totalTime)}
+                fullWidth
+                helperText={touched.totalTime && errors.totalTime}
+                label="Duration in minutes"
+                margin="normal"
+                name="totalTime"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.totalTime}
+                variant="outlined"
+              />
         
         <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
@@ -237,25 +237,25 @@ const clearForm = () => {
         </Select>
       </FormControl>
           <br/><br/>
-      <FormControl required error={error} component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Select at least one meeting output</FormLabel>
-      <FormControlLabel
-        control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={checkedDecision}/>}
-        label="Decision"
-      /> 
+        <FormControl required error={error} component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">Select at least one meeting output</FormLabel>
+        <FormControlLabel
+          control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={checkedDecision}/>}
+          label="Decision"
+        /> 
        <FormControlLabel
-      control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={checkedInfo} />}
-      label="Information "
-    />
-    </FormControl>
+          control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={checkedInfo} />}
+          label="Information "
+        />
+        </FormControl>
 
-              </CardContent>
-              <Divider />
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          p={3}
-        >
+          </CardContent>
+          <Divider />
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            p={3}
+          >
           <Button
             color="primary"
             variant="contained"
@@ -267,8 +267,8 @@ const clearForm = () => {
           </Button>
 
         </Box>
-              </Card>
-            </form>
+        </Card>
+        </form>
           </>
         );
       }}
