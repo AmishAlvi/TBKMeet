@@ -261,21 +261,21 @@ const CreateMeetingForm = props => {
     );
     //console.log(topicsTmp);
     console.log(participantsTmp);
-    //  if (!topicsTmp.length)
-    // {
-    //   setErrorMessage("Please select at least one topic");
-    //      setOpenAlert(true); 
-    // }
-    // else if(!participantsTmp.length)
-    // {
-    //      setErrorMessage("Please select at least one participant");
-    //      setOpenAlert(true); 
-    // }
-   /*  else if (Object.keys(location).length==0)
-    {
-      setErrorMessage("Please select a meeting location");
-      setOpenAlert(true); 
-    } */
+  //   //  if (!topicsTmp.length)
+  //   // {
+  //   //   setErrorMessage("Please select at least one topic");
+  //   //      setOpenAlert(true); 
+  //   // }
+  //   // else if(!participantsTmp.length)
+  //   // {
+  //   //      setErrorMessage("Please select at least one participant");
+  //   //      setOpenAlert(true); 
+  //   // }
+  //  /*  else if (Object.keys(location).length==0)
+  //   {
+  //     setErrorMessage("Please select a meeting location");
+  //     setOpenAlert(true); 
+  //   } */
     
     
     var body = {
@@ -356,6 +356,7 @@ return (
       value => {
         return value >= calculateTotalDuration();
       })
+      // location: Yup.string().ensure().required("Location is required")
   })}
   >
     {props => {

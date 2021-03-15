@@ -71,14 +71,15 @@ const clearForm = () => {
 };
   // The function that handles the logic when submitting the form
   const handleSubmit = async (values,{resetForm}) => {
+    setErrorMessage("");
     // This function received the values from the form
     // The line below extract the two fields from the values object.
-    //   if(Object.keys(category).length == 0)
-    // {
-    //      setErrorMessage("Please select a category");
-    //      setOpen(true); 
-    // } 
-    // else {
+      if(Object.keys(category).length == 0)
+    {
+         setErrorMessage("Please select a category");
+         setOpen(true); 
+    } 
+    else {
     
     const { title, description,totalTime } = values;
     var body = {
@@ -118,7 +119,7 @@ const clearForm = () => {
     } catch (error) {
       console.error(error);
     } 
-  // }
+   }
   }; 
 
   //For updating the selector -duration time-
@@ -154,8 +155,7 @@ const clearForm = () => {
         title: Yup.string().max(100).required('Title is required'),
         description: Yup.string().max(255).required('Description is required'),
        
-        totalTime: Yup.string().required("Duration is required").matches(/^\d+$/, 'The field should have digits only')
-        
+        totalTime: Yup.string().required("Duration is required").matches(/^\d+$/, 'The field should have digits only')        
       })}
       
     >
@@ -231,7 +231,7 @@ const clearForm = () => {
           label="Category"
           
         > 
-          <MenuItem value={""}></MenuItem>  
+          {/* <MenuItem value={""}></MenuItem>   */}
           <MenuItem value={"Budget Meeting"}>Budget Meeting</MenuItem>
           <MenuItem value={"HR Meeting"}>HR Meeting</MenuItem>
           <MenuItem value={"Project Meeting"}>Project Meeting</MenuItem>
