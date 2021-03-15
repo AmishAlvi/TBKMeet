@@ -336,7 +336,7 @@ return (
   initialValues={{
     title: '',
     topics: '',
-    desctiption: '',
+    description: '',
     duration: '',
     date: '',
     location: ' '
