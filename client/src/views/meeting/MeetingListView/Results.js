@@ -38,6 +38,48 @@ const Results = ({ className, meetings, ...rest }) => {
       const id = uuid();
       navigate(`/app/room/${id}`, {id: id});
   }
+
+ /* async function startMeeting(meeting_id) {
+    console.log("here")
+    const url = `http://localhost:81/meeting/startMeeting/${meeting_id}`;
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
+  
+      if (data.status == "success") {
+        console.log(data)
+        
+      } else {
+        console.log("error");
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  }; */
+
+  function MeetingButtonRender(status) {
+    //console.log(status)
+    if(status)
+    {
+      return (
+        <TableCell>
+                    <Button href="#text-buttons" color="primary" onClick={create}>
+                      Attend Meeting
+                    </Button>
+        </TableCell>
+      );
+    }
+    else
+    {
+      return(
+      <TableCell>
+                  <Button href="#text-buttons" color="primary" onClick={create}>
+                  Start Meeting </Button>
+      </TableCell>
+      )
+    }
+  }
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -107,11 +149,8 @@ const Results = ({ className, meetings, ...rest }) => {
                   <TableCell>
                     {moment(meetings.date).format('LT')}
                   </TableCell>
-                  <TableCell>
-                  <Button href="#text-buttons" color="primary" onClick={create}>
-  Attend Meeting
-</Button>
-                  </TableCell>
+                  {MeetingButtonRender(meetings.isStarted, meetings._id)}
+                  
                 </TableRow>
               ))}
                {emptyRows > 0 && (
