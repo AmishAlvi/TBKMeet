@@ -51,6 +51,7 @@ class CalendarView extends Component {
           defaultDate={new Date()}
           defaultView="month"
           events={newEvents}
+          views={['month']}
           style={{ height: "80vh" , width:"100%"}}
         />
       </div>
