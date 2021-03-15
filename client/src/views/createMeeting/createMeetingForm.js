@@ -74,18 +74,9 @@ const topicColumns = [
   
 ];
 const columns = [
-  { field: 'firstName', headerName: 'First name', width: 160},
-  { field: 'lastName', headerName: 'Last name', width: 160 },
-  /* {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      ${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''},
-  }, */
-  { field: 'email', headerName: 'Email', width: 160 }
+  { field: 'firstName', headerName: 'First name', width: 120},
+  { field: 'lastName', headerName: 'Last name', width: 120 },
+  { field: 'email', headerName: 'Email', width: 220 }
 ];
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
