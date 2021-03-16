@@ -81,7 +81,12 @@ const clearForm = () => {
           setOpen(true); 
           
      } 
-     else if(Object.keys(category).length > 0)
+     else if(error)
+     {
+      setErrorMessage("Please select a category");
+      setOpen(true); 
+     }
+     else
     {
       
     const { title, description,totalTime } = values;

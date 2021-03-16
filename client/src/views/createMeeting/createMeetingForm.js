@@ -300,6 +300,8 @@ const CreateMeetingForm = props => {
         setOpenAlert(true); 
         resetForm({});
         clearForm();
+        setSelectionModelParticipant([]);
+        setSelectionModelTopic([]);
   
       } else {
         console.log(text.message);
