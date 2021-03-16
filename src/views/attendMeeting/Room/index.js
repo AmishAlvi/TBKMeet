@@ -41,7 +41,7 @@ const videoConstraints = {
 
 async function startMeeting(meeting_id) {
     console.log("starting meeting")
-    const url = `http://localhost:81/meeting/startMeeting/${meeting_id}`;
+    const url = `https://tbkmeet-backend.herokuapp.com/meeting/startMeeting/${meeting_id}`;
     try {
       const result = await fetch(url);
       const data = await result.json();
