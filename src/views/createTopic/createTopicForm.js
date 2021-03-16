@@ -83,7 +83,7 @@ const clearForm = () => {
      } 
      else if(error)
      {
-      setErrorMessage("Please select a category");
+      setErrorMessage("Please select at least one output type");
       setOpen(true); 
      }
      else
