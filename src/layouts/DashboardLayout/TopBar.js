@@ -15,6 +15,7 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
 import linearGradient from 'src/components/linearGradient'
+import { useNavigate } from 'react-router-dom';
   
 
 const TopBar = ({
@@ -24,6 +25,7 @@ const TopBar = ({
 }) => {
   const classes = linearGradient();
   const [notifications] = useState([]);
+  let navigate = useNavigate()
 
   return (
     <AppBar
@@ -46,7 +48,9 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit"
+            onClick={() => navigate(`/Login`)}
+          >
             <InputIcon />
           </IconButton>
         </Hidden>
