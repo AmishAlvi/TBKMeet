@@ -27,6 +27,11 @@ const TopBar = ({
   const [notifications] = useState([]);
   let navigate = useNavigate()
 
+  function LogOut(e) {
+    console.log("logout button clicked")
+    navigate(`/Login`)
+  }
+
   return (
     <AppBar
       className={clsx(classes.root, className)}
@@ -49,7 +54,7 @@ const TopBar = ({
             </Badge>
           </IconButton>
           <IconButton color="inherit"
-            onClick={() => navigate(`/Login`)}
+            onClick={LogOut}
           >
             <InputIcon />
           </IconButton>
