@@ -44,11 +44,11 @@ const items = [
     icon: CheckMeetingIcon,
     title: 'Check Meeting '
   },
-  {
+  /*{
     href: '/app/attendMeeting',
     icon: AttendMeetingIcon,
     title: 'Attend Meeting'
-  },
+  },*/
   
   {
     href: '/app/createTopic',

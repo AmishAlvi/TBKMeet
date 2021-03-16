@@ -34,10 +34,34 @@ const Results = ({ className, meetings, ...rest }) => {
     setLimit(event.target.value);
   };
   let navigate = useNavigate()
-  function create() {
+  /*function create() {
       const id = uuid();
       navigate(`/app/room/${id}`, {id: id});
+  }*/
+
+  function MeetingButtonRender(status, meeting_id) {
+    //console.log(id)
+    if(status)
+    {
+      return (
+        <TableCell>
+                    <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                      Attend Meeting
+                    </Button>
+        </TableCell>
+      )
+    }
+    else
+    {
+      return(
+      <TableCell>
+                  <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                  Start Meeting </Button>
+      </TableCell>
+      )
+    }
   }
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -107,11 +131,7 @@ const Results = ({ className, meetings, ...rest }) => {
                   <TableCell>
                     {moment(meetings.date).format('LT')}
                   </TableCell>
-                  <TableCell>
-                  <Button href="#text-buttons" color="primary" onClick={create}>
-  Attend Meeting
-</Button>
-                  </TableCell>
+                                    {MeetingButtonRender(meetings.isStarted, meetings._id)}
                 </TableRow>
               ))}
                {emptyRows > 0 && (

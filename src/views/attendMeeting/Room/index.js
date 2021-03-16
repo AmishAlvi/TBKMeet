@@ -39,12 +39,34 @@ const videoConstraints = {
     width: window.innerWidth / 2
 };
 
+async function startMeeting(meeting_id) {
+    console.log("starting meeting")
+    const url = `http://localhost:81/meeting/startMeeting/${meeting_id}`;
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
+  
+      if (data.status == "success") {
+        console.log(data)
+        
+      } else {
+        console.log(data);
+        
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    
+}
+
 const Room = (props) => {
     const [peers, setPeers] = useState([]);
     const socketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const roomID = Room[id];
+    const roomID = useParams()["roomID"];
+    console.log(roomID)
+    startMeeting(roomID)
 
     useEffect(() => {
         socketRef.current = io.connect("https://tbkmeet-videoserver.herokuapp.com/");
