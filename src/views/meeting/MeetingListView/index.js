@@ -41,7 +41,7 @@ const MeetingListView = () => {
         console.log(state);
       };
       const getMeetings = async values => {
-        const url = "http://localhost:81/meeting/getMeetings";
+        const url = "https://tbkmeet-backend.herokuapp.com/meeting/getMeetings";
         try {
           const result = await fetch(url);
           const data = await result.json();
