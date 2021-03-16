@@ -57,7 +57,7 @@ const items = [
   },
   
   {
-    href: '/404',
+    href: '/app/topics',
     icon: CheckTopicPoolIcon,
     title: 'Check Topic Pool'
   },

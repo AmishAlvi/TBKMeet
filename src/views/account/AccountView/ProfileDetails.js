@@ -35,12 +35,12 @@ const useStyles = makeStyles(() => ({
 const ProfileDetails = ({ className, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: 'Seyma',
-    lastName: 'Yazar',
-    email: 'seyma.yazar@ug.bilkent.edu.tr',
+    firstName: '',
+    lastName: '',
+    email: '',
     phone: '',
-    city: 'Ankara',
-    country: 'Turkey'
+    city: '',
+    country: ''
   });
 
   const handleChange = (event) => {
@@ -121,11 +121,11 @@ const ProfileDetails = ({ className, ...rest }) => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
-                name="phone"
+                label="Company"
+                name="company"
                 onChange={handleChange}
-                type="number"
-                value={values.phone}
+                required
+                //value={values.email}
                 variant="outlined"
               />
             </Grid>
@@ -134,42 +134,10 @@ const ProfileDetails = ({ className, ...rest }) => {
               md={6}
               xs={12}
             >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
+              
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select City"
-                name="city"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.city}
-                variant="outlined"
-              >
-                {cities.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
+           
+          
           </Grid>
         </CardContent>
         <Divider />

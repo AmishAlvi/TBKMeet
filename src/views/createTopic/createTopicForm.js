@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -19,9 +19,10 @@ import {
   Checkbox,
   FormControlLabel ,
   CardContent,
+  Snackbar,
   FormControl
 } from '@material-ui/core';
-
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,39 +37,112 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
 const CreateTopicForm = props => {
+
   const classes = useStyles();
   const navigate = useNavigate();
-
-  // The function that handles the logic when submitting the form
-  const handleSubmit = async values => {
-    // This function received the values from the form
-    // The line below extract the two fields from the values object.
-    const { title, description,category,duration } = values;
-    var body = {
-        title: title,
-        description: description,
-        category: category,
-        duration: duration
-    };
-    
-  };
-
-  //For updating the selector -duration time-
+  const [open, setOpen] = React.useState(false);
+  var [errorMessage,setErrorMessage]=useState("");
+  var [successMessage,setSuccessMessage]=useState("");
   const [category, setCategory] = React.useState('');
-  const updateCategory = (event) => {
-    setCategory(event.target.value);
-  };
   const [state, setState] = React.useState({
     checkedDecision: false,
     checkedInfo: false,
   });
-
-  const handleCB = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
   const { checkedDecision, checkedInfo } = state;
   const error = [checkedDecision, checkedInfo].filter((v) => v).length < 1;
+  
+  //Alert Function
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+//Close func for closing the alert
+const handleClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+  setOpen(false);
+};
+const clearForm = () => {
+ setCategory("");
+ setState(state.checkedDecision=false);
+ setState(state.checkedInfo=false);
+};
+  // The function that handles the logic when submitting the form
+  const handleSubmit = async (values,{resetForm}) => {
+    setErrorMessage("");
+    // This function received the values from the form
+    // The line below extract the two fields from the values object.
+       if(Object.keys(category).length == 0)
+     {
+      
+        setErrorMessage("Please select a category");
+          setOpen(true); 
+          
+     } 
+     else if(error)
+     {
+      setErrorMessage("Please select a category");
+      setOpen(true); 
+     }
+     else
+    {
+      
+    const { title, description,totalTime } = values;
+    var body = {
+        title: title,
+        description: description,
+        totalTime: totalTime,
+        category: category,
+        decision:checkedDecision,
+        information: checkedInfo
+    };
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(body)
+    };
+    const url = "http://localhost:81/topic/topicSave";
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      console.log(text)
+
+      if (text.status == "success") {
+        //console.log("success")
+        setSuccessMessage(text.message);
+        setOpen(true);
+        //Form reset must be done!!!
+        resetForm({});
+        clearForm();
+      } else {
+        console.log(text.message);
+        setErrorMessage(text.message);
+        setOpen(true);
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+   }
+  }; 
+
+  //For updating the selector -duration time-
+  
+  const updateCategory = (event) => {
+    setCategory(event.target.value);
+    console.log(category);
+  };
+  
+
+  const handleCB = (event,value) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+    
+  };
+  
   // Returning the part that should be rendered
   // Just set handleSubmit as the handler for the onSubmit call.
   return (
@@ -79,7 +153,7 @@ const CreateTopicForm = props => {
         title: '',
         description: '',
         category:"",
-        duration:''
+        totalTime:''
       }}
       onSubmit={handleSubmit}
 
@@ -88,8 +162,11 @@ const CreateTopicForm = props => {
       validationSchema={Yup.object().shape({
         title: Yup.string().max(100).required('Title is required'),
         description: Yup.string().max(255).required('Description is required'),
-        duration: Yup.string().required("Duration is required")
+       
+        totalTime: Yup.string().required("Duration is required").matches(/^\d+$/, 'The field should have digits only')
+        
       })}
+      
     >
       {props => {
         const {
@@ -141,17 +218,17 @@ const CreateTopicForm = props => {
                 rows={5}
               />
               <TextField
-          error={Boolean(touched.duration && errors.duration)}
-          fullWidth
-          helperText={touched.duration && errors.duration}
-          label="Duration in minutes"
-          margin="normal"
-          name="duration"
-          onBlur={handleBlur}
-          onChange={handleChange}
-          value={values.duration}
-          variant="outlined"
-        />
+                error={Boolean(touched.totalTime && errors.totalTime)}
+                fullWidth
+                helperText={touched.totalTime && errors.totalTime}
+                label="Duration in minutes"
+                margin="normal"
+                name="totalTime"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.totalTime}
+                variant="outlined"
+              />
         
         <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
@@ -161,32 +238,34 @@ const CreateTopicForm = props => {
           value={category}
           onChange={updateCategory}
           label="Category"
-        >    
-          <MenuItem value={"budget"}>Budget Meeting</MenuItem>
-          <MenuItem value={"hr"}>HR Meeting</MenuItem>
-          <MenuItem value={"project"}>Project Meeting</MenuItem>
+          
+        > 
+          <MenuItem value={""}></MenuItem>  
+          <MenuItem value={"Budget Meeting"}>Budget Meeting</MenuItem>
+          <MenuItem value={"HR Meeting"}>HR Meeting</MenuItem>
+          <MenuItem value={"Project Meeting"}>Project Meeting</MenuItem>
         </Select>
       </FormControl>
           <br/><br/>
-      <FormControl required error={error} component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Select at least one meeting output</FormLabel>
-      <FormControlLabel
-        control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" />}
-        label="Decision"
-      /> 
+        <FormControl required error={error} component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">Select at least one meeting output</FormLabel>
+        <FormControlLabel
+          control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={checkedDecision}/>}
+          label="Decision"
+        /> 
        <FormControlLabel
-      control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" />}
-      label="Information "
-    />
-    </FormControl>
+          control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={checkedInfo} />}
+          label="Information "
+        />
+        </FormControl>
 
-              </CardContent>
-              <Divider />
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          p={3}
-        >
+          </CardContent>
+          <Divider />
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            p={3}
+          >
           <Button
             color="primary"
             variant="contained"
@@ -196,13 +275,26 @@ const CreateTopicForm = props => {
           >
            Create Topic
           </Button>
+
         </Box>
-              </Card>
-            </form>
+        </Card>
+        </form>
           </>
         );
       }}
     </Formik>
+    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    {!Object.keys(errorMessage).length == 0 ? 
+     
+         (<Alert onClose={handleClose} severity="Error">
+         {errorMessage}  
+     </Alert>)
+        :(<Alert onClose={handleClose} severity="success">
+            {successMessage}  
+        </Alert>)}
+        
+        
+      </Snackbar>
   </Container>
   );
 };
