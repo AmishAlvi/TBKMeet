@@ -1,4 +1,5 @@
 const login = require("./login");
+const logout = require("./logout");
 const signUp = require("./signup");
 const emailverification = require("./emailverification");
 const resendemailverification = require("./resendemailverification");
@@ -8,6 +9,7 @@ const newPassword = require("./newPassword");
 
 module.exports = {
   login,
+  logout,
   signUp,
   emailverification,
   resendemailverification,
