@@ -25,7 +25,7 @@ import NavItem from './NavItem';
 
 const user = {
   avatar: '/static/images/avatars/default_profile_img',
-  name: 'Syed Amish Alvi'
+  name: ''
 };
 
 const items = [
