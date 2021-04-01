@@ -128,6 +128,7 @@ const UpcomingMeetings = ({ className, ...rest }) => {
           endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
+          href="meetings"
         >
           View all
         </Button>
