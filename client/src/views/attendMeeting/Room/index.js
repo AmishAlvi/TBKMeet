@@ -4,6 +4,7 @@ import Peer from "simple-peer";
 import styled from "styled-components";
 import {useParams} from 'react-router-dom';
 import { id } from "date-fns/esm/locale";
+import { Button } from "@material-ui/core";
 
 const Container = styled.div`
     padding: 20px;
@@ -78,8 +79,13 @@ const Room = (props) => {
                 const item = peersRef.current.find(p => p.peerID === payload.id);
                 item.peer.signal(payload.signal);
             });
+
+            //stream.getAudioTracks()[0].enabled = false;
         })
+
     }, []);
+
+    
 
     function createPeer(userToSignal, callerID, stream) {
         const peer = new Peer({
@@ -111,6 +117,11 @@ const Room = (props) => {
         return peer;
     }
 
+   function muteSelf()
+    {
+        userVideo.current.srcObject.getAudioTracks()[0].enabled = !userVideo.current.srcObject.getAudioTracks()[0].enabled;
+    }
+
     return (
         <Container>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
@@ -119,7 +130,12 @@ const Room = (props) => {
                     <Video key={index} peer={peer} />
                 );
             })}
+
+         <Button onClick={muteSelf}>Mute
+        </Button>
         </Container>
+
+        
     );
 };
 
