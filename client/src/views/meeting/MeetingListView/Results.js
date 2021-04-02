@@ -19,15 +19,60 @@ import {
 } from '@material-ui/core';
 import { v1 as uuid } from "uuid";
 import { useNavigate } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import { withStyles } from '@material-ui/core/styles';
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+    width: 500
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
+
 const useStyles = makeStyles((theme) => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
   }
 }));
-const meetingDetailHandleClick = (e) =>{
-  console.log(e.target);
-}
 
 const Results = ({ className, meetings, ...rest }) => {
   const classes = useStyles();
@@ -44,6 +89,16 @@ const Results = ({ className, meetings, ...rest }) => {
   }
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
+  };
+  const [open, setOpen] = React.useState(false);
+  const [meetingState, setMeetingState] = useState({date: moment().toDate(),  title: "", _id: "",
+  description:"", location: "", topic: "", members: ""});
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -95,10 +150,12 @@ const Results = ({ className, meetings, ...rest }) => {
                         color="textPrimary"
                         variant="body1"
                         onClick={() => {
-                          console.log(meetings)
+                          handleClickOpen();
+                          console.log(meetings);
+                          setMeetingState(meetings);
+                          console.log(meetingState);
                         }}
                       >
-                        {/* <a href='/app/meetingDetail'>{meetings.title}</a> */}
                         <a>{meetings.title}</a>
                       </Typography>
                     </Box>
@@ -117,8 +174,8 @@ const Results = ({ className, meetings, ...rest }) => {
                   </TableCell>
                   <TableCell>
                   <Button href="#text-buttons" color="primary" onClick={create}>
-  Attend Meeting
-</Button>
+                    Attend Meeting
+                  </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -129,6 +186,29 @@ const Results = ({ className, meetings, ...rest }) => {
               )}
             </TableBody>
           </Table>
+
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Meeting Detail
+            </DialogTitle>
+            <DialogContent dividers>
+              <p>Title: { meetingState.title}</p>
+              <p>Description: {meetingState.description}</p>
+              <p>Duration: { meetingState.duration}</p>
+              <p>Date: {moment( meetingState.date).format('DD MMM YYYY')}</p>
+              <p>Time: {moment( meetingState.date).format('LT')}</p>
+              <p>Location: {meetingState.location}</p>
+              <p>Topics: {meetingState.topic}</p>
+              <p>Participants: {meetingState.members}</p>
+              
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={create} color="primary">
+                Attend Meeting
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </Box>
       </PerfectScrollbar>
       <TablePagination
