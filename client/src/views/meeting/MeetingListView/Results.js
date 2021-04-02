@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import moment from "moment";
+import { Link } from 'react-router-dom';
 import {
   Box,
   Card,
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2)
   }
 }));
+const meetingDetailHandleClick = (e) =>{
+  console.log(e.target);
+}
 
 const Results = ({ className, meetings, ...rest }) => {
   const classes = useStyles();
@@ -54,7 +58,7 @@ const Results = ({ className, meetings, ...rest }) => {
               <TableRow>
                
               <TableCell>
-                  Meeting Name
+                  Meeting Name 
                 </TableCell>
                 <TableCell>
                   Description
@@ -90,8 +94,12 @@ const Results = ({ className, meetings, ...rest }) => {
                       <Typography
                         color="textPrimary"
                         variant="body1"
+                        onClick={() => {
+                          console.log(meetings)
+                        }}
                       >
-                        {meetings.title}
+                        {/* <a href='/app/meetingDetail'>{meetings.title}</a> */}
+                        <a>{meetings.title}</a>
                       </Typography>
                     </Box>
                   </TableCell>

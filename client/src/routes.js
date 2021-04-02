@@ -30,7 +30,7 @@ const routes = [
       { path: 'topics', element: <TopicPool/> },
       { path: '*', element: <Navigate to="/404" /> },
       { path: 'attendMeeting', element: <AttendMeetingView /> },
-      { path: 'room/:roomID', element: <Room /> },
+      { path: 'room/:roomID', element: <Room /> }
     ]
   },
   {
