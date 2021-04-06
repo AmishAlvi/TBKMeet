@@ -122,6 +122,11 @@ const Room = (props) => {
         userVideo.current.srcObject.getAudioTracks()[0].enabled = !userVideo.current.srcObject.getAudioTracks()[0].enabled;
     }
 
+    function closeCamera()
+    {
+        userVideo.current.srcObject.getVideoTracks()[0].enabled = !userVideo.current.srcObject.getVideoTracks()[0].enabled;
+    }
+
     return (
         <Container>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
@@ -131,7 +136,9 @@ const Room = (props) => {
                 );
             })}
 
-         <Button onClick={muteSelf}>Mute
+         <Button onClick={muteSelf}>Toggle Mic
+        </Button>
+        <Button onClick={closeCamera}>Toggle Video
         </Button>
         </Container>
 
