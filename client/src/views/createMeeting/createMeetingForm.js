@@ -282,6 +282,9 @@ const CreateMeetingForm = props => {
     };
     const options = {
       method: "POST",
+      xhrFields: {
+        withCredentials: true
+    },
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
