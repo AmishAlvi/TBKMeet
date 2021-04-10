@@ -263,12 +263,13 @@ const CreateMeetingForm = props => {
          setErrorMessage("Please select at least one participant");
          setOpenAlert(true); 
     }
-     else if (Object.keys(location).length==0)
+     else if (location.length==0)
     {
       setErrorMessage("Please select a meeting location");
       setOpenAlert(true); 
+      console.log((location));
     } 
-    
+    else{
     
     var body = {
       title: title,
@@ -282,6 +283,9 @@ const CreateMeetingForm = props => {
     };
     const options = {
       method: "POST",
+      xhrFields: {
+        withCredentials: true
+    },
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -313,7 +317,8 @@ const CreateMeetingForm = props => {
     } 
  /*  console.log(selectedTime.toLocaleDateString());
   console.log(selectedTime.toLocaleTimeString()); */
-  };
+  }  
+};
 
   //update the location selection
   const [location, setLocation] = React.useState('');

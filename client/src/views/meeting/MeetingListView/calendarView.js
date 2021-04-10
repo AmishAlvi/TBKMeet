@@ -15,7 +15,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
+import { v1 as uuid } from "uuid";
+import { useNavigate } from 'react-router-dom';
 const localizer = momentLocalizer(moment);
 
 const styles = (theme) => ({
@@ -61,10 +62,10 @@ const DialogActions = withStyles((theme) => ({
 
 
 
-class CalendarView extends Component {
+const CalendarView = ({ className, meetings, ...rest }) => {
   
-  state = {
-    events: [
+
+const[events,setEvents]=useState([
       {
         start: moment().toDate(),
         end: moment()
@@ -72,24 +73,25 @@ class CalendarView extends Component {
           .toDate(),
         title: "TBKmeet Meeting"
       }
-    ],
-    open: false,
-    eventState: { start: moment().toDate(), end: moment().add(0, "days").toDate(), title: "", _id: "",
-      description:"", location: "", topic: "", members: ""}
-  };
+    ]);
+    const [open, setOpen] =useState(false);
+    const [eventState,setEventState]=useState( { start: moment().toDate(), end: moment().add(0, "days").toDate(), title: "", _id: "",
+    description:"", location: "", topic: "", members: ""})
 
 
-
- handleClickOpen=() => {
-  this.setState({open: true});
+ const handleClickOpen=() => {
+  setOpen(true);
 
 };
- handleClose=() => {
-  this.setState({open: false});
+ const handleClose=() => {
+  setOpen(false);
 };
-
-  render() {
-    const {meetings}= this.props.meetings;
+let navigate = useNavigate()
+function create() {
+    const id = uuid();
+    navigate(`/app/room/${id}`, {id: id});
+}
+    //const {meetings}= this.props.meetings;
     // console.log(moment()
     // .add(1, "days")
     // .toDate())
@@ -99,7 +101,7 @@ class CalendarView extends Component {
     this.state.eventss[i].end=Date.parse(this.props.meetings[i].date);
     this.state.eventss[i].title=this.props.meetings[i].title;
   }  */
-  const newEvents = this.props.meetings.map(event => ({
+  const newEvents = meetings.map(event => ({
     start:event.date,
     end:event.date,
     title: event.title,
@@ -108,8 +110,32 @@ class CalendarView extends Component {
     topic: event.topic,
     location: event.location,
     members:event.members,
-    duration:event.duration
+    duration:event.duration,
+    isStarted:event.isStarted
   }));
+  function MeetingButtonRender(status, meeting_id) {
+    //console.log(id)
+    if(status)
+    {
+      return (
+        
+                    <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                      Attend Meeting
+                    </Button>
+        
+      )
+    }
+    else
+    {
+      return(
+      
+                  <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                  Start Meeting </Button>
+      
+      )
+    }
+  }
+  console.log(eventState);
     return (
 
       <Card>
@@ -125,37 +151,35 @@ class CalendarView extends Component {
           //   console.log(newEvents);
           // }}
           onSelectEvent={event => {
-            this.handleClickOpen()
-            this.setState({eventState: event});
+            handleClickOpen()
+            setEventState( event);
             }}
           style={{ height: "80vh" , width:"100%"}}
         />
       </div>
-      <Dialog onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.state.open}>
-            <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
               Meeting Detail
             </DialogTitle>
             <DialogContent dividers>
-              <p>Title: {this.state.eventState.title}</p>
-              <p>Description: {this.state.eventState.description}</p>
-              <p>Duration: {this.state.eventState.duration}</p>
-              <p>Date: {moment(this.state.eventState.start).format('DD MMM YYYY')}</p>
-              <p>Time: {moment(this.state.eventState.start).format('LT')}</p>
-              <p>Location: {this.state.eventState.location}</p>
-              <p>Topics: {this.state.eventState.topic}</p>
-              <p>Participants: {this.state.eventState.members}</p>
+              <p>Title: {eventState.title}</p>
+              <p>Description: {eventState.description}</p>
+              <p>Duration: {eventState.duration}</p>
+              <p>Date: {moment(eventState.start).format('DD MMM YYYY')}</p>
+              <p>Time: {moment(eventState.start).format('LT')}</p>
+              <p>Location: {eventState.location}</p>
+{/*               <p>Topics: {this.state.eventState.topic}</p>
+              <p>Participants: {this.state.eventState.members}</p> */}
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={this.handleClose} color="primary">
-                Attend Meeting
-              </Button>
+            {MeetingButtonRender(eventState.isStarted, eventState._id)}
             </DialogActions>
           </Dialog>
 
       </Card>
     );
-  }
-}
+  
+};
 
 
 
