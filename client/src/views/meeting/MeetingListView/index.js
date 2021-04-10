@@ -15,7 +15,6 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
 import CalendarView from './calendarView';
 import { Search as SearchIcon } from 'react-feather';
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 const MeetingListView = () => {
   const classes = useStyles();
-  const [meetings] = useState(data);
   const [meeting,setMeeting]=useState([]);
     const [state, setState] = React.useState({
         checkedA: true,

@@ -11,7 +11,8 @@ const MeetingSchema = new Schema(
     members:{type:[ObjectId],require:true,ref:"User"},
     notes:{type:String},
     isStarted:{type:Boolean,default:false},
-    owner:{type:ObjectId,require:false,ref:"User"}
+    owner:{type:ObjectId,require:false,ref:"User"},
+    duration:{type: String, require: true}
   }
 );
 

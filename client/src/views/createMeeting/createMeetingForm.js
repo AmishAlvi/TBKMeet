@@ -253,20 +253,21 @@ const CreateMeetingForm = props => {
     );
     //console.log(topicsTmp);
     console.log(participantsTmp);
-      if (!topicsTmp.length)
-     {
-       setErrorMessage("Please select at least one topic");
-          setOpenAlert(true); 
-     }
-     else if(!participantsTmp.length)
-     {
-          setErrorMessage("Please select at least one participant");
-          setOpenAlert(true); 
-     }
-     else if (Object.keys(location).length==0)
+     if (!topicsTmp.length)
+    {
+      setErrorMessage("Please select at least one topic");
+         setOpenAlert(true); 
+    }
+    else if(!participantsTmp.length)
+    {
+         setErrorMessage("Please select at least one participant");
+         setOpenAlert(true); 
+    }
+     else if (location.length==0)
     {
       setErrorMessage("Please select a meeting location");
       setOpenAlert(true); 
+      console.log((location));
     } 
     else{
     
@@ -282,6 +283,9 @@ const CreateMeetingForm = props => {
     };
     const options = {
       method: "POST",
+      xhrFields: {
+        withCredentials: true
+    },
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -313,8 +317,8 @@ const CreateMeetingForm = props => {
     } 
  /*  console.log(selectedTime.toLocaleDateString());
   console.log(selectedTime.toLocaleTimeString()); */
-  }
-  };
+  }  
+};
 
   //update the location selection
   const [location, setLocation] = React.useState('');
@@ -351,6 +355,7 @@ return (
       value => {
         return value >= calculateTotalDuration();
       })
+      // location: Yup.string().ensure().required("Location is required")
   })}
   >
     {props => {
@@ -514,10 +519,10 @@ return (
           margin="normal"
           >
             <MenuItem value=""> <em>None</em></MenuItem>
-            <MenuItem value={"Meeting Room 1"}>Meeting Room 1</MenuItem>
-            <MenuItem value={"Meeting Room 2"}>Meeting Room 2</MenuItem>
-            <MenuItem value={"Meeting Room 4"}>Meeting Room 3</MenuItem>
-            <MenuItem value={"Meeting Room 4"}>Meeting Room 4</MenuItem>
+            <MenuItem value={1}>Meeting Room 1</MenuItem>
+            <MenuItem value={2}>Meeting Room 2</MenuItem>
+            <MenuItem value={3}>Meeting Room 3</MenuItem>
+            <MenuItem value={4}>Meeting Room 4</MenuItem>
         </Select>
         <br></br>
         {/* Invite Participants Button */}
