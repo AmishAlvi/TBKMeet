@@ -7,7 +7,6 @@ import MeetingListView from 'src/views/meeting/MeetingListView';
 import DashboardView from 'src/views/dashboard/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
 import NotFoundView from 'src/views/errors/NotFoundView';
-//import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 import CreateTopic from 'src/views/createTopic';
@@ -23,7 +22,6 @@ const routes = [
       { path: 'account', element: <AccountView /> },
       { path: 'meetings', element: <MeetingListView /> },
       { path: 'dashboard', element: <DashboardView /> },
-     // { path: 'attendMeeting', element: <AttendMeetingView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: 'createTopic', element: <CreateTopic/> },
       { path: 'createMeeting', element: <CreateMeeting/> },
