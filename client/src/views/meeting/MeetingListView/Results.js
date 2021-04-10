@@ -101,6 +101,29 @@ const Results = ({ className, meetings, ...rest }) => {
     setOpen(false);
   };
 
+
+  function MeetingButtonRender(status, meeting_id) {
+    //console.log(id)
+    if(status)
+    {
+      return (
+        
+                    <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                      Attend Meeting
+                    </Button>
+        
+      )
+    }
+    else
+    {
+      return(
+      
+                  <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                  Start Meeting </Button>
+      
+      )
+    }
+  }
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -173,9 +196,8 @@ const Results = ({ className, meetings, ...rest }) => {
                     {moment(meetings.date).format('LT')}
                   </TableCell>
                   <TableCell>
-                  <Button href="#text-buttons" color="primary" onClick={create}>
-                    Attend Meeting
-                  </Button>
+                  {MeetingButtonRender(meetings.isStarted, meetings._id)}
+
                   </TableCell>
                 </TableRow>
               ))}
@@ -198,14 +220,12 @@ const Results = ({ className, meetings, ...rest }) => {
               <p>Date: {moment( meetingState.date).format('DD MMM YYYY')}</p>
               <p>Time: {moment( meetingState.date).format('LT')}</p>
               <p>Location: {meetingState.location}</p>
-              <p>Topics: {meetingState.topic}</p>
-              <p>Participants: {meetingState.members}</p>
+              {/* <p>Topics: {meetingState.topic}</p>
+              <p>Participants: {meetingState.members}</p> */}
               
             </DialogContent>
             <DialogActions>
-              <Button autoFocus onClick={create} color="primary">
-                Attend Meeting
-              </Button>
+            {MeetingButtonRender(meetingState.isStarted, meetingState._id)}
             </DialogActions>
           </Dialog>
 
