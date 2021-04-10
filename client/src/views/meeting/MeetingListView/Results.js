@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import moment from "moment";
+import { Link } from 'react-router-dom';
 import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -17,6 +17,55 @@ import {
   makeStyles,
   Button
 } from '@material-ui/core';
+import { v1 as uuid } from "uuid";
+import { useNavigate } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import { withStyles } from '@material-ui/core/styles';
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+    width: 500
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -29,14 +78,52 @@ const Results = ({ className, meetings, ...rest }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const emptyRows = limit - Math.min(limit, meetings.length - page * limit);
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
-
+  let navigate = useNavigate()
+  function create() {
+      const id = uuid();
+      navigate(`/app/room/${id}`, {id: id});
+  }
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+  const [open, setOpen] = React.useState(false);
+  const [meetingState, setMeetingState] = useState({date: moment().toDate(),  title: "", _id: "",
+  description:"", location: "", topic: "", members: ""});
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  function MeetingButtonRender(status, meeting_id) {
+    //console.log(id)
+    if(status)
+    {
+      return (
+        
+                    <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                      Attend Meeting
+                    </Button>
+        
+      )
+    }
+    else
+    {
+      return(
+      
+                  <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+                  Start Meeting </Button>
+      
+      )
+    }
+  }
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -49,10 +136,10 @@ const Results = ({ className, meetings, ...rest }) => {
               <TableRow>
                
               <TableCell>
-                  Meeting Name
+                  Meeting Name 
                 </TableCell>
                 <TableCell>
-                  Meeting Topic
+                  Description
                 </TableCell>
                 <TableCell>
                   Location
@@ -69,10 +156,10 @@ const Results = ({ className, meetings, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {meetings.slice(0, limit).map((meetings) => (
+              {meetings.slice(page* limit, page * limit + limit).map((meetings) => (
                 <TableRow
                   hover
-                  key={meetings.id}
+                  key={meetings._id}
                   
                 >
                  
@@ -85,32 +172,63 @@ const Results = ({ className, meetings, ...rest }) => {
                       <Typography
                         color="textPrimary"
                         variant="body1"
+                        onClick={() => {
+                          handleClickOpen();
+                          console.log(meetings);
+                          setMeetingState(meetings);
+                          console.log(meetingState);
+                        }}
                       >
-                        {meetings.meetingName}
+                        <a>{meetings.title}</a>
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {meetings.meetingTopic}
+                    {meetings.description}
                   </TableCell>
                   <TableCell>
-                    {`${meetings.address.city}, ${meetings.address.building}, ${meetings.address.room}`}  
+                  {meetings.location}
                   </TableCell>
                   <TableCell>
-                    {meetings.date}
+                    {moment(meetings.date).format('DD MMM YYYY')}
                   </TableCell>
                   <TableCell>
-                    {meetings.time}
+                    {moment(meetings.date).format('LT')}
                   </TableCell>
                   <TableCell>
-                  <Button href="#text-buttons" color="primary">
-  Attend Meeting
-</Button>
+                  {MeetingButtonRender(meetings.isStarted, meetings._id)}
+
                   </TableCell>
                 </TableRow>
               ))}
+               {emptyRows > 0 && (
+                <TableRow style={{ height:  56 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
           </Table>
+
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Meeting Detail
+            </DialogTitle>
+            <DialogContent dividers>
+              <p>Title: { meetingState.title}</p>
+              <p>Description: {meetingState.description}</p>
+              <p>Duration: { meetingState.duration}</p>
+              <p>Date: {moment( meetingState.date).format('DD MMM YYYY')}</p>
+              <p>Time: {moment( meetingState.date).format('LT')}</p>
+              <p>Location: {meetingState.location}</p>
+              {/* <p>Topics: {meetingState.topic}</p>
+              <p>Participants: {meetingState.members}</p> */}
+              
+            </DialogContent>
+            <DialogActions>
+            {MeetingButtonRender(meetingState.isStarted, meetingState._id)}
+            </DialogActions>
+          </Dialog>
+
         </Box>
       </PerfectScrollbar>
       <TablePagination

@@ -16,11 +16,11 @@ import {
 
 const user = {
   avatar: '/static/images/avatars/default_profile_img',
-  city: 'Ankara',
-  country: 'Turkey',
-  jobTitle: 'Senior Developer',
-  name: 'Seyma Yazar',
-  timezone: 'GTM+3'
+  city: '',
+  country: '',
+  jobTitle: '',
+  name: '',
+  timezone: ''
 };
 
 const useStyles = makeStyles(() => ({

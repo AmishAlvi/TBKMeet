@@ -4,8 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   AppBar,
-  Toolbar,
-  makeStyles
+  Toolbar
 } from '@material-ui/core';
 import Logo from 'src/components/Logo';
 import linearLayout from 'src/components/linearGradient';
