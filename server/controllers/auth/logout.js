@@ -1,6 +1,3 @@
-const bcrypt = require("bcryptjs");
-
-const {User} = require("../../models");
 
 // TODO: add swagger
 module.exports = async (req, res) => {
