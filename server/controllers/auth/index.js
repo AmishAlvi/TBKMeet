@@ -6,6 +6,7 @@ const resendemailverification = require("./resendemailverification");
 const passwordreset = require("./passwordreset");
 const validPasswordToken = require("./validPasswordToken");
 const newPassword = require("./newPassword");
+const isLoggedIn = require("./isLoggedIn");
 
 module.exports = {
   login,
@@ -15,5 +16,6 @@ module.exports = {
   resendemailverification,
   passwordreset,
   validPasswordToken,
-  newPassword
+  newPassword,
+  isLoggedIn
 };
