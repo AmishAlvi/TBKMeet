@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import AccountView from 'src/views/account/AccountView';
@@ -14,10 +14,12 @@ import CreateMeeting from 'src/views/createMeeting';
 import TopicPool from 'src/views/topicPool';
 import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import Room from 'src/views/attendMeeting/Room';
-const routes = [
+
+//const user = this.state.user
+const routes = (user) => [
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: user ? <DashboardLayout /> : <Navigate to="/login"/>,
     children: [
       { path: 'account', element: <AccountView /> },
       { path: 'meetings', element: <MeetingListView /> },
@@ -33,7 +35,7 @@ const routes = [
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: !user ?  <MainLayout /> : <Navigate to="/app/dashboard" />,
     children: [
       { path: 'login', element: <LoginView /> },
       { path: 'register', element: <RegisterView /> },

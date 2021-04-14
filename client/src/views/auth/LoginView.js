@@ -16,6 +16,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
 import { Alert } from '@material-ui/lab';
+import { login, userSlice } from 'src/features/userSlice';
+import { useDispatch } from 'react-redux';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -29,6 +31,8 @@ const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   var [errorMessage,setErrorMessage]=useState("");
 
   //Alert Function 
@@ -42,6 +46,8 @@ const LoginView = props => {
     }
     setOpen(false);
   };
+
+  const dispatch = useDispatch();
 
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
@@ -71,6 +77,11 @@ const LoginView = props => {
 
       if (text.status == "success") {
         console.log("success")
+        dispatch(login({
+          email: email,
+          password: password,
+          loggedIn:true
+        }))
         navigate('/app/dashboard', { replace: true });
         
       } else {
@@ -114,6 +125,8 @@ const LoginView = props => {
     >
       {props => {
         const {
+          email,
+          password,
           values,
           touched,
           errors,
