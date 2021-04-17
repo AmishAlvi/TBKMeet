@@ -12,7 +12,7 @@ import { selectUser } from './features/userSlice';
 function App() {
   const user = useSelector(selectUser);
   const routing = useRoutes(routes(user));
-  console.log(user)
+  //console.log(user)
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />

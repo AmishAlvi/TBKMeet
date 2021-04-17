@@ -78,8 +78,7 @@ const LoginView = props => {
       if (text.status == "success") {
         console.log("success")
         dispatch(login({
-          email: email,
-          password: password,
+          text,
           loggedIn:true
         }))
         navigate('/app/dashboard', { replace: true });
