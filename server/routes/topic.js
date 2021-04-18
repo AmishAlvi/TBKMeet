@@ -1,12 +1,14 @@
 const {Router} = require("express");
 const http = require("http");
-const {topic,getTopic} = require("../controllers/topic");
+const {topic,getTopic,getOneTopic,modifyTopic} = require("../controllers/topic");
 const {requireAuthentication,validateJson} = require("../middleware");
 
 const router = Router();
 
 router.post("/topicSave", [requireAuthentication,topic]);
 router.get("/getTopic", [requireAuthentication,getTopic]);
+router.get("/getTopic/:id",[requireAuthentication,getOneTopic]);
+router.get("/modifyTopic/:id",[requireAuthentication,modifyTopic]);
 
 
 module.exports = router;
