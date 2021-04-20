@@ -294,9 +294,7 @@ setSelectionModelTopic(result.data.data.topic)
 setSelectionModelParticipant(result.data.data.members)
 setLocation(result.data.data.location)
 setTopicsArr([result.data.data.topic])
-setSelectedTopic(result.data.data.topic)
-console.log(result.data.data.topic)
-console.log(selectedTopic)
+setSelectedTopic([result.data.data.topic])
 setParticipantsArr(result.data.data.members)
   },[]);
  //update date
@@ -318,8 +316,8 @@ const SaveParticipants=()=>
 const SaveTopics=()=>
 {
   setTopicsArr(selectedTopic);
-  console.log(topicsArr)
-  setSelectionModelTopic(topicsArr.map((r) => r.id));
+  console.log(selectedTopic)
+  setSelectionModelTopic(selectedTopic.map((r) => r.id));
 
 
   //handleCloseTopic();
@@ -413,7 +411,7 @@ const SaveTopics=()=>
         <DialogContent dividers> 
              <div style={{ height: 400, width: '100%' }}> 
                 <DataGrid 
-                  enableReinitialize
+                  
                   rows={topic}
                   columns={topicColumns}
                   pageSize={5} 
