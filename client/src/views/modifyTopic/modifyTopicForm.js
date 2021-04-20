@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from 'react';
-import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation,useHistory} from 'react-router-dom';
+import { Redirect} from 'react-router';
 import * as Yup from 'yup';
 import axios from 'axios';
 
@@ -120,9 +121,10 @@ const handleClose = (event, reason) => {
 
       if (text.status == "success") {
         //console.log("success")
-        setSuccessMessage(text.message);
-        setOpen(true);
-        
+        /* const history = useHistory()    
+        history.push('/app/topics') */
+        <Redirect path to='/app/topics/'/>
+
         
       } else {
         console.log(text.message);

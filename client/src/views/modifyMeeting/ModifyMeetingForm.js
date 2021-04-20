@@ -129,7 +129,7 @@ const ModifyMeetingForm = props => {
   const[selectionModelTopic,setSelectionModelTopic]=useState([]);
   const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
-  const loadUser = async values => {
+ /*  const loadUser = async values => {
     const url = "http://localhost:81/meeting/getEmails";
     try {
       const result = await fetch(url);
@@ -145,8 +145,14 @@ const ModifyMeetingForm = props => {
     } catch (error) {
       console.error(error);
     } 
-  };
-  const loadTopic = async values => {
+  }; */
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getEmails",
+    );
+      setUser(result.data.data)
+  },[]);
+/*   const loadTopic = async values => {
     const url = "http://localhost:81/topic/getTopic";
     try {
       const result = await fetch(url);
@@ -162,7 +168,22 @@ const ModifyMeetingForm = props => {
     } catch (error) {
       console.error(error);
     } 
-  };
+  }; */
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/topic/getTopic",
+    );
+      setTopic(result.data.data)
+      topic.map((val)=>{
+        console.log(val._id)
+        selectedTopic.forEach(element => {
+          console.log(element[0]);
+      if (val._id==element[0])
+      {
+        setTopicsArr([val])
+      }});
+      });
+  },[]);
 
       //function for displaying alert
       function Alert(props) {
@@ -170,13 +191,13 @@ const ModifyMeetingForm = props => {
       }
 //Open Participants Dialog
   const handleClickOpen = () => {
-    loadUser();
+    //loadUser();
     setOpen(true);
     
   };
   
   const handleClickOpenTopic =()=>{
-    loadTopic();
+    //loadTopic();
     setOpenTopic(true);
   }
   const handleClose = () => {
@@ -198,6 +219,8 @@ const ModifyMeetingForm = props => {
     topicsArr.map((val) => 
     totalDuration+=parseInt(val.totalTime)
     );
+    console.log(totalDuration);
+    console.log(topicsArr);
     return totalDuration;
   }
   const clearForm=()=>{
@@ -293,10 +316,14 @@ setSelectedDate(result.data.data.date)
 setSelectionModelTopic(result.data.data.topic)
 setSelectionModelParticipant(result.data.data.members)
 setLocation(result.data.data.location)
-setTopicsArr([result.data.data.topic])
 setSelectedTopic([result.data.data.topic])
 setParticipantsArr(result.data.data.members)
   },[]);
+
+
+  
+
+
  //update date
  const handleDateChange = (date) => {
   setSelectedDate(date);
@@ -318,14 +345,9 @@ const SaveTopics=()=>
   setTopicsArr(selectedTopic);
   console.log(selectedTopic)
   setSelectionModelTopic(selectedTopic.map((r) => r.id));
-
-
-  //handleCloseTopic();
+  handleCloseTopic();
   
-}
-
-  //setMeeting(meetingId);
-  
+}  
    //update the location selection
   const updateLocation = (event) => {
     setLocation(event.target.value);

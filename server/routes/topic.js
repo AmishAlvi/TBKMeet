@@ -8,7 +8,7 @@ const router = Router();
 router.post("/topicSave", [topic]);
 router.get("/getTopic", [getTopic]);
 router.get("/getTopic/:id",[getOneTopic]);
-router.get("/modifyTopic/:id",[modifyTopic]);
+router.post("/modifyTopic/:id",[modifyTopic]);
 
 
 module.exports = router;

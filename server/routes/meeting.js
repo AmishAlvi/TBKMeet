@@ -10,6 +10,6 @@ router.get("/getMeetings",[getMeeting]);
 router.get("/getMeetings/:id",[getOneMeeting]);
 router.get("/getEmails",[getEmails]);
 router.get('/startMeeting/:id',[requireAuthentication,startMeeting]);
-router.get('/modifyMeeting/:id',[modifyMeeting]);
+router.post('/modifyMeeting/:id',[modifyMeeting]);
 
 module.exports = router;
