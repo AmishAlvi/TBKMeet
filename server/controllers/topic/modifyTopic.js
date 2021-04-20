@@ -13,10 +13,15 @@ module.exports = async (req, res, _next) => {
   } = req.fields;
 
 
-  const topic = new Topic({title,description,totalTime,category,decision,information});
   try {
-    Topic.findOne({_id:req.params.id}).then(async (topic1) =>{
-        topic1 = topic;
+    Topic.findOne({_id:req.params.id}).then(async (topic) =>{
+        topic.title = title;
+        topic.description = description;
+        topic.totalTime = totalTime;
+        topic.category = category;
+        topic.decision = decision;
+        topic.information = information;
+
         await topic.save(async  (err) => {
             if (err) { return res.status(500).send({ msg: err.message }); }
             else{return res.status(200).json({status:"success",message:"The topic is saved"});}
