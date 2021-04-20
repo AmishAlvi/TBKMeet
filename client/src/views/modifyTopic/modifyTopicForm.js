@@ -120,10 +120,13 @@ const handleClose = (event, reason) => {
       console.log(text)
 
       if (text.status == "success") {
+        setSuccessMessage(text.message);
+        setOpen(true);
+
         //console.log("success")
         /* const history = useHistory()    
         history.push('/app/topics') */
-        <Redirect path to='/app/topics/'/>
+       // <Redirect path to='/app/topics/'/>
 
         
       } else {
