@@ -21,7 +21,7 @@ module.exports = async (req, res, _next) => {
         topic.category = category;
         topic.decision = decision;
         topic.information = information;
-        
+
         await topic.save(async  (err) => {
             if (err) { return res.status(500).send({ msg: err.message }); }
             else{return res.status(200).json({status:"success",message:"The topic is saved"});}
