@@ -16,6 +16,10 @@ import {
 } from '@material-ui/core';
 import Async from 'react-async';
 import { CompareArrowsOutlined } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import InfoIcon from '@material-ui/icons/Info';
 const useStyles = makeStyles((theme) => ({
   root: {},
 
@@ -137,7 +141,19 @@ const TopicList = ({ className,  ...rest }) => {
                  
                   </TableCell>
                   <TableCell>
+                  <Link to={{pathname: `/app/modifyTopic/${topic._id}`}}
+                   style={{ textDecoration: 'none',color:"initial" }}
                    
+                  > 
+                    <EditIcon
+                    style={{ cursor: "pointer" }}
+                    />
+                    </Link>
+                    <DeleteIcon
+                    style={{ cursor: "pointer" }}
+                    />
+                    <InfoIcon
+                    style={{ cursor: "pointer" }}/>
                   </TableCell>
                   
                 </TableRow>

@@ -15,6 +15,8 @@ import CreateMeeting from 'src/views/createMeeting';
 import TopicPool from 'src/views/topicPool';
 import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import Room from 'src/views/attendMeeting/Room';
+import ModifyMeeting from 'src/views/modifyMeeting';
+import ModifyTopic from 'src/views/modifyTopic';
 const routes = [
   {
     path: 'app',
@@ -30,6 +32,8 @@ const routes = [
       { path: 'topics', element: <TopicPool/> },
       { path: '*', element: <Navigate to="/404" /> },
       { path: 'attendMeeting', element: <AttendMeetingView /> },
+      { path: 'modifyMeeting/:meetingId', element: <ModifyMeeting /> },
+      { path: 'modifyTopic/:topicId', element: <ModifyTopic /> },
       { path: 'room/:roomID', element: <Room /> }
     ]
   },
