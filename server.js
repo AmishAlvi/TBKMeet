@@ -46,6 +46,10 @@ io.on('connection', socket => {
         }
     });
 
+    socket.on('message', ([name, message]) => {
+        io.emit('message', name, message )
+    })
+
 });
 
 server.listen(PORT, () => console.log(`server is running on port ${PORT}`));
