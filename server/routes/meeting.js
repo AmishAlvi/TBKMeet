@@ -13,6 +13,6 @@ router.get('/startMeeting/:id',[requireAuthentication,startMeeting]);
 router.post('/modifyMeeting/:id',[modifyMeeting]);
 
 router.post('/endMeeting/:id',[requireAuthentication,endMeeting]);
-router.get('/getEndedMeetings',[requireAuthentication,getEndedMeetings]);
+router.get('/getEndedMeetings',[getEndedMeetings]);
 
 module.exports = router;

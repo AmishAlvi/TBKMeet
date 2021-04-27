@@ -11,7 +11,9 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles
+  makeStyles,
+  Button,
+  Dialog
   
 } from '@material-ui/core';
 import Async from 'react-async';
@@ -20,6 +22,26 @@ import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import InfoIcon from '@material-ui/icons/Info';
+import { withStyles } from '@material-ui/core/styles';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+    width: 500
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
 const useStyles = makeStyles((theme) => ({
   root: {},
 
@@ -34,6 +56,32 @@ const url="http://localhost:81/topic/getTopic";
 response = await fetch(url);
 const data = await response.json();
 console.log(data);}) */
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
 
 const TopicList = ({ className,  ...rest }) => {
   const classes = useStyles();
@@ -43,9 +91,11 @@ const TopicList = ({ className,  ...rest }) => {
     setLimit(event.target.value);
     setPage(0);
   };
+  const [topicState, setTopicState] = useState({ title: "", _id: "",
+  description:"", duration: "", category: "", decision: "",information: ""});
   const [topic, setTopic]=useState([]);    
   const emptyRows = limit - Math.min(limit, topic.length - page * limit);
-  
+  const [open, setOpen] = React.useState(false);
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -69,9 +119,13 @@ const TopicList = ({ className,  ...rest }) => {
       console.error(error);
     } 
   };
-
+  const handleClose = () => {
+    setOpen(false);
+  };
    
-  
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -153,7 +207,14 @@ const TopicList = ({ className,  ...rest }) => {
                     style={{ cursor: "pointer" }}
                     />
                     <InfoIcon
-                    style={{ cursor: "pointer" }}/>
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      handleClickOpen();
+                      console.log(topic);
+                      setTopicState(topic);
+                      console.log(topicState);
+                                            }}
+                    />
                   </TableCell>
                   
                 </TableRow>
@@ -177,6 +238,28 @@ const TopicList = ({ className,  ...rest }) => {
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 25]}
       />
+          <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Topic Detail
+            </DialogTitle>
+            <DialogContent dividers>
+              <p>Title: { topicState.title}</p>
+              <br/>
+              <p>Description: {topicState.description}</p>
+              <br/>
+              <p>Duration: { topicState.totalTime} Minutes</p>
+              <br/>
+              <p>Category: { topicState.category}</p>
+              {/*<p>Location: {topicState.location}</p>
+               <p>Topics: {meetingState.topic}</p>
+              <p>Participants: {meetingState.members}</p> */}
+              
+            </DialogContent>
+            <DialogActions>
+            <Button href="" color="primary" onClick={handleClose}>
+                  Close </Button>
+            </DialogActions>
+          </Dialog>
     </Card>
   );
 };
