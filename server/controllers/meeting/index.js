@@ -5,7 +5,7 @@ const startMeeting = require("./startMeeting");
 const getOneMeeting = require("./getOneMeeting");
 const modifyMeeting = require("./modifyMeeting");
 const endMeeting = require("./endMeeting");
-const getEndedMeeting = require("./getEndedMeetings")
+const getEndedMeetings = require("./getEndedMeetings")
 
 module.exports = {
   meeting,
