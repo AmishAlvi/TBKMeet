@@ -4,7 +4,8 @@ const getEmails = require("./getEmails");
 const startMeeting = require("./startMeeting");
 const getOneMeeting = require("./getOneMeeting");
 const modifyMeeting = require("./modifyMeeting");
-
+const endMeeting = require("./endMeeting");
+const getEndedMeeting = require("./getEndedMeetings")
 
 module.exports = {
   meeting,
@@ -12,5 +13,7 @@ module.exports = {
   getEmails,
   startMeeting,
   getOneMeeting,
-  modifyMeeting
+  modifyMeeting,
+  endMeeting,
+  getEndedMeetings
 };
