@@ -22,10 +22,14 @@ import {
   UserCheck as AttendMeetingIcon
 } from 'react-feather';
 import NavItem from './NavItem';
+import { connect } from 'react-redux'
+import store from '../../../app/store'
 
-const user = {
+//const state = getState();
+
+const staticInfo = {
   avatar: '/static/images/avatars/default_profile_img',
-  name: 'Syed Amish Alvi'
+  //name: 'Syed Amish Alvi'
 };
 
 const items = [
@@ -95,9 +99,15 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const NavBar = ({ onMobileClose, openMobile }) => {
+const state = store.getState();
+
+const name = state.user.user.text.data.firstName + " " + state.user.user.text.data.lastName;
+
+const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();
   const location = useLocation();
+  console.log(name)
+  
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -119,9 +129,9 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         p={2}
       >
         <Avatar
-          className={classes.avatar}
+          className={classes.avatar}s
           component={RouterLink}
-          src={user.avatar}
+          src={staticInfo.avatar}
           to="/app/account"
         />
         <Typography
@@ -135,7 +145,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           color="textSecondary"
           variant="body2"
         >
-          {user.name}
+          {name}
         </Typography>
       </Box>
       <Divider />
@@ -192,5 +202,12 @@ NavBar.defaultProps = {
   onMobileClose: () => {},
   openMobile: false
 };
+
+/*function mapStateToProps(state) {
+  return {
+      user: state
+      }
+  }*/
+
 
 export default NavBar;
