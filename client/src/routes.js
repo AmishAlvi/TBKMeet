@@ -14,7 +14,9 @@ import CreateMeeting from 'src/views/createMeeting';
 import TopicPool from 'src/views/topicPool';
 import AttendMeetingView from 'src/views/attendMeeting/AttendMeetingtView';
 import Room from 'src/views/attendMeeting/Room';
-
+import ModifyMeeting from 'src/views/modifyMeeting';
+import ModifyTopic from 'src/views/modifyTopic';
+import MeetingHistoryList from 'src/views/meetingHistory';
 //const user = this.state.user
 const routes = (user) => [
   {
@@ -30,7 +32,10 @@ const routes = (user) => [
       { path: 'topics', element: <TopicPool/> },
       { path: '*', element: <Navigate to="/404" /> },
       { path: 'attendMeeting', element: <AttendMeetingView /> },
-      { path: 'room/:roomID', element: <Room /> }
+      { path: 'room/:roomID', element: <Room /> },
+      { path: 'modifyMeeting/:meetingId', element: <ModifyMeeting /> },
+      { path: 'modifyTopic/:topicId', element: <ModifyTopic /> },
+      { path: 'meetingHistory', element: <MeetingHistoryList /> }
     ]
   },
   {
