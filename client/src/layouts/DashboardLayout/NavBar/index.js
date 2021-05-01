@@ -101,7 +101,7 @@ const useStyles = makeStyles(() => ({
 
 const state = store.getState();
 
-const name = state.user.user.text.data.firstName + " " + state.user.user.text.data.lastName;
+const name = " Syed Amish " 
 
 const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();

@@ -18,6 +18,7 @@ import linearGradient from 'src/components/linearGradient';
 import { Alert } from '@material-ui/lab';
 import { login, userSlice } from 'src/features/userSlice';
 import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -74,11 +75,14 @@ const LoginView = props => {
     try {
       const response = await fetch(url, options);
       const text = await response.json();
+      const user = text.data
 
       if (text.status == "success") {
         console.log("success")
+        console.log(text)
+        Cookies.set('access_token', user['x-access-token'])
         dispatch(login({
-          text,
+          user,
           loggedIn:true
         }))
         navigate('/app/dashboard', { replace: true });
