@@ -26,6 +26,9 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import InfoIcon from '@material-ui/icons/Info';
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -150,6 +153,7 @@ const Results = ({ className, meetings, ...rest }) => {
                 <TableCell>
                   Time
                 </TableCell>
+                <TableCell></TableCell>
                 <TableCell>
                   Attend
                 </TableCell>
@@ -162,7 +166,6 @@ const Results = ({ className, meetings, ...rest }) => {
                   key={meetings._id}
                   
                 >
-                 
                   <TableCell>
                     <Box
                       alignItems="center"
@@ -172,12 +175,7 @@ const Results = ({ className, meetings, ...rest }) => {
                       <Typography
                         color="textPrimary"
                         variant="body1"
-                        onClick={() => {
-                          handleClickOpen();
-                          console.log(meetings);
-                          setMeetingState(meetings);
-                          console.log(meetingState);
-                        }}
+
                       >
                         <a>{meetings.title}</a>
                       </Typography>
@@ -194,6 +192,28 @@ const Results = ({ className, meetings, ...rest }) => {
                   </TableCell>
                   <TableCell>
                     {moment(meetings.date).format('LT')}
+                  </TableCell>
+                  <TableCell>
+                   {/*<Link to="ModifyMeeting" params={{ meetingId: meetings._id }}>*/} 
+                     <Link to={{pathname: `/app/modifyMeeting/${meetings._id}`}}
+                     style={{ textDecoration: 'none',color:"initial" }}
+                     > 
+                    <EditIcon
+                    style={{ cursor: "pointer" }}
+                    />
+                    </Link>
+                    <DeleteIcon
+                    style={{ cursor: "pointer" }}
+                    />
+                    <InfoIcon
+                    style={{ cursor: "pointer" }}
+                     onClick={() => {
+                      handleClickOpen();
+                      console.log(meetings);
+                      setMeetingState(meetings);
+                      console.log(meetingState);
+                                            }}
+                    />
                   </TableCell>
                   <TableCell>
                   {MeetingButtonRender(meetings.isStarted, meetings._id)}

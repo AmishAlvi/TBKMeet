@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -19,6 +19,8 @@ import {
   makeStyles
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import axios from 'axios';
+import moment from "moment";
 
 const data = [
   {
@@ -57,7 +59,13 @@ const useStyles = makeStyles(() => ({
 const UpcomingMeetings = ({ className, ...rest }) => {
   const classes = useStyles();
   const [meetings] = useState(data);
-
+  const [meeting,setMeeting]=useState([]);
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getMeetings",
+    );
+    setMeeting(result.data.data)
+  },[]);
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -73,9 +81,7 @@ const UpcomingMeetings = ({ className, ...rest }) => {
                 <TableCell>
                   Meeting Name
                 </TableCell>
-                <TableCell>
-                  Meeting Topic
-                </TableCell>
+               
                 <TableCell sortDirection="desc">
                   <Tooltip
                     enterDelay={300}
@@ -95,22 +101,20 @@ const UpcomingMeetings = ({ className, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {meetings.map((meeting) => (
+              {meeting.slice(0,5).map((meeting) => (
                 <TableRow
                   hover
-                  key={meeting.id}
+                  key={meeting._id}
                 >
                   <TableCell>
-                    {meeting.meetingName}
+                    {meeting.title}
                   </TableCell>
+                  
                   <TableCell>
-                    {meeting.meetingTopic}
-                  </TableCell>
-                  <TableCell>
-                    {meeting.date}
+                  {moment( meeting.date).format('DD MMM YYYY')}
                   </TableCell>
                   <TableCell>                      
-                      {meeting.time}
+                  {moment( meeting.date).format('LT')}
                   </TableCell>
                 </TableRow>
               ))}

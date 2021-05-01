@@ -66,7 +66,7 @@ const items = [
     title: 'Check Topic Pool'
   },
   {
-    href: '/404',
+    href: '/app/meetingHistory',
     icon: CheckHistoryIcon,
     title: 'Check Meeting History'
   },
@@ -101,12 +101,12 @@ const useStyles = makeStyles(() => ({
 
 const state = store.getState();
 
-const name = state.user.user.text.data.firstName + " " + state.user.user.text.data.lastName;
+//const name = state.user.user.text.data.firstName + " " + state.user.user.text.data.lastName;
 
 const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();
   const location = useLocation();
-  console.log(name)
+  //console.log(name)
   
 
   useEffect(() => {
@@ -145,7 +145,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
           color="textSecondary"
           variant="body2"
         >
-          {name}
+         {/*  {name} */}
         </Typography>
       </Box>
       <Divider />

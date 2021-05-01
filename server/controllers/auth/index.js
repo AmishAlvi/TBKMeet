@@ -7,6 +7,7 @@ const passwordreset = require("./passwordreset");
 const validPasswordToken = require("./validPasswordToken");
 const newPassword = require("./newPassword");
 const isLoggedIn = require("./isLoggedIn");
+const updatePassword = require("./updatePassword");
 
 module.exports = {
   login,
@@ -17,5 +18,6 @@ module.exports = {
   passwordreset,
   validPasswordToken,
   newPassword,
-  isLoggedIn
+  isLoggedIn,
+  updatePassword
 };
