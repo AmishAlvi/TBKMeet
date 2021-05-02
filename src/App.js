@@ -7,8 +7,12 @@ import { ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/components/GlobalStyles';
 import theme from 'src/theme';
 import routes from 'src/routes';
+import { useSelector } from 'react-redux';
+import { selectUser } from './features/userSlice';
 function App() {
-  const routing = useRoutes(routes);
+  const user = useSelector(selectUser);
+  const routing = useRoutes(routes(user));
+  //console.log(user)
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />

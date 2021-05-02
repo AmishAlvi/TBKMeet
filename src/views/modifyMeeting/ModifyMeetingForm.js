@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React,{useState, useEffect} from 'react';
+import { Link as RouterLink, useNavigate, useParams, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns'; //instal this version npm i @date-io/date-fns@1.3.13
@@ -38,6 +38,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,7 +67,6 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
-
 const topicColumns = [
   
   { field: 'title', headerName: 'Topic Title', width: 180},
@@ -106,14 +106,17 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
  
-const CreateMeetingForm = props => {
+const ModifyMeetingForm = props => {
   const classes = useStyles();
+  const [location, setLocation] = React.useState('');
+  const [meeting, setMeeting] = React.useState('');
+  const [title, setTitle] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [openTopic, setOpenTopic] = React.useState(false);
   const [selectParticipats, setSelectionParticipants] = React.useState([]);
   let dt = new Date();
   const minDate = dt.setDate(dt.getDate() );
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState();
   const [openAlert, setOpenAlert] = React.useState(false);
   var [errorMessage,setErrorMessage]=useState("");
   var [successMessage,setSuccessMessage]=useState("");
@@ -126,17 +129,14 @@ const CreateMeetingForm = props => {
   const[selectionModelTopic,setSelectionModelTopic]=useState([]);
   const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
-  const loadUser = async values => {
+ /*  const loadUser = async values => {
     const url = "http://localhost:81/meeting/getEmails";
     try {
       const result = await fetch(url);
       const data = await result.json();
-      console.log(data)
 
       if (data.status == "success") {
-        console.log("success");
         setUser(data.data)
-        console.log(user)
         
       } else {
         console.log("error");
@@ -145,18 +145,21 @@ const CreateMeetingForm = props => {
     } catch (error) {
       console.error(error);
     } 
-  };
-  const loadTopic = async values => {
+  }; */
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getEmails",
+    );
+      setUser(result.data.data)
+  },[]);
+/*   const loadTopic = async values => {
     const url = "http://localhost:81/topic/getTopic";
     try {
       const result = await fetch(url);
       const data = await result.json();
-      //console.log(data)
 
       if (data.status == "success") {
-        console.log("success");
         setTopic(data.data)
-        //console.log(topic)
         
       } else {
         console.log("error");
@@ -165,7 +168,22 @@ const CreateMeetingForm = props => {
     } catch (error) {
       console.error(error);
     } 
-  };
+  }; */
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/topic/getTopic",
+    );
+      setTopic(result.data.data)
+      topic.map((val)=>{
+        console.log(val._id)
+        selectedTopic.forEach(element => {
+          console.log(element[0]);
+      if (val._id==element[0])
+      {
+        setTopicsArr([val])
+      }});
+      });
+  },[]);
 
       //function for displaying alert
       function Alert(props) {
@@ -173,14 +191,13 @@ const CreateMeetingForm = props => {
       }
 //Open Participants Dialog
   const handleClickOpen = () => {
-    loadUser();
+    //loadUser();
     setOpen(true);
     
   };
   
   const handleClickOpenTopic =()=>{
-    loadTopic();
-    console.log(topic);
+    //loadTopic();
     setOpenTopic(true);
   }
   const handleClose = () => {
@@ -188,8 +205,6 @@ const CreateMeetingForm = props => {
   };
   const handleCloseTopic = () => {
     setOpenTopic(false);
-    console.log(topicsArr);
-    // console.log(selectionModelTopic);
   };
   const handleCloseAlert = (event, reason) => {
     if (reason === 'clickaway') {
@@ -197,40 +212,15 @@ const CreateMeetingForm = props => {
     }
     setOpenAlert(false);
   };
- /*  const addId=(data)=>{
-    var ln = data.length;
-    console.log("add id starts")
-    for(var i=0; i<ln;i++)
-    {
-      console.log(i);
-      data[i].id=i;
-    }
-    return data;
-  } */
-  const SaveParticipants=()=>
-  {
-    setParticipantsArr(member);
-    setSelectionModelParticipant(member.map((r) => r.id));
-    console.log(participantsArr);
-   console.log(member);
-    handleClose();
-  }
-  const SaveTopics=()=>
-  {
-    setTopicsArr(selectedTopic);
-    setSelectionModelTopic(selectedTopic.map((r) => r.id));
-     console.log(selectionModelTopic)
-     console.log(topicsArr)
-    handleCloseTopic();
-    //console.log(calculateTotalDuration())
-    
-  }
+
+
   const calculateTotalDuration=()=>{
     var totalDuration=0;
     topicsArr.map((val) => 
     totalDuration+=parseInt(val.totalTime)
     );
     console.log(totalDuration);
+    console.log(topicsArr);
     return totalDuration;
   }
   const clearForm=()=>{
@@ -245,15 +235,15 @@ const CreateMeetingForm = props => {
     const {title, description, duration} = values;
     var participantsTmp=[];
     var topicsTmp=[];
+
     participantsArr.map((val)=>
     participantsTmp.push(val._id)
     );
     topicsArr.map((val)=>
     topicsTmp.push(val._id)
     );
-    //console.log(topicsTmp);
-    console.log(participantsTmp);
-     if (!topicsTmp.length)
+   
+    if (!topicsTmp.length)
     {
       setErrorMessage("Please select at least one topic");
          setOpenAlert(true); 
@@ -267,7 +257,6 @@ const CreateMeetingForm = props => {
     {
       setErrorMessage("Please select a meeting location");
       setOpenAlert(true); 
-      console.log((location));
     } 
     else{
     
@@ -283,23 +272,20 @@ const CreateMeetingForm = props => {
     };
     const options = {
       method: "POST",
-      xhrFields: {
-        withCredentials: true
-    },
+   
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/meeting/meetingSave";
+    const url = "http://localhost:81/meeting/modifyMeeting/"+meetingId;
+    console.log(url)
     try {
       const response = await fetch(url, options);
       const text = await response.json();
-      console.log(text)
 
       if (text.status == "success") {
-        //console.log("success")
         setSuccessMessage(text.message);
         setOpenAlert(true); 
         resetForm({});
@@ -317,31 +303,62 @@ const CreateMeetingForm = props => {
     } 
  /*  console.log(selectedTime.toLocaleDateString());
   console.log(selectedTime.toLocaleTimeString()); */
-  }  
+  }   
 };
 
-  //update the location selection
-  const [location, setLocation] = React.useState('');
+useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getMeetings/"+meetingId,
+    );
+ 
+setMeeting(result.data.data);
+setSelectedDate(result.data.data.date)
+setSelectionModelTopic(result.data.data.topic)
+setSelectionModelParticipant(result.data.data.members)
+setLocation(result.data.data.location)
+setSelectedTopic([result.data.data.topic])
+setParticipantsArr(result.data.data.members)
+  },[]);
+
+
+  
+
+
+ //update date
+ const handleDateChange = (date) => {
+  setSelectedDate(date);
+};
+const urllocation = useLocation();
+const getCurrentPathWithLastPart = () => {
+
+  return urllocation.pathname.slice(urllocation.pathname.lastIndexOf('/')+1,urllocation.pathname.length );
+}
+const  meetingId  = getCurrentPathWithLastPart();
+const SaveParticipants=()=>
+{
+  setParticipantsArr(member);
+  setSelectionModelParticipant(member.map((r) => r.id));
+  handleClose();
+}
+const SaveTopics=()=>
+{
+  setTopicsArr(selectedTopic);
+  console.log(selectedTopic)
+  setSelectionModelTopic(selectedTopic.map((r) => r.id));
+  handleCloseTopic();
+  
+}  
+   //update the location selection
   const updateLocation = (event) => {
     setLocation(event.target.value);
   }
-  //update date
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-
-return (
+ 
+  return (
     
 <Container maxWidth={false}>
   <Formik
-  initialValues={{
-    title: '',
-    topics: '',
-    description: '',
-    duration: '',
-    date: '',
-    location: ' '
-  }}
+   initialValues={meeting} 
+  enableReinitialize
   onSubmit={handleSubmit}
 
   // Using Yup for validation
@@ -358,6 +375,7 @@ return (
       // location: Yup.string().ensure().required("Location is required")
   })}
   >
+    
     {props => {
       const {
         values,
@@ -369,32 +387,36 @@ return (
         handleReset,
         handleSubmit
       } = props;
+      
       return (
         <>
         
         <form onSubmit={handleSubmit} noValidate>
           <Card>
             <CardContent>
-              <CardHeader title="Create A Meeting">
+              <CardHeader title="Modify The Meeting">
               </CardHeader>
           {/* </Card> */}
 
           <Divider/>
 
           {/* Meeting Title */}
+
           <TextField
                 error={Boolean(touched.title && errors.title)}
                 fullWidth
                 helperText={touched.title && errors.title}
                 label="Title"
+                InputLabelProps={{ shrink: true }}
+                /* initialValues={meeting.title} */
                 margin="normal"
                 name="title"
                 onBlur={handleBlur}
-                onChange={handleChange}
+                onChange={ /* (e) => setMeeting({title:e.target.value}) */ handleChange}
                 value={values.title}
-                variant="outlined"
-                
-              />
+                variant="outlined">
+              </TextField>
+             
         {/* Meeting Topic */}  
       {/* Invite Topics Button */}
        <Button 
@@ -410,7 +432,6 @@ return (
         </DialogTitle>
         <DialogContent dividers> 
              <div style={{ height: 400, width: '100%' }}> 
-             {/* {console.log(topicsArr)} */}
                 <DataGrid 
                   
                   rows={topic}
@@ -421,7 +442,6 @@ return (
                   onSelectionModelChange={(e) => {
                      
                      const selectedIDs = new Set(e.selectionModel);
-                     console.log(selectedTopic)
                      setSelectedTopic(topic.filter((r) =>
                        selectedIDs.has(r.id))
                        
@@ -449,6 +469,7 @@ return (
           error={Boolean(touched.description && errors.description)}
           fullWidth
           helperText={touched.description && errors.description}
+          InputLabelProps={{ shrink: true }}
           label="Description"
           margin="normal"
           name="description"
@@ -496,6 +517,7 @@ return (
           error={Boolean(touched.duration && errors.duration)}
           fullWidth
           helperText={touched.duration && errors.duration}
+          InputLabelProps={{ shrink: true }}
           label="Duration in minutes"
           margin="normal"
           name="duration"
@@ -565,7 +587,6 @@ return (
                  onSelectionModelChange={(e) => {
                     
                     const selectedIDs = new Set(e.selectionModel);
-                    console.log(member)
                     setMember(user.filter((r) =>
                       selectedIDs.has(r.id))
                       
@@ -594,7 +615,7 @@ return (
           disabled={isSubmitting}
             type="submit"
             variant="contained">
-            Create Meeting
+            Modify Meeting
           </Button>
           </Box>
 
@@ -623,4 +644,4 @@ return (
   );
 };
 
-export default CreateMeetingForm;
+export default ModifyMeetingForm;

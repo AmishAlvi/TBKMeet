@@ -15,7 +15,6 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
 import CalendarView from './calendarView';
 import { Search as SearchIcon } from 'react-feather';
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 
 const MeetingListView = () => {
   const classes = useStyles();
-  const [meetings] = useState(data);
   const [meeting,setMeeting]=useState([]);
     const [state, setState] = React.useState({
         checkedA: true,
@@ -41,7 +39,7 @@ const MeetingListView = () => {
         console.log(state);
       };
       const getMeetings = async values => {
-        const url = "https://tbkmeet-backend.herokuapp.com/meeting/getMeetings";
+        const url = "http://localhost:81/meeting/getMeetings";
         try {
           const result = await fetch(url);
           const data = await result.json();
@@ -50,7 +48,7 @@ const MeetingListView = () => {
           if (data.status == "success") {
             // console.log("success");
             setMeeting(data.data)
-            // console.log(meeting)
+           // console.log(meeting)
             
           } else {
             console.log("error");

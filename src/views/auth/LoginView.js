@@ -16,6 +16,9 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
 import { Alert } from '@material-ui/lab';
+import { login, userSlice } from 'src/features/userSlice';
+import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -29,6 +32,8 @@ const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   var [errorMessage,setErrorMessage]=useState("");
 
   //Alert Function 
@@ -43,6 +48,8 @@ const LoginView = props => {
     setOpen(false);
   };
 
+  const dispatch = useDispatch();
+
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
     // This function received the values from the form
@@ -54,20 +61,30 @@ const LoginView = props => {
     };
     const options = {
       method: "POST",
+      xhrFields: {
+        withCredentials: true
+    },
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       },
       body: JSON.stringify(body)
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/auth/login";
+    const url = "http://localhost:81/auth/login";
    
     try {
       const response = await fetch(url, options);
       const text = await response.json();
+      const user = text.data
 
       if (text.status == "success") {
         console.log("success")
+        console.log(text)
+        Cookies.set('access_token', user['x-access-token'])
+        dispatch(login({
+          user,
+          loggedIn:true
+        }))
         navigate('/app/dashboard', { replace: true });
         
       } else {
@@ -111,6 +128,8 @@ const LoginView = props => {
     >
       {props => {
         const {
+          email,
+          password,
           values,
           touched,
           errors,

@@ -1,6 +1,8 @@
-import React,{useState} from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React,{useState, useEffect} from 'react';
+import { Link, useNavigate, useLocation,useHistory} from 'react-router-dom';
+import { Redirect} from 'react-router';
 import * as Yup from 'yup';
+import axios from 'axios';
 
 import { Formik } from 'formik';
 import {
@@ -38,20 +40,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const CreateTopicForm = props => {
+const ModifyTopicForm = props => {
 
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [topic, setTopic] = React.useState('');
   var [errorMessage,setErrorMessage]=useState("");
   var [successMessage,setSuccessMessage]=useState("");
   const [category, setCategory] = React.useState('');
+/*   const [category, setCategory] = React.useState();
+  const [category, setCategory] = React.useState(''); */
   const [state, setState] = React.useState({
     checkedDecision: false,
     checkedInfo: false,
   });
-  const { checkedDecision, checkedInfo } = state;
-  const error = [checkedDecision, checkedInfo].filter((v) => v).length < 1;
+  //const { checkedDecision, checkedInfo } = state;
+  const error = [state.checkedDecision, state.checkedInfo].filter((v) => v).length < 1;
   
   //Alert Function
 function Alert(props) {
@@ -64,13 +69,12 @@ const handleClose = (event, reason) => {
   }
   setOpen(false);
 };
-const clearForm = () => {
- setCategory("");
- setState(state.checkedDecision=false);
- setState(state.checkedInfo=false);
-};
+
+
+
+
   // The function that handles the logic when submitting the form
-  const handleSubmit = async (values,{resetForm}) => {
+  const handleSubmit = async (values) => {
     setErrorMessage("");
     // This function received the values from the form
     // The line below extract the two fields from the values object.
@@ -95,8 +99,8 @@ const clearForm = () => {
         description: description,
         totalTime: totalTime,
         category: category,
-        decision:checkedDecision,
-        information: checkedInfo
+        decision:state.checkedDecision,
+        information: state.checkedInfo
     };
     const options = {
       method: "POST",
@@ -109,19 +113,22 @@ const clearForm = () => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/topic/topicSave";
+    const url = "http://localhost:81/topic/modifyTopic/"+topicId;
     try {
       const response = await fetch(url, options);
       const text = await response.json();
       console.log(text)
 
       if (text.status == "success") {
-        //console.log("success")
         setSuccessMessage(text.message);
         setOpen(true);
-        //Form reset must be done!!!
-        resetForm({});
-        clearForm();
+
+        //console.log("success")
+        /* const history = useHistory()    
+        history.push('/app/topics') */
+       // <Redirect path to='/app/topics/'/>
+
+        
       } else {
         console.log(text.message);
         setErrorMessage(text.message);
@@ -131,8 +138,25 @@ const clearForm = () => {
       console.error(error);
     } 
    }
-  }; 
-
+  };
+  
+  
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/topic/getTopic/"+topicId,
+    );
+  
+  setTopic(result.data.data);
+  setCategory(result.data.data.category);
+  setState({checkedDecision:result.data.data.decision, checkedInfo:result.data.data.information});
+  },[]);
+  const urllocation = useLocation();
+  const getCurrentPathWithLastPart = () => {
+  
+    return urllocation.pathname.slice(urllocation.pathname.lastIndexOf('/')+1,urllocation.pathname.length );
+  }
+  const  topicId  = getCurrentPathWithLastPart();
+  console.log(topicId);
   //For updating the selector -duration time-
   
   const updateCategory = (event) => {
@@ -152,12 +176,8 @@ const clearForm = () => {
     
    <Container maxWidth={false}>
     <Formik
-      initialValues={{
-        title: '',
-        description: '',
-        category:"",
-        totalTime:''
-      }}
+      initialValues={topic}
+      enableReinitialize
       onSubmit={handleSubmit}
 
       //********Using Yup for validation********/
@@ -188,12 +208,13 @@ const clearForm = () => {
             <Card>
             <CardContent>
             <CardHeader
-          subheader="Please enter the necessary information for creating a topic"
-          title="Create Topic"
+          subheader="Please enter the necessary information for modifying a topic"
+          title="Modify Topic"
         />
         <Divider />
                 
               <TextField
+              InputLabelProps={{ shrink: true }}
                 error={Boolean(touched.title && errors.title)}
                 fullWidth
                 helperText={touched.title && errors.title}
@@ -207,6 +228,7 @@ const clearForm = () => {
                 
               />
               <TextField
+              InputLabelProps={{ shrink: true }}
                 error={Boolean(touched.description && errors.description)}
                 fullWidth
                 helperText={touched.description && errors.description}
@@ -221,6 +243,7 @@ const clearForm = () => {
                 rows={5}
               />
               <TextField
+              InputLabelProps={{ shrink: true }}
                 error={Boolean(touched.totalTime && errors.totalTime)}
                 fullWidth
                 helperText={touched.totalTime && errors.totalTime}
@@ -253,11 +276,11 @@ const clearForm = () => {
         <FormControl required error={error} component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">Select at least one meeting output</FormLabel>
         <FormControlLabel
-          control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={checkedDecision}/>}
+          control={<Checkbox checked={state.checkedDecision} onChange={handleCB} name="checkedDecision" value={state.checkedDecision}/>}
           label="Decision"
         /> 
        <FormControlLabel
-          control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={checkedInfo} />}
+          control={<Checkbox checked={state.checkedInfo} onChange={handleCB} name="checkedInfo" value={state.checkedInfo} />}
           label="Information "
         />
         </FormControl>
@@ -276,7 +299,7 @@ const clearForm = () => {
             type="submit"
             variant="contained"
           >
-           Create Topic
+           Modify Topic
           </Button>
 
         </Box>
@@ -302,4 +325,4 @@ const clearForm = () => {
   );
 };
 
-export default CreateTopicForm;
+export default ModifyTopicForm;

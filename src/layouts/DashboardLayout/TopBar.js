@@ -15,8 +15,8 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
 import linearGradient from 'src/components/linearGradient'
-import { useNavigate } from 'react-router-dom';
-  
+import { useDispatch } from 'react-redux'; 
+import {logout} from "../../features/userSlice";
 
 const TopBar = ({
   className,
@@ -25,11 +25,11 @@ const TopBar = ({
 }) => {
   const classes = linearGradient();
   const [notifications] = useState([]);
-  let navigate = useNavigate()
+  const dispatch = useDispatch();
 
-  function LogOut(e) {
-    console.log("logout button clicked")
-    navigate(`/Login`)
+  const Logout = () => {
+    dispatch(logout());
+
   }
 
   return (
@@ -53,9 +53,7 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit"
-            onClick={LogOut}
-          >
+          <IconButton color="inherit"  onClick= {Logout}>
             <InputIcon />
           </IconButton>
         </Hidden>

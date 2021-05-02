@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React,{useState, useEffect} from 'react';
+import { Link as RouterLink, useNavigate, useParams, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns'; //instal this version npm i @date-io/date-fns@1.3.13
@@ -38,6 +38,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,7 +67,6 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
-
 const topicColumns = [
   
   { field: 'title', headerName: 'Topic Title', width: 180},
@@ -106,7 +106,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
  
-const CreateMeetingForm = props => {
+const ModifyMeetingForm = props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [openTopic, setOpenTopic] = React.useState(false);
@@ -241,7 +241,7 @@ const CreateMeetingForm = props => {
   }
   //Function that handles the form submission
   const handleSubmit = async (values,{resetForm}) => {
-    setErrorMessage("");
+    /* setErrorMessage("");
     const {title, description, duration} = values;
     var participantsTmp=[];
     var topicsTmp=[];
@@ -317,31 +317,70 @@ const CreateMeetingForm = props => {
     } 
  /*  console.log(selectedTime.toLocaleDateString());
   console.log(selectedTime.toLocaleTimeString()); */
-  }  
+ // }  */ 
 };
 
-  //update the location selection
+/* const getMeeting = async meetingId => {
+  const url = "http://localhost:81/meeting/getMeetings/"+meetingId;
+  try {
+    const result = await fetch(url);
+    const data = await result.json();
+    //console.log(data)
+
+    if (data.status == "success") {
+      // console.log("success");
+      setMeeting(data.data);
+      
+    } else {
+      console.log("error");
+      
+    }
+  } catch (error) {
+    console.error(error);
+  } 
+}; */
+useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getMeetings/"+meetingId,
+    );
+ 
+    setMeeting(result.data);
+  });
+ //update date
+ const handleDateChange = (date) => {
+  setSelectedDate(date);
+};
+const urllocation = useLocation();
+const getCurrentPathWithLastPart = () => {
+
+  return urllocation.pathname.slice(urllocation.pathname.lastIndexOf('/')+1,urllocation.pathname.length );
+}
+const  meetingId  = getCurrentPathWithLastPart();
   const [location, setLocation] = React.useState('');
+  const [meeting, setMeeting] = React.useState('');
+  getMeeting(meetingId);
+  
+   //update the location selection
   const updateLocation = (event) => {
     setLocation(event.target.value);
   }
-  //update date
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+ 
+  console.log(meeting)
 
-return (
+  var meetingArr=meeting;
+  console.log(meetingArr)
+  return (
     
 <Container maxWidth={false}>
   <Formik
-  initialValues={{
+   initialValues={{
     title: '',
     topics: '',
     description: '',
     duration: '',
     date: '',
     location: ' '
-  }}
+  }} 
   onSubmit={handleSubmit}
 
   // Using Yup for validation
@@ -375,26 +414,27 @@ return (
         <form onSubmit={handleSubmit} noValidate>
           <Card>
             <CardContent>
-              <CardHeader title="Create A Meeting">
+              <CardHeader title="Modify The Meeting">
               </CardHeader>
           {/* </Card> */}
 
           <Divider/>
 
           {/* Meeting Title */}
+
           <TextField
                 error={Boolean(touched.title && errors.title)}
                 fullWidth
                 helperText={touched.title && errors.title}
                 label="Title"
+                /* initialValues={meeting.title} */
                 margin="normal"
                 name="title"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.title}
-                variant="outlined"
-                
-              />
+                onChange={(e) => setMeeting({title:"e.target.value"})}
+                value={meetingArr.title}
+                variant="outlined">
+              </TextField>
         {/* Meeting Topic */}  
       {/* Invite Topics Button */}
        <Button 
@@ -594,7 +634,7 @@ return (
           disabled={isSubmitting}
             type="submit"
             variant="contained">
-            Create Meeting
+            Modify Meeting
           </Button>
           </Box>
 
@@ -623,4 +663,4 @@ return (
   );
 };
 
-export default CreateMeetingForm;
+export default ModifyMeetingForm;

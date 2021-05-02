@@ -6,11 +6,15 @@ import reportWebVitals from './reportWebVitals';
 //Please use "react-router-dom": "^6.0.0-beta.0" version 
 //npm install react-router-dom@^6.0.0-beta.0
 import { BrowserRouter } from 'react-router-dom';
+import {Provider} from "react-redux"
+import store from "./app/store"
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-    </BrowserRouter>,
+  <Provider store = {store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 );
 
