@@ -113,7 +113,7 @@ const handleClose = (event, reason) => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/topic/modifyTopic/"+topicId;
+    const url = "https://tbkmeet-backend.herokuapp.com/topic/modifyTopic/"+topicId;
     try {
       const response = await fetch(url, options);
       const text = await response.json();
@@ -143,7 +143,7 @@ const handleClose = (event, reason) => {
   
   useEffect(async () => {
     const result = await axios(
-        "http://localhost:81/topic/getTopic/"+topicId,
+        "https://tbkmeet-backend.herokuapp.com/topic/getTopic/"+topicId,
     );
   
   setTopic(result.data.data);

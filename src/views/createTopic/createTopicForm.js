@@ -109,7 +109,7 @@ const clearForm = () => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/topic/topicSave";
+    const url = "https://tbkmeet-backend.herokuapp.com/topic/topicSave";
     try {
       const response = await fetch(url, options);
       const text = await response.json();
