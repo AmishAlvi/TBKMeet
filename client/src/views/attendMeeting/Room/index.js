@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import styled from "styled-components";
+import TextField from "@material-ui/core/TextField"
 import {useParams} from 'react-router-dom';
 import { id } from "date-fns/esm/locale";
 import { Button } from "@material-ui/core";
@@ -86,10 +87,46 @@ const Room = (props) => {
     const [camStatus,setCamStatus]=useState(true)
     const [recordStatus,setRecordStatus]=useState(false)
     const socketRef = useRef();
+    const chatSocketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
     const roomID = Room[id];
     const classes = useStyles();
+    const [ state, setState ] = useState({ message: "", name: "" })
+	const [ chat, setChat ] = useState([])
+
+    useEffect(
+		() => {
+			chatSocketRef.current = io.connect("http://localhost:4000")
+			chatSocketRef.current.on("message", ({ name, message }) => {
+				setChat([ ...chat, { name, message } ])
+			})
+			return () => chatSocketRef.current.disconnect()
+		},
+		[ chat ]
+	)
+
+	const onTextChange = (e) => {
+		setState({ ...state, [e.target.name]: e.target.value })
+	}
+
+	const onMessageSubmit = (e) => {
+		const { name, message } = state
+        console.log(state)
+		chatSocketRef.current.emit("message", { name, message })
+		e.preventDefault()
+		setState({ message: "", name })
+	}
+
+	const renderChat = () => {
+		return chat.map(({ name, message }, index) => (
+			<div key={index}>
+				<h3>
+					{name}: <span>{message}</span>
+				</h3>
+			</div>
+		))
+	}
 
   /*   function Footer({ children }) {
         return (
@@ -180,6 +217,7 @@ const Room = (props) => {
           )
         }
       }
+      
     useEffect(() => {
         socketRef.current = io.connect("https://tbkmeet-videoserver.herokuapp.com/");
         navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
@@ -218,7 +256,7 @@ const Room = (props) => {
 
     }, []);
 
-    
+
 
     function createPeer(userToSignal, callerID, stream) {
         const peer = new Peer({
@@ -281,6 +319,30 @@ const Room = (props) => {
                     <Video key={index} peer={peer} />
                 );
             })}
+            <div className="card">
+			<form onSubmit={onMessageSubmit}>
+				<h1>Messenger</h1>
+				<div className="name-field">
+					<TextField name="name" onChange={(e) => onTextChange(e)} value={state.name} label="Name" />
+				</div>
+				<div>
+					<TextField
+						name="message"
+						onChange={(e) => onTextChange(e)}
+						value={state.message}
+						id="outlined-multiline-static"
+						variant="outlined"
+						label="Message"
+					/>
+				</div>
+				<button>Send Message</button>
+			</form>
+			<div className="render-chat">
+				<h1>Chat Log</h1>
+				{renderChat()}
+			</div>
+		</div>
+
     <div className={classes.footerStyle}>
         {muteButtonRender()}
         {camButtonRender()}
