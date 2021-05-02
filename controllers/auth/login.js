@@ -5,7 +5,7 @@ const {User} = require("../../models");
 // TODO: add swagger
 module.exports = async (req, res, _next) => {
   const instance = await User.findOne({email: req.fields.email}).lean();
-  if(instance && !instance.emailConfirmed) return res.status(400).json({status: "error", message: "Confirm user email first."});
+  if(!instance.emailConfirmed) return res.status(400).json({status: "error", message: "Confirm user email first."});
   else if (instance && bcrypt.compareSync(req.fields.password, instance.password)) {
     req.session["user"] = {userid: instance._id};
     delete instance.password;
