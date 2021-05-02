@@ -97,7 +97,7 @@ const Room = (props) => {
 
     useEffect(
 		() => {
-			chatSocketRef.current = io.connect("http://localhost:4000")
+			chatSocketRef.current = io.connect("https://tbkmeet-chatserver.herokuapp.com/")
 			chatSocketRef.current.on("message", ({ name, message }) => {
 				setChat([ ...chat, { name, message } ])
 			})
