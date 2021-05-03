@@ -15,7 +15,8 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
 import linearGradient from 'src/components/linearGradient'
-  
+import { useDispatch } from 'react-redux'; 
+import {logout} from "../../features/userSlice";
 
 const TopBar = ({
   className,
@@ -24,6 +25,12 @@ const TopBar = ({
 }) => {
   const classes = linearGradient();
   const [notifications] = useState([]);
+  const dispatch = useDispatch();
+
+  const Logout = () => {
+    dispatch(logout());
+
+  }
 
   return (
     <AppBar
@@ -46,7 +53,7 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit"  onClick= {Logout}>
             <InputIcon />
           </IconButton>
         </Hidden>
