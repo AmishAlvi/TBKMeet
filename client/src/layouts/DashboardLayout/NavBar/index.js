@@ -22,8 +22,6 @@ import {
   UserCheck as AttendMeetingIcon
 } from 'react-feather';
 import NavItem from './NavItem';
-import { connect } from 'react-redux'
-import store from '../../../app/store'
 
 //const state = getState();
 
@@ -98,8 +96,6 @@ const useStyles = makeStyles(() => ({
     height: 64
   }
 }));
-
-const state = store.getState();
 
 //const name = state.user.user.text.data.firstName + " " + state.user.user.text.data.lastName;
 
