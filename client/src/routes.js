@@ -48,6 +48,14 @@ const routes = (loggedIn) => [
       { path: '/', element: <Navigate to="/Login" /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
+  },
+  {
+    path: 'meetings',
+    element: loggedIn ? <MainLayout  /> : <Navigate to="/login"/>,
+    children: [
+      { path: 'room/:roomID', element: <Room /> },
+    ]
+
   }
   
 ];
