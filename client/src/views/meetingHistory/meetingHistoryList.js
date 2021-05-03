@@ -23,6 +23,8 @@ import { Link } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import InfoIcon from '@material-ui/icons/Info';
+import moment from "moment";
+
 const useStyles = makeStyles((theme) => ({
   root: {},
 
@@ -46,23 +48,24 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     setLimit(event.target.value);
     setPage(0);
   };
-  const [topic, setTopic]=useState([]);    
-  const emptyRows = limit - Math.min(limit, topic.length - page * limit);
+  const [endedMeeting, setEndedMeeting]=useState([]);    
+  const emptyRows = limit - Math.min(limit, endedMeeting.length - page * limit);
   
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+  
   const getTopics = async values => {
-    const url = "http://localhost:81/topic/getTopic";
+    const url = "http://localhost:81/meeting/getEndedMeetings";
     try {
       const result = await fetch(url);
       const data = await result.json();
       // console.log(data)
 
       if (data.status == "success") {
-        // console.log("success");
-        setTopic(data.data)
-        // console.log(topic)
+        console.log("success");
+        setEndedMeeting(data.data)
+         console.log(endedMeeting)
         
       } else {
         console.log("error");
@@ -107,10 +110,10 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-               {topic.slice( page* limit, page * limit + limit).map((topic) => (
+               {endedMeeting.slice( page* limit, page * limit + limit).map((meeting) => (
                 <TableRow
                   hover
-                 key={topic._id}
+                 key={meeting._id}
                  className={classes.tableRow}
                 >
                  
@@ -124,21 +127,21 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                         color="textPrimary"
                         variant="body1"
                       >
-                        {topic.title}
+                        {meeting.title}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                     {topic.totalTime } minutes 
+                  {moment(meeting.date).format('DD MMM YYYY')} 
                   </TableCell>
                   <TableCell>
-                  {topic.category}  
+                  {moment(meeting.date).format('LT')}
                   </TableCell>
                   <TableCell>
-                  {topic.information &&(
+                  {meeting.information &&(
                     <p>Information Meeting</p>
                   )}
-                  {topic.decision &&(
+                  {meeting.decision &&(
                     <p>Decision Meeting</p>
                   )}
                  
@@ -162,7 +165,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={topic.length}
+        count={endedMeeting.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
