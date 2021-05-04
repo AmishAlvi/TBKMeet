@@ -1,7 +1,7 @@
 const {User} = require("../../models");
 
 module.exports = async (req,res) =>{
-    await User.findOne({Id:req.session.user}).then(async (user)=>{
+    await User.findOne({Id:req.session.user.userId}).then(async (user)=>{
         user.password = req.fields.password;
         await user.save((err)=>{
             if(err){return res.status(400).json({message: err.message});}
