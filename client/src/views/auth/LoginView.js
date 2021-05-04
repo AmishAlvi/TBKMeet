@@ -72,14 +72,12 @@ const LoginView = props => {
     try {
       const response = await fetch(url, options);
       const text = await response.json();
+      const head = await response.headers
+      console.log(head)
       const user = text.data
 
       if (text.status == "success") {
         console.log("success")
-        console.log(user)
-        Cookies.set('access_token', response.headers)
-        const tmp=response.headers.get('Set-Cookie')
-        console.log(tmp);
         localStorage.setItem('user', JSON.stringify(user))
         localStorage.setItem('loggedIn', true)
         navigate('/app/dashboard', { replace: true });
