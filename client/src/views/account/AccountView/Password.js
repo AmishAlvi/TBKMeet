@@ -11,7 +11,8 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
-
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 const useStyles = makeStyles(({
   root: {}
 }));
@@ -29,8 +30,82 @@ const Password = ({ className, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
+  const handleSubmit = async values => {
+    // This function received the values from the form
+    // The line below extract the two fields from the values object.
+    const {password} = values;
+    var body = {
+      password: password
+    };
+    const options = {
+      method: "POST",
+      xhrFields: {
+        withCredentials: true
+    },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(body)
+    };
+    const url = "http://localhost:81/updatePassword";
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      console.log(text)
 
+      if (text.status == "success") {
+        console.log("success")
+      } else {
+        console.log(text.message);
+      
+        
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
+    <Formik
+    initialValues={{
+      password: '',
+      confirmPassword: '',
+    }}
+    onSubmit={handleSubmit}
+
+    //********Using Yup for validation********/
+  /*   validationSchema: Yup.object({
+      password: Yup.string().required('Password is required'),
+      passwordConfirmation: Yup.string()
+         .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    }); */
+
+    validationSchema={Yup.object().shape({
+      password: Yup.string().min(8, 'Password must be at least 8 characters').required('password is required'),
+   /*    password:Yup.lazy(
+        value =>
+          !value
+            ? Yup.string()
+            : Yup.string()
+                .min(6, 'Password must be at least 6 characters')
+                .required('Password is required'),
+      ), */
+      confirmPassword: Yup.string().min(8, 'Password must be at least 8 characters').required('password is required').oneOf([Yup.ref('password'), null], 'Passwords must match')
+      
+    })}
+  >
+  {props => {
+    const {
+      values,
+      touched,
+      errors,
+      isSubmitting,
+      handleChange,
+      handleBlur,
+      handleSubmit
+    } = props;
+    return (
+      <>
     <form
       className={clsx(classes.root, className)}
       {...rest}
@@ -44,9 +119,12 @@ const Password = ({ className, ...rest }) => {
         <CardContent>
           <TextField
             fullWidth
+            error={Boolean(touched.password && errors.password)}
+            helperText={touched.password && errors.password}
             label="Password"
             margin="normal"
             name="password"
+            onBlur={handleBlur}
             onChange={handleChange}
             type="password"
             value={values.password}
@@ -54,12 +132,15 @@ const Password = ({ className, ...rest }) => {
           />
           <TextField
             fullWidth
+            error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+            helperText={touched.confirmPassword && errors.confirmPassword}
             label="Confirm password"
             margin="normal"
-            name="confirm"
+            name="confirmPassword"
             onChange={handleChange}
+            onBlur={handleBlur}
             type="password"
-            value={values.confirm}
+            value={values.confirmPassword}
             variant="outlined"
           />
         </CardContent>
@@ -70,6 +151,7 @@ const Password = ({ className, ...rest }) => {
           p={2}
         >
           <Button
+            type="submit"
             color="primary"
             variant="contained"
           >
@@ -78,6 +160,10 @@ const Password = ({ className, ...rest }) => {
         </Box>
       </Card>
     </form>
+    </>
+    );
+  }}
+    </Formik>
   );
 };
 

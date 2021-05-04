@@ -107,6 +107,7 @@ const DialogActions = withStyles((theme) => ({
 
  
 const ModifyMeetingForm = props => {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [location, setLocation] = React.useState('');
   const [meeting, setMeeting] = React.useState('');
@@ -292,6 +293,7 @@ const ModifyMeetingForm = props => {
         clearForm();
         setSelectionModelParticipant([]);
         setSelectionModelTopic([]);
+        navigate('/meetings')
   
       } else {
         console.log(text.message);
