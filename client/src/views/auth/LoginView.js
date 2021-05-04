@@ -58,9 +58,7 @@ const LoginView = props => {
     };
     const options = {
       method: "POST",
-      xhrFields: {
-        withCredentials: true
-    },
+      credentials: 'include',
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -73,7 +71,7 @@ const LoginView = props => {
       const response = await fetch(url, options);
       const text = await response.json();
       const head = await response.headers
-      console.log(head)
+      console.log( head)
       const user = text.data
 
       if (text.status == "success") {
