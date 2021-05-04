@@ -1,7 +1,7 @@
 const {Meeting} = require("../../models");
 
 module.exports = (req, res, _next) => {
-    return Meeting.find({}).
+    return Meeting.find({status:["notStarted","started"]}).
     then(meetings=>{
         res.json({status:"success",data:meetings});
     })

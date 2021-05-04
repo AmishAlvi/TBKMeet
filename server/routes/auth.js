@@ -101,7 +101,7 @@ router.post("/login", [
   login
 ]);
 
-router.get('/updatePassword',[requireAuthentication,updatePassword])
+router.post('/updatePassword',[requireAuthentication,updatePassword])
 router.get('/isLoggedIn',[requireAuthentication,isLoggedIn]);
 router.get('/logout',[requireAuthentication,logout]);
 
