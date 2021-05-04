@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -15,8 +15,7 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
 import linearGradient from 'src/components/linearGradient'
-import { useDispatch } from 'react-redux'; 
-import {logout} from "../../features/userSlice";
+
 
 const TopBar = ({
   className,
@@ -25,11 +24,13 @@ const TopBar = ({
 }) => {
   const classes = linearGradient();
   const [notifications] = useState([]);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const Logout = () => {
-    dispatch(logout());
-
+    //dispatch(logout());
+    localStorage.removeItem('user')
+    localStorage.removeItem('loggedIn')
+    navigate('/login', { replace: true });
   }
 
   return (

@@ -22,14 +22,12 @@ import {
   UserCheck as AttendMeetingIcon
 } from 'react-feather';
 import NavItem from './NavItem';
-import { connect } from 'react-redux'
-import store from '../../../app/store'
 
 //const state = getState();
 
 const staticInfo = {
   avatar: '/static/images/avatars/default_profile_img',
-  //name: 'Syed Amish Alvi'
+  name: 'Syed Amish Alvi'
 };
 
 const items = [
@@ -48,12 +46,7 @@ const items = [
     icon: CheckMeetingIcon,
     title: 'Check Meeting '
   },
-  {
-    href: '/app/attendMeeting',
-    icon: AttendMeetingIcon,
-    title: 'Attend Meeting'
-  },
-  
+ 
   {
     href: '/app/createTopic',
     icon: CreateTopicIcon,
@@ -99,9 +92,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const state = store.getState();
-
-//const name = state.user.user.text.data.firstName + " " + state.user.user.text.data.lastName;
+const name = " Syed Amish Alvi ";
 
 const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();
@@ -145,7 +136,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
           color="textSecondary"
           variant="body2"
         >
-         {/*  {name} */}
+         "Syed Amish Alvi"
         </Typography>
       </Box>
       <Divider />

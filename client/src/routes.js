@@ -18,10 +18,10 @@ import ModifyMeeting from 'src/views/modifyMeeting';
 import ModifyTopic from 'src/views/modifyTopic';
 import MeetingHistoryList from 'src/views/meetingHistory';
 //const user = this.state.user
-const routes = (user) => [
+const routes = (loggedIn) => [
   {
     path: 'app',
-    element: user ? <DashboardLayout /> : <Navigate to="/login"/>,
+    element: loggedIn ? <DashboardLayout /> : <Navigate to="/login"/>,
     children: [
       { path: 'account', element: <AccountView /> },
       { path: 'meetings', element: <MeetingListView /> },
@@ -40,7 +40,7 @@ const routes = (user) => [
   },
   {
     path: '/',
-    element: !user ?  <MainLayout /> : <Navigate to="/app/dashboard" />,
+    element: !loggedIn ?  <MainLayout /> : <Navigate to="/app/dashboard" />,
     children: [
       { path: 'login', element: <LoginView /> },
       { path: 'register', element: <RegisterView /> },
@@ -48,6 +48,14 @@ const routes = (user) => [
       { path: '/', element: <Navigate to="/Login" /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
+  },
+  {
+    path: 'meetings',
+    element: loggedIn ? <MainLayout  /> : <Navigate to="/login"/>,
+    children: [
+      { path: 'room/:roomID', element: <Room /> },
+    ]
+
   }
   
 ];

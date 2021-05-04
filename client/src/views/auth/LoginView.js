@@ -16,8 +16,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
 import { Alert } from '@material-ui/lab';
-import { login, userSlice } from 'src/features/userSlice';
-import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -47,7 +46,6 @@ const LoginView = props => {
     setOpen(false);
   };
 
-  const dispatch = useDispatch();
 
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
@@ -74,13 +72,14 @@ const LoginView = props => {
     try {
       const response = await fetch(url, options);
       const text = await response.json();
+      const user = text.data
 
       if (text.status == "success") {
         console.log("success")
-        dispatch(login({
-          text,
-          loggedIn:true
-        }))
+        console.log(user)
+        Cookies.set('access_token', response.headers['Set-Cookie'])
+        localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('loggedIn', true)
         navigate('/app/dashboard', { replace: true });
         
       } else {
