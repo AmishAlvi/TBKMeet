@@ -78,8 +78,6 @@ const LoginView = props => {
 
       if (text.status == "success") {
         console.log("success")
-        //console.log(user)
-        //Cookies.set('access_token', response.headers)
         localStorage.setItem('user', JSON.stringify(user))
         localStorage.setItem('loggedIn', true)
         navigate('/app/dashboard', { replace: true });

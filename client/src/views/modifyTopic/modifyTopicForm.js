@@ -76,6 +76,7 @@ const handleClose = (event, reason) => {
   // The function that handles the logic when submitting the form
   const handleSubmit = async (values) => {
     setErrorMessage("");
+    
     // This function received the values from the form
     // The line below extract the two fields from the values object.
        if(Object.keys(category).length == 0)
@@ -122,6 +123,7 @@ const handleClose = (event, reason) => {
       if (text.status == "success") {
         setSuccessMessage(text.message);
         setOpen(true);
+        navigate('/topics')
 
         //console.log("success")
         /* const history = useHistory()    
