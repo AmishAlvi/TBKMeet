@@ -23,8 +23,9 @@ const Container = styled.div`
 `;
 
 const StyledVideo = styled.video`
+    background: black;
     height: 40%;
-    width: 50%;
+    width: 100%;
 `;
 
 const Video = (props) => {
@@ -92,8 +93,10 @@ const Room = (props) => {
     const peersRef = useRef([]);
     const roomID = Room[id];
     const classes = useStyles();
-    const [ state, setState ] = useState({ message: "", name: "" })
+    const user = JSON.parse(localStorage.getItem('user'));
+    const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 	const [ chat, setChat ] = useState([])
+
 
     useEffect(
 		() => {
@@ -112,7 +115,6 @@ const Room = (props) => {
 
 	const onMessageSubmit = (e) => {
 		const { name, message } = state
-        console.log(state)
 		chatSocketRef.current.emit("message", { name, message })
 		e.preventDefault()
 		setState({ message: "", name })
@@ -172,7 +174,7 @@ const Room = (props) => {
                  style={{ fontSize: 40 }}
                 />
 
-        </Button>
+            </Button>
             
           )
         }
@@ -231,19 +233,22 @@ const Room = (props) => {
                         peerID: userID,
                         peer,
                     })
-                    peers.push(peer);
+                    peers.push({
+                        peerID: userID,
+                        peer,
+                    });
                 })
                 setPeers(peers);
             })
 
-            socketRef.current.on("user joined", payload => {
+            socketRef.current.on("user joined", (payload) => {
                 const peer = addPeer(payload.signal, payload.callerID, stream);
                 peersRef.current.push({
-                    peerID: payload.callerID,
-                    peer,
-                })
-
-                setPeers(users => [...users, peer]);
+                  peerID: payload.callerID,
+                  peer,
+                });
+           
+              setPeers([...peersRef.current]);
             });
 
             socketRef.current.on("receiving returned signal", payload => {
@@ -251,7 +256,15 @@ const Room = (props) => {
                 item.peer.signal(payload.signal);
             });
 
-            //stream.getAudioTracks()[0].enabled = false;
+            socketRef.current.on('user disconnected', id => {
+                const peerObj = peersRef.current.find(p => p.peerID === id);
+                if(peerObj) {
+                    peerObj.peer.destroy();
+                }
+                const peers = peersRef.current.filter(p => p.peerID !== id);
+                peersRef.current = peers;
+                setPeers(peers);
+            })
         })
 
     }, []);
@@ -314,17 +327,15 @@ const Room = (props) => {
     return (
         <Container style={{width:"100%"}}>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
-            {peers.map((peer, index) => {
+            {peers.map((peer) => {
                 return (
-                    <Video key={index} peer={peer} />
+                    <Video key={peer.peerID} peer={peer.peer} />
                 );
             })}
+            {
             <div className="card">
 			<form onSubmit={onMessageSubmit}>
 				<h1>Messenger</h1>
-				<div className="name-field">
-					<TextField name="name" onChange={(e) => onTextChange(e)} value={state.name} label="Name" />
-				</div>
 				<div>
 					<TextField
 						name="message"
@@ -341,7 +352,7 @@ const Room = (props) => {
 				<h1>Chat Log</h1>
 				{renderChat()}
 			</div>
-		</div>
+		</div> }
 
     <div className={classes.footerStyle}>
         {muteButtonRender()}
