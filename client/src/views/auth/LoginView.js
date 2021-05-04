@@ -16,6 +16,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
 import { Alert } from '@material-ui/lab';
+import Cookies from 'js-cookie'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -29,6 +30,8 @@ const LoginView = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   var [errorMessage,setErrorMessage]=useState("");
 
   //Alert Function 
@@ -42,6 +45,7 @@ const LoginView = props => {
     }
     setOpen(false);
   };
+
 
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
@@ -68,9 +72,16 @@ const LoginView = props => {
     try {
       const response = await fetch(url, options);
       const text = await response.json();
+      const head = await response.headers
+      console.log(head)
+      const user = text.data
 
       if (text.status == "success") {
         console.log("success")
+        //console.log(user)
+        //Cookies.set('access_token', response.headers)
+        localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('loggedIn', true)
         navigate('/app/dashboard', { replace: true });
         
       } else {
@@ -114,6 +125,8 @@ const LoginView = props => {
     >
       {props => {
         const {
+          email,
+          password,
           values,
           touched,
           errors,
