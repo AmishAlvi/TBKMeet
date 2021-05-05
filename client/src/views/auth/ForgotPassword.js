@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LoginView = props => {
+const ForgotPassword = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -139,7 +139,7 @@ const LoginView = props => {
                     color="textPrimary"
                     variant="h2"
                   >
-                    Sign in
+                    Forgot Password
                   </Typography>
                   
                 </Box>
@@ -179,36 +179,9 @@ const LoginView = props => {
                     size="large"
                     type="submit"
                     variant="contained" >
-                      Sign in now
+                      Reset Password
                 </Button>
               </Box>
-              <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Don&apos;t have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to="/register"
-                    variant="h6"
-                  >
-                    Sign up
-                  </Link>
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-    
-                  <Link
-                    component={RouterLink}
-                    to="/forgotPassword"
-                    variant="h6"
-                  >
-                    Forgot your Password?
-                  </Link>
-                </Typography>
             </form>
           </>
         );
@@ -225,4 +198,4 @@ const LoginView = props => {
   );
 };
 
-export default LoginView;
+export default ForgotPassword;

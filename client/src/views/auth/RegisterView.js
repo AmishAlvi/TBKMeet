@@ -150,7 +150,7 @@ const RegisterView = props => {
               Yup.object().shape({
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                 firstName: Yup.string().max(255).required('First name is required'),
-                lastName: Yup.string().max(255).required('Last name is required'),
+                lastName: Yup.string().min(8, 'Password must be at least 8 characters').required('Last name is required'),
                 password: Yup.string().max(255).required('password is required'),
                 companyName: Yup.string().max(255).required('company name is required'),
                 policy: Yup.boolean().oneOf([true], 'This field must be checked')

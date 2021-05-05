@@ -39,12 +39,14 @@ const MeetingListView = () => {
         console.log(state);
       };
       const getMeetings = async values => {
+        const options = {
+          method: "GET",
+          credentials: 'include',
+        };
         const url = "http://localhost:81/meeting/getMeetings";
         try {
-          const result = await fetch(url);
-          const data = await result.json();
-          //console.log(data)
-      
+          const result = await fetch(url,options);
+          //console.log(data)  
           if (data.status == "success") {
             // console.log("success");
             setMeeting(data.data)
