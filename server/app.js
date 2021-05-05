@@ -19,9 +19,8 @@ app.use(helmet());
 
 app.use(
   cors({
-    credentials: true,
     origin: /.*/,
-    exposedHeaders:"Set-Cookie"
+    credentials: true
   })
 );
 app.use(

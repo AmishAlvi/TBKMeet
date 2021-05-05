@@ -3,18 +3,19 @@ const uuid = require('uuid/v4');
 const AWS = require('aws-sdk');
 require('dotenv').config();
 const BUCKET_NAME ='tbkawsbucket';
-
+const {MeetingFile} = require('../models');
+const { meeting } = require('../controllers/meeting');
 module.exports = async(req,res)=>{
     try{
 
     const fileContent = fs.createReadStream(req.files.fileName.path);
     fileContent.on('error', function(err) {
         console.log('File Error', err);
-      });
-      AWS.config.update({
-        accesskeyId:'AKIAYC64MUG3SG576255',
-        secretAccessKey:'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'
-      });
+    });
+    AWS.config.credentials = {
+        "accessKeyId": 'AKIAYC64MUG3SG576255',
+        "secretAccessKey":'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'
+    }
     const s3 = new AWS.S3({
         apiVersion: '2006-03-01'
     });
@@ -29,7 +30,14 @@ module.exports = async(req,res)=>{
             return res.status(400).send({msg: err.message});
         }
         else{
-            return res.status(200).send(`file uploaded successfull ${data.location}` );
+            const {
+                _meetingId
+            
+              } = req.fields.meetingId;
+              fileName = data.Location;
+            const meetingFile = new MeetingFile(_meetingId,fileName);
+            meetingFile.save()
+            return res.status(200).send({location: data.Location });
         }
     });
 } catch(error){
