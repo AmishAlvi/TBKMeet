@@ -19,36 +19,37 @@ const useStyles = makeStyles(({
 
 const Password = ({ className, ...rest }) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    password: '',
-    confirm: ''
-  });
+  
 
-  const handleChange = (event) => {
+ /*  const handleChange = (event) => {
     setValues({
       ...values,
       [event.target.name]: event.target.value
     });
-  };
+  }; */
   const handleSubmit = async values => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
+    
+    console.log("tmp")
+    console.log(values.password)
     const {password} = values;
+    console.log(values.password)
+    //values.preventDefault()
     var body = {
       password: password
     };
+    console.log(body.password)
     const options = {
       method: "POST",
-      xhrFields: {
-        withCredentials: true
-    },
+     credentials:"include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/updatePassword";
+    const url = "http://localhost:81/auth/updatePassword";
     try {
       const response = await fetch(url, options);
       const text = await response.json();
@@ -64,6 +65,8 @@ const Password = ({ className, ...rest }) => {
     } catch (error) {
       console.error(error);
     }
+    
+
   };
   return (
     <Formik
@@ -71,7 +74,10 @@ const Password = ({ className, ...rest }) => {
       password: '',
       confirmPassword: '',
     }}
-    onSubmit={handleSubmit}
+ /*    onSubmit={(e) => {
+      e.preventDefault();
+      handleSubmit();
+    }} */
 
     //********Using Yup for validation********/
   /*   validationSchema: Yup.object({
@@ -102,7 +108,6 @@ const Password = ({ className, ...rest }) => {
       isSubmitting,
       handleChange,
       handleBlur,
-      handleSubmit
     } = props;
     return (
       <>
@@ -152,8 +157,18 @@ const Password = ({ className, ...rest }) => {
         >
           <Button
             type="submit"
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit(values);
+            }}
             color="primary"
             variant="contained"
+            disabled={isSubmitting}
+            /* onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }} */
+            /* disabled={isSubmitting} */
           >
             Update
           </Button>
@@ -167,8 +182,6 @@ const Password = ({ className, ...rest }) => {
   );
 };
 
-Password.propTypes = {
-  className: PropTypes.string
-};
+
 
 export default Password;

@@ -63,6 +63,7 @@ const UpcomingMeetings = ({ className, ...rest }) => {
   useEffect(async () => {
     const result = await axios(
         "http://localhost:81/meeting/getMeetings",
+        {withCredentials: true}
     );
     setMeeting(result.data.data)
   },[]);
