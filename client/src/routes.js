@@ -17,6 +17,7 @@ import Room from 'src/views/attendMeeting/Room';
 import ModifyMeeting from 'src/views/modifyMeeting';
 import ModifyTopic from 'src/views/modifyTopic';
 import MeetingHistoryList from 'src/views/meetingHistory';
+import ForgotPassword from 'src/views/auth/ForgotPassword';
 //const user = this.state.user
 const routes = (loggedIn) => [
   {
@@ -44,6 +45,7 @@ const routes = (loggedIn) => [
     children: [
       { path: 'login', element: <LoginView /> },
       { path: 'register', element: <RegisterView /> },
+      { path: 'forgotPassword', element: <ForgotPassword /> },
       { path: '404', element: <NotFoundView /> },
       { path: '/', element: <Navigate to="/Login" /> },
       { path: '*', element: <Navigate to="/404" /> }
