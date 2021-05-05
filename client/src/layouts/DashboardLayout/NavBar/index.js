@@ -23,7 +23,9 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
-const user = {
+//const state = getState();
+
+const staticInfo = {
   avatar: '/static/images/avatars/default_profile_img',
   name: 'Syed Amish Alvi'
 };
@@ -44,12 +46,7 @@ const items = [
     icon: CheckMeetingIcon,
     title: 'Check Meeting '
   },
-  {
-    href: '/app/attendMeeting',
-    icon: AttendMeetingIcon,
-    title: 'Attend Meeting'
-  },
-  
+ 
   {
     href: '/app/createTopic',
     icon: CreateTopicIcon,
@@ -62,7 +59,7 @@ const items = [
     title: 'Check Topic Pool'
   },
   {
-    href: '/404',
+    href: '/app/meetingHistory',
     icon: CheckHistoryIcon,
     title: 'Check Meeting History'
   },
@@ -95,9 +92,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const NavBar = ({ onMobileClose, openMobile }) => {
+const name = " Syed Amish Alvi ";
+
+const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();
   const location = useLocation();
+  //console.log(name)
+  
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -119,9 +120,9 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         p={2}
       >
         <Avatar
-          className={classes.avatar}
+          className={classes.avatar}s
           component={RouterLink}
-          src={user.avatar}
+          src={staticInfo.avatar}
           to="/app/account"
         />
         <Typography
@@ -135,7 +136,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           color="textSecondary"
           variant="body2"
         >
-          {user.name}
+         "Syed Amish Alvi"
         </Typography>
       </Box>
       <Divider />
@@ -192,5 +193,12 @@ NavBar.defaultProps = {
   onMobileClose: () => {},
   openMobile: false
 };
+
+/*function mapStateToProps(state) {
+  return {
+      user: state
+      }
+  }*/
+
 
 export default NavBar;

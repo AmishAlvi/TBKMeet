@@ -91,7 +91,6 @@ function create() {
     const id = uuid();
     navigate(`/app/room/${id}`, {id: id});
 }
-  
     //const {meetings}= this.props.meetings;
     // console.log(moment()
     // .add(1, "days")
@@ -136,6 +135,7 @@ function create() {
       )
     }
   }
+  console.log(eventState);
     return (
 
       <Card>
@@ -152,7 +152,7 @@ function create() {
           // }}
           onSelectEvent={event => {
             handleClickOpen()
-            setEventState({eventState: event});
+            setEventState( event);
             }}
           style={{ height: "80vh" , width:"100%"}}
         />
@@ -173,7 +173,6 @@ function create() {
             </DialogContent>
             <DialogActions>
             {MeetingButtonRender(eventState.isStarted, eventState._id)}
-
             </DialogActions>
           </Dialog>
 

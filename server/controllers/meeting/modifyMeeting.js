@@ -33,7 +33,7 @@ module.exports = async (req, res, _next) => {
         meeting.isActive = isActive;
         await meeting.save(async  (err) => {
             if (err) { return res.status(500).send({ msg: err.message }); }
-            else{ return res.status(200).json({status:"success",message:"The meeting is saved"});}
+            else{ return res.status(200).json({status:"success",message:"The meeting is modified"});}
       
         });
     }); 

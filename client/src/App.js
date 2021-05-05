@@ -8,7 +8,13 @@ import GlobalStyles from 'src/components/GlobalStyles';
 import theme from 'src/theme';
 import routes from 'src/routes';
 function App() {
-  const routing = useRoutes(routes);
+ // localStorage.setItem(loggedIn, false)
+  const loggedIn = localStorage.getItem('loggedIn')
+  const user = JSON.parse(localStorage.getItem('user'));
+  console.log(user)
+  console.log(loggedIn)
+  const routing = useRoutes(routes(loggedIn));
+  //console.log(user)
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />

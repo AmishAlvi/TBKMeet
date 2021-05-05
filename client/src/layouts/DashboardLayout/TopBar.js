@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -15,7 +15,7 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
 import linearGradient from 'src/components/linearGradient'
-  
+
 
 const TopBar = ({
   className,
@@ -24,6 +24,14 @@ const TopBar = ({
 }) => {
   const classes = linearGradient();
   const [notifications] = useState([]);
+  const navigate = useNavigate();
+
+  const Logout = () => {
+    //dispatch(logout());
+    localStorage.removeItem('user')
+    localStorage.removeItem('loggedIn')
+    navigate('/login', { replace: true });
+  }
 
   return (
     <AppBar
@@ -46,7 +54,7 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit"  onClick= {Logout}>
             <InputIcon />
           </IconButton>
         </Hidden>
