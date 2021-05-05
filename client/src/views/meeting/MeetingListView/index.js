@@ -45,7 +45,7 @@ const MeetingListView = () => {
         };
         const url = "http://localhost:81/meeting/getMeetings";
         try {
-          const result = await fetch(url,options);
+          const data = await fetch(url,options);
           //console.log(data)  
           if (data.status == "success") {
             // console.log("success");
