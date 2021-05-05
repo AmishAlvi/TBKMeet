@@ -58,9 +58,10 @@ const LoginView = props => {
     };
     const options = {
       method: "POST",
-      xhrFields: {
+      credentials: 'include',
+     /*  xhrFields: {
         withCredentials: true
-    },
+    }, */
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -78,7 +79,7 @@ const LoginView = props => {
         console.log("success")
         console.log(user)
         Cookies.set('access_token', response.headers)
-        const tmp=response.headers.get('Set-Cookie')
+        const tmp=response.headers
         console.log(tmp);
         localStorage.setItem('user', JSON.stringify(user))
         localStorage.setItem('loggedIn', true)

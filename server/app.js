@@ -20,8 +20,8 @@ app.use(helmet());
 app.use(
   cors({
     credentials: true,
-    origin: /.*/,
-    exposedHeaders:"Set-Cookie"
+    origin: 'http://localhost:3000/'
+    //exposedHeaders:"Set-Cookie"
   })
 );
 app.use(
