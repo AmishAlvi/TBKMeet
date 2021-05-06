@@ -1,4 +1,3 @@
-
 module.exports = async (req,res) =>{
     try{
     if(!req.session.userpass)return res.status(403).json({status:"forbidden"});
