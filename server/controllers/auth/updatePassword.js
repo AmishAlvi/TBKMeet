@@ -14,7 +14,7 @@ module.exports = async (req,res) =>{
         await user.save((err)=>{
             if(err){return res.status(400).json({message: err.message});}
             else{
-            return res.status(201).json({message:"password changed successfully"});}
+            return res.status(201).json({status:"success",message:"password changed successfully"});}
 
         });
     }
