@@ -46,12 +46,12 @@ const MeetingListView = () => {
         const url = "http://localhost:81/meeting/getMeetings";
         try {
           const data = await fetch(url,options);
+
           //console.log(data)  
           if (data.status == "success") {
             // console.log("success");
             setMeeting(data.data)
-           // console.log(meeting)
-            
+            // console.log(meeting)
           } else {
             console.log("error");
             

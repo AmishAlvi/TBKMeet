@@ -13,6 +13,9 @@ import MicOffRoundedIcon from '@material-ui/icons/MicOffRounded';
 import { makeStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import axios from 'axios';
+import Countdown from "react-countdown";
+
 const Container = styled.div`
     padding: 20px;
     display: flex;
@@ -87,15 +90,34 @@ const Room = (props) => {
     const [micStatus,setMicStatus]=useState(true)
     const [camStatus,setCamStatus]=useState(true)
     const [recordStatus,setRecordStatus]=useState(false)
+    const [meetingData ,setMeeting]=useState([]);
     const socketRef = useRef();
     const chatSocketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const roomID = Room[id];
+    const params = useParams();
+    const roomID = params.roomID;
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
-	const [ chat, setChat ] = useState([])
+	  const [ chat, setChat ] = useState([])
+
+    //console.log("room id: " , params.roomID)
+
+    useEffect(async () => {
+      const result = await axios(
+  
+        `http://localhost:81/meeting/getMeetings/${roomID}`,
+          {withCredentials: true}
+  
+      );
+      setMeeting(result.data.data)
+    },[]);
+
+  
+    const duration = meetingData.duration * 60000
+    console.log(duration)
+
 
 
     useEffect(
@@ -352,6 +374,9 @@ const Room = (props) => {
 				<h1>Chat Log</h1>
 				{renderChat()}
 			</div>
+      <Countdown date={Date.now() + 5000} >
+        <span>Meeting Ended</span>
+      </Countdown>
 		</div> }
 
     <div className={classes.footerStyle}>
@@ -359,6 +384,7 @@ const Room = (props) => {
         {camButtonRender()}
         {recordButtonRender()}
         <Button variant="contained" className={classes.exitButton}> Exit</Button>
+        
     </div>
         </Container>
 
