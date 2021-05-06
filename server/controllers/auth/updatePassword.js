@@ -1,11 +1,15 @@
 const {User} = require("../../models");
-
+const bcrypt = require("bcryptjs");
 module.exports = async (req,res) =>{
-    await User.findOne({Id:req.session.user.userId}).then(async (user)=>{
+
+    try{
+    console.log(req.session.user);
+    await User.findOne({_id:req.session.user.userid}).then(async (user)=>{
         if(!req.fields.password){
             return res.status(400).json({msg:"Empty password"})
         }
         else{
+        
         user.password = req.fields.password;
         await user.save((err)=>{
             if(err){return res.status(400).json({message: err.message});}
@@ -15,4 +19,8 @@ module.exports = async (req,res) =>{
         });
     }
     });
+}
+catch(error){
+    return res.status(400).json({message:error.message});
+}
 }
