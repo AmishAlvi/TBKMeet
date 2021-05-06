@@ -12,6 +12,8 @@ module.exports = async(req,res)=>{
     fileContent.on('error', function(err) {
         console.log('File Error', err);
     });
+    var fileType = (req.files.fileName.name).split(".");
+    console.log(req.files.fileName.name);
     AWS.config.credentials = {
         "accessKeyId": 'AKIAYC64MUG3SG576255',
         "secretAccessKey":'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'
@@ -25,6 +27,7 @@ module.exports = async(req,res)=>{
         Key:uuid(),
         Body:fileContent
     };
+    params.Key += `.${fileType[fileType.length-1]}`;
     await s3.upload(params,function(err,data){
         if(err){
             return res.status(400).send({msg: err.message});
@@ -35,9 +38,13 @@ module.exports = async(req,res)=>{
             
               } = req.fields.meetingId;
               fileName = data.Location;
-            const meetingFile = new MeetingFile(_meetingId,fileName);
-            meetingFile.save()
-            return res.status(200).send({location: data.Location });
+            const meetingFile = new MeetingFile({_meetingId,fileName});
+            meetingFile.save((err)=>{
+                if(err){return res.status(400).send({msg:err.message})}
+                else{
+                    return res.status(200).send({location: data.Location });
+                }
+            });
         }
     });
 } catch(error){
