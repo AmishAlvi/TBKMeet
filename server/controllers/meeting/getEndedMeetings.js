@@ -1,7 +1,7 @@
 const {Meeting} = require("../../models");
 
-module.exports = (req, res, _next) => {
-    return Meeting.find({status:"ended"}).
+module.exports = (req, res) => {
+    return Meeting.find({status:"ended",owner:req.session.user._id}).
     then(meetings=>{
         res.json({status:"success",data:meetings});
     })
