@@ -33,6 +33,7 @@ const ForgotPassword = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   var [errorMessage,setErrorMessage]=useState("");
+  var [tokenState,SetTokenState]= useState("");
 
   //Alert Function 
   function Alert(props) {
@@ -46,6 +47,46 @@ const ForgotPassword = props => {
     setOpen(false);
   };
 
+    const resetTokenClicked= async values =>{
+      const { email } = values;
+      var body = {
+        email: email
+      };
+      const options = {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(body)
+
+      };
+      const url = "http://localhost:81/auth/resetTokenClicked";
+     
+      try {
+        const response = await fetch(url, options);
+        const text = await response.json();
+        const head = await response.headers
+        console.log( head)
+        const user = text.data
+  
+        if (text.status == "success") {
+          console.log("success")
+          console.log(text)
+          SetTokenState(text)
+          console.log(tokenState);
+          
+        } else {
+          console.log(text.message);
+          setErrorMessage(text.message)
+          setOpen(true);    
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+    }
 
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
@@ -53,7 +94,6 @@ const ForgotPassword = props => {
     // The line below extract the two fields from the values object.
     const { email, password } = values;
     var body = {
-      password: password,
       email: email
     };
     const options = {
@@ -65,29 +105,28 @@ const ForgotPassword = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/auth/login";
+    const url = "http://localhost:81/auth/passwordreset";
    
     try {
       const response = await fetch(url, options);
       const text = await response.json();
       const head = await response.headers
-      console.log( head)
+      //console.log( head)
       const user = text.data
 
       if (text.status == "success") {
-        console.log("success")
-        localStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('loggedIn', true)
-        navigate('/app/dashboard', { replace: true });
+       // console.log("success")
+    
         
       } else {
-        console.log(text.message);
+        //console.log(text.message);
         setErrorMessage(text.message)
         setOpen(true);    
       }
     } catch (error) {
-      console.error(error);
+     // console.error(error);
     }
+    resetTokenClicked(values);
   };
 
   // Returning the part that should be rendered
