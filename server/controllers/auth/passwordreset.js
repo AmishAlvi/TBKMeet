@@ -25,7 +25,7 @@ module.exports = async (req, res, _next) =>{
             var mailOptions = { from: email1, to: user.email, subject: 'Password Reset Token', text: 'Hello,\n\n' + 'please reset your password using this code: \nhttp:\/\/' + req.headers.host + '\/auth\/passwordtoken\/' + token.token + '\n' };
             transporter.sendMail(mailOptions, function (err) {
                 if (err) { return res.status(500).send({ msg: err.message }); }
-                return res.send('Password reset token has been sent to ' + user.email + '.');
+                return res.status(200).send({status:"success"});
             });
         });
     });
