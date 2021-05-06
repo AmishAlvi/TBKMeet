@@ -33,7 +33,7 @@ const ForgotPassword = props => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   var [errorMessage,setErrorMessage]=useState("");
-  var [tokenState,SetTokenState]= useState("");
+  var [tokenState,setTokenState]= useState("");
 
   //Alert Function 
   function Alert(props) {
@@ -74,8 +74,7 @@ const ForgotPassword = props => {
         if (text.status == "success") {
           console.log("success")
           console.log(text)
-          SetTokenState(text)
-          console.log(tokenState);
+          return("success")
           
         } else {
           console.log(text.message);
@@ -85,7 +84,7 @@ const ForgotPassword = props => {
       } catch (error) {
         console.error(error);
       }
-
+      return "Not yet";
     }
 
   // The function that handles the logic when submitting the form
@@ -126,7 +125,8 @@ const ForgotPassword = props => {
     } catch (error) {
      // console.error(error);
     }
-    resetTokenClicked(values);
+    setTokenState(resetTokenClicked(values));
+    console.log(tokenState)
   };
 
   // Returning the part that should be rendered
