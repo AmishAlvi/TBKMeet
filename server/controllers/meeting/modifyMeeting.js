@@ -20,17 +20,16 @@ module.exports = async (req, res, _next) => {
 
 
   try {
-    Meeting.findOne({_id:req.params.id}).then(async (meeting) =>{
-        meeting.title = title;
-        meeting.description = description;
-        meeting.duration = duration;
-        meeting.location = location;
-        meeting.date = date;
-        meeting.topic = topic;
-        meeting.members = members;
-        meeting.notes = notes;
-        meeting.owner = owner;
-        meeting.isActive = isActive;
+    await Meeting.findOne({_id:req.params.id}).then(async (meeting) =>{
+        meeting.title = !title ? meeting.title : title;
+        meeting.description = !description ? meeting.description : description;
+        meeting.duration = !duration ? meeting.duration : duration;
+        meeting.location = !location ? meeting.location : location;
+        meeting.date = !date ? meeting.date:date;
+        meeting.topic = !topic ? meeting.topic:topic;
+        meeting.members = !members ? meeting.members : members;
+        meeting.notes = !notes ? meeting.notes:notes;
+        meeting.isActive = !isActive ? meeting.isActive : isActive;
         await meeting.save(async  (err) => {
             if (err) { return res.status(500).send({ msg: err.message }); }
             else{ return res.status(200).json({status:"success",message:"The meeting is modified"});}
