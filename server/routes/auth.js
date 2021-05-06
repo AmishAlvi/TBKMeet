@@ -80,7 +80,7 @@ router.post("/resendemailverification", [
       email: {type: "string", format: "email"}
     }
   }),resendemailverification]);
-router.get("/resetTokenClicked",[resetTokenClicked]);
+router.post("/resetTokenClicked",[resetTokenClicked]);
 router.post("/passwordreset",[
   /*validateJson({
     required:["email"],
