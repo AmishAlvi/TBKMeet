@@ -15,6 +15,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import axios from 'axios';
 import Countdown from "react-countdown";
+import Timer from './timer'
 
 const Container = styled.div`
     padding: 20px;
@@ -101,6 +102,11 @@ const Room = (props) => {
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 	  const [ chat, setChat ] = useState([])
+    const now = Date.now()
+    const [selectedFile, setFile] = useState();
+
+    const CountdownWrapper = () => <Countdown date={now + 100000} />;
+    const MemoCountdown = React.memo(CountdownWrapper);
 
     //console.log("room id: " , params.roomID)
 
@@ -115,7 +121,7 @@ const Room = (props) => {
     },[]);
 
   
-    const duration = meetingData.duration * 60000
+    const duration = meetingData
     console.log(duration)
 
 
@@ -146,7 +152,14 @@ const Room = (props) => {
 		return chat.map(({ name, message }, index) => (
 			<div key={index}>
 				<h3>
-					{name}: <span>{message}</span>
+        {message.startsWith("http") ? ( <span>
+        {name} : <a href={message}  class="active">{message}</a></span>
+      ) : (
+        <span>
+        {name} : {message} 
+        </span>
+      )}
+					
 				</h3>
 			</div>
 		))
@@ -346,6 +359,29 @@ const Room = (props) => {
         userVideo.current.srcObject.getVideoTracks()[0].enabled = !userVideo.current.srcObject.getVideoTracks()[0].enabled;
     }
 
+    function handleUpload(e){
+      console.log('tmp')
+      const data = new FormData() 
+      data.append('fileName', selectedFile)
+      data.append('meetingId', roomID)
+      console.log(selectedFile);
+      let url = "http://localhost:81/fileupload";
+
+      axios.post(url, data, {withCredentials: true , headers: 
+        {"Content-Type": "multipart/form-data",} 
+      },)
+      .then(res => { // then print response status
+          console.log(res.data.location);
+          state.message = res.data.location;
+          const { name, message } = state
+		      chatSocketRef.current.emit("message", { name, message })
+		      e.preventDefault()
+		      setState({ message: "", name })
+
+      })
+
+    }
+
     return (
         <Container style={{width:"100%"}}>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
@@ -374,17 +410,19 @@ const Room = (props) => {
 				<h1>Chat Log</h1>
 				{renderChat()}
 			</div>
-      <Countdown date={Date.now() + 5000} >
-        <span>Meeting Ended</span>
-      </Countdown>
 		</div> }
+
+    
 
     <div className={classes.footerStyle}>
         {muteButtonRender()}
         {camButtonRender()}
         {recordButtonRender()}
+        <Timer initialMinute = {0} initialSeconds = {150} />
         <Button variant="contained" className={classes.exitButton}> Exit</Button>
-        
+        <input type="file" name="fileName" onChange={(event) => setFile(event.target.files[0])}/>
+        {console.log(selectedFile)}
+        <button type="button" class="btn btn-success btn-block" onClick={handleUpload}>Upload</button> 
     </div>
         </Container>
 
