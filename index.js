@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 4000
 let users = []
 
 io.on('connection', socket => {
-  socket.on('join room', (userID) => {
+  socket.on('join server', (userID) => {
     const user = {
       userID, 
       id: socket.id,
@@ -16,10 +16,10 @@ io.on('connection', socket => {
     io.emit("new user", users)
   });
 
-  socket.on('join room', (roomID, cb) => {
+  socket.on('join room', (roomID) => {
     socket.join(roomID);
-    cb(messages[roomID]);
-    socket.emit('joined', messages[roomID]);
+    //cb(messages[roomID]);
+    socket.emit('joined room', "hello");
   })
 
   socket.on('send message', ({content, to, sender}) => {
