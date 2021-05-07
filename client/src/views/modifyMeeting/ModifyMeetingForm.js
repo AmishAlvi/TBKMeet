@@ -107,6 +107,7 @@ const DialogActions = withStyles((theme) => ({
 
  
 const ModifyMeetingForm = props => {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [location, setLocation] = React.useState('');
   const [meeting, setMeeting] = React.useState('');
@@ -149,6 +150,7 @@ const ModifyMeetingForm = props => {
   useEffect(async () => {
     const result = await axios(
         "http://localhost:81/meeting/getEmails",
+        {withCredentials: true}
     );
       setUser(result.data.data)
   },[]);
@@ -172,6 +174,7 @@ const ModifyMeetingForm = props => {
   useEffect(async () => {
     const result = await axios(
         "http://localhost:81/topic/getTopic",
+        {withCredentials: true}
     );
       setTopic(result.data.data)
       topic.map((val)=>{
@@ -272,7 +275,7 @@ const ModifyMeetingForm = props => {
     };
     const options = {
       method: "POST",
-   
+      credentials:"include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -292,6 +295,7 @@ const ModifyMeetingForm = props => {
         clearForm();
         setSelectionModelParticipant([]);
         setSelectionModelTopic([]);
+        navigate('/meetings')
   
       } else {
         console.log(text.message);
@@ -309,6 +313,7 @@ const ModifyMeetingForm = props => {
 useEffect(async () => {
     const result = await axios(
         "http://localhost:81/meeting/getMeetings/"+meetingId,
+        {withCredentials: true}
     );
  
 setMeeting(result.data.data);

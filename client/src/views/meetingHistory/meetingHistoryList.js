@@ -56,9 +56,13 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   };
   
   const getTopics = async values => {
+    const options = {
+      method: "GET",
+      credentials: 'include',
+    };
     const url = "http://localhost:81/meeting/getEndedMeetings";
     try {
-      const result = await fetch(url);
+      const result = await fetch(url,options);
       const data = await result.json();
       // console.log(data)
 
