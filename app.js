@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, '../')));
 
 app.use(helmet());
 
+app.set("trust proxy",1);
 app.use(
   cors({
     credentials: true,
