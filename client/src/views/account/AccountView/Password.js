@@ -9,9 +9,12 @@ import {
   CardHeader,
   Divider,
   TextField,
-  makeStyles
+  makeStyles,
+  Snackbar,
+  FormControl
 } from '@material-ui/core';
 import * as Yup from 'yup';
+import MuiAlert from '@material-ui/lab/Alert';
 import { Formik } from 'formik';
 const useStyles = makeStyles(({
   root: {}
@@ -19,7 +22,9 @@ const useStyles = makeStyles(({
 
 const Password = ({ className, ...rest }) => {
   const classes = useStyles();
-  
+  const [open, setOpen] = React.useState(false);
+  var [errorMessage,setErrorMessage]=useState("");
+  var [successMessage,setSuccessMessage]=useState("");
 
  /*  const handleChange = (event) => {
     setValues({
@@ -27,10 +32,21 @@ const Password = ({ className, ...rest }) => {
       [event.target.name]: event.target.value
     });
   }; */
-  const handleSubmit = async values => {
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+  //Close func for closing the alert
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  const handleSubmit = async (values) => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
-    
+    setErrorMessage("");
+    ///setSuccessMessage("")
     console.log("tmp")
     console.log(values.password)
     const {password} = values;
@@ -56,9 +72,14 @@ const Password = ({ className, ...rest }) => {
       console.log(text)
 
       if (text.status == "success") {
-        console.log("success")
+          //console.log("success")
+           setSuccessMessage(text.message);
+           setOpen(true);
+           
       } else {
-        console.log(text.message);
+        console.log("This is the error message "+text.message);
+        setErrorMessage(text.message);
+        setOpen(true);
       
         
       }
@@ -173,6 +194,18 @@ const Password = ({ className, ...rest }) => {
             Update
           </Button>
         </Box>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    {!Object.keys(errorMessage).length == 0 ? 
+     
+         (<Alert onClose={handleClose} severity="Error">
+         {errorMessage}  
+     </Alert>)
+        :(<Alert onClose={handleClose} severity="success">
+            {successMessage}  
+        </Alert>)}
+        
+        
+      </Snackbar>
       </Card>
     </form>
     </>

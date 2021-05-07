@@ -196,6 +196,19 @@ const LoginView = props => {
                     Sign up
                   </Link>
                 </Typography>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+    
+                  <Link
+                    component={RouterLink}
+                    to="/forgotPassword"
+                    variant="h6"
+                  >
+                    Forgot your Password?
+                  </Link>
+                </Typography>
             </form>
           </>
         );
