@@ -1,6 +1,6 @@
 const {Router} = require("express");
 
-const {signUp, login, logout,isLoggedIn,emailverification,resendemailverification,passwordreset,validPasswordToken,newPassword,updatePassword} = require("../controllers/auth");
+const {signUp, login, logout,isLoggedIn,emailverification,resendemailverification,passwordreset,validPasswordToken,newPassword,updatePassword,resetTokenClicked} = require("../controllers/auth");
 const {requireAuthentication,validateJson} = require("../middleware");
 //const nodemailer = require("nodemailer");
 //const Token = require("../models/User/token");
@@ -80,6 +80,7 @@ router.post("/resendemailverification", [
       email: {type: "string", format: "email"}
     }
   }),resendemailverification]);
+router.post("/resetTokenClicked",[resetTokenClicked]);
 router.post("/passwordreset",[
   /*validateJson({
     required:["email"],
@@ -101,7 +102,7 @@ router.post("/login", [
   login
 ]);
 
-router.get('/updatePassword',[requireAuthentication,updatePassword])
+router.post('/updatePassword',[requireAuthentication,updatePassword])
 router.get('/isLoggedIn',[requireAuthentication,isLoggedIn]);
 router.get('/logout',[requireAuthentication,logout]);
 

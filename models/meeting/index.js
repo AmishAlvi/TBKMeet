@@ -21,7 +21,7 @@ const MeetingSchema = new Schema(
       default: "notStarted",
       required: true
     },
-    owner:{type:ObjectId,require:false,ref:"User"},
+    owner:{type:ObjectId,require:true,ref:"User"},
     duration:{type: String, require: true}
   }
 );

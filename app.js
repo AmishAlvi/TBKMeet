@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(
   cors({
     credentials: true,
-    origin: /.*/
+    origin: 'http://localhost:3000'
   })
 );
 app.use(
@@ -54,6 +54,5 @@ const port = process.env.PORT || 81;
 
 
 app.listen(port, () => {
-  console.log(`successfully started`)
   console.log(`Listening for requests on port ${port}`);
 });

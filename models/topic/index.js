@@ -9,7 +9,8 @@ const TopicSchema = new Schema(
     totalTime: { type: String,require:true},
     category:{type:String,require:true},
     decision:{type:Boolean,default:false},
-    information:{type:Boolean,default:false} 
+    information:{type:Boolean,default:false},
+    owner:{type:ObjectId,require:true,ref:"User"}
   },opts
 );
 TopicSchema.virtual("id").get(function() {
