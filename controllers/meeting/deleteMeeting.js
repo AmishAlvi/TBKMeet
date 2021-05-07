@@ -1,7 +1,7 @@
 const {Meeting} = require("../../models");
 
 module.exports = (req, res) => {
-    return Meeting.find({status:"ended",owner:req.session.user._id}).
+    return Meeting.deleteOne({_id: req.params.id}).
     then(meetings=>{
         res.json({status:"success",data:meetings});
     })
