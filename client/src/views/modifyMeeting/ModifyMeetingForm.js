@@ -130,6 +130,23 @@ const ModifyMeetingForm = props => {
   const[selectionModelTopic,setSelectionModelTopic]=useState([]);
   const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
+ /*  const loadUser = async values => {
+    const url = "http://localhost:81/meeting/getEmails";
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
+
+      if (data.status == "success") {
+        setUser(data.data)
+        
+      } else {
+        console.log("error");
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  }; */
   useEffect(async () => {
     const result = await axios(
         "http://localhost:81/meeting/getEmails",
@@ -137,7 +154,23 @@ const ModifyMeetingForm = props => {
     );
       setUser(result.data.data)
   },[]);
+/*   const loadTopic = async values => {
+    const url = "http://localhost:81/topic/getTopic";
+    try {
+      const result = await fetch(url);
+      const data = await result.json();
 
+      if (data.status == "success") {
+        setTopic(data.data)
+        
+      } else {
+        console.log("error");
+        
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  }; */
   useEffect(async () => {
     const result = await axios(
         "http://localhost:81/topic/getTopic",
@@ -262,8 +295,7 @@ const ModifyMeetingForm = props => {
         clearForm();
         setSelectionModelParticipant([]);
         setSelectionModelTopic([]);
-        navigate('/app/meetings');
-
+        navigate('/app/meetings')
   
       } else {
         console.log(text.message);
