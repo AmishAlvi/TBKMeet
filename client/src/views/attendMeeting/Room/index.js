@@ -102,11 +102,12 @@ const Room = (props) => {
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 	  const [ chat, setChat ] = useState([])
-    const now = Date.now()
+    const [currentTime, setCurrentTime] = useState();
     const [selectedFile, setFile] = useState();
-
-    const CountdownWrapper = () => <Countdown date={now + 100000} />;
-    const MemoCountdown = React.memo(CountdownWrapper);
+    const [meetingTopicIDs, setTopicIDs] = useState();
+    const [meetingSeconds, setSeconds] = useState();
+    const [meetingMinutes, setMinutes] = useState();
+    const [meetingHours, setHours] = useState();
 
     //console.log("room id: " , params.roomID)
 
@@ -118,11 +119,37 @@ const Room = (props) => {
   
       );
       setMeeting(result.data.data)
+      setTopicIDs(result.data.data.topic)
     },[]);
-
   
-    const duration = meetingData
-    console.log(duration)
+   /* const duration = meetingData
+    console.log("topics: " , meetingTopicIDs)
+    console.log("date: ", duration.date)
+    const mildate = new Date(duration.date)
+
+    function msToTime(duration) {
+      var milliseconds = Math.floor((duration % 1000) / 100),
+        seconds = Math.floor((duration / 1000) % 60),
+        minutes = Math.floor((duration / (1000 * 60)) % 60),
+        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    
+      hours = (hours < 10) ? "0" + hours : hours;
+      minutes = (minutes < 10) ? "0" + minutes : minutes;
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      setHours(hours);
+      setMinutes(minutes);
+      setSeconds(seconds);
+    
+      return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    }
+
+    //setCurrentTime(Date.now())
+    const meetingDuration = mildate.getTime() - currentTime
+    msToTime(mildate.getTime())
+
+    console.log("meeting duration: " , msToTime(meetingDuration))
+    console.log("date: ", meetingDuration)*/
 
 
 
@@ -220,34 +247,6 @@ const Room = (props) => {
             <Button onClick={closeCamera} className={classes.button}>
                 <VideocamOffRoundedIcon
                  style={{ fontSize: 40 }}
-                />
-        </Button>
-          
-          )
-        }
-      }
-      function recordButtonRender() {
-        //console.log(id)
-        if(recordStatus)
-        {
-          return (
-            
-            <Button onClick={startRecord} className={classes.button} style={{ color:"#d32f2f"}}>
-                <FiberManualRecordIcon
-                 style={{ fontSize: 40 }}
-                />
-
-        </Button>
-            
-          )
-        }
-        else
-        {
-          return(
-          
-            <Button onClick={startRecord} className={classes.button} style={{ alignItems:"center"}}  >
-                <FiberManualRecordIcon
-                 style={{ fontSize: 40  }}
                 />
         </Button>
           
@@ -382,6 +381,10 @@ const Room = (props) => {
 
     }
 
+    function handleExit(e){
+      window.close()
+    }
+
     return (
         <Container style={{width:"100%"}}>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
@@ -391,8 +394,12 @@ const Room = (props) => {
                 );
             })}
             {
-            <div className="card">
-			<form onSubmit={onMessageSubmit}>
+      <div className="card">
+			<div className="render-chat">
+				<h1>Chat Log</h1>
+				{renderChat()}
+			</div>
+      <form onSubmit={onMessageSubmit}>
 				<h1>Messenger</h1>
 				<div>
 					<TextField
@@ -406,10 +413,6 @@ const Room = (props) => {
 				</div>
 				<button>Send Message</button>
 			</form>
-			<div className="render-chat">
-				<h1>Chat Log</h1>
-				{renderChat()}
-			</div>
 		</div> }
 
     
@@ -417,9 +420,8 @@ const Room = (props) => {
     <div className={classes.footerStyle}>
         {muteButtonRender()}
         {camButtonRender()}
-        {recordButtonRender()}
-        <Timer initialMinute = {0} initialSeconds = {150} />
-        <Button variant="contained" className={classes.exitButton}> Exit</Button>
+        <Timer initialHours = {0} initialMinute = {60} initialSeconds = {60} />
+        <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
         <input type="file" name="fileName" onChange={(event) => setFile(event.target.files[0])}/>
         {console.log(selectedFile)}
         <button type="button" class="btn btn-success btn-block" onClick={handleUpload}>Upload</button> 
