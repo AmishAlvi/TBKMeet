@@ -107,6 +107,7 @@ const DialogActions = withStyles((theme) => ({
 
  
 const ModifyMeetingForm = props => {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [location, setLocation] = React.useState('');
   const [meeting, setMeeting] = React.useState('');
@@ -130,7 +131,7 @@ const ModifyMeetingForm = props => {
   const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
  /*  const loadUser = async values => {
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/getEmails";
+    const url = "http://localhost:81/meeting/getEmails";
     try {
       const result = await fetch(url);
       const data = await result.json();
@@ -148,12 +149,13 @@ const ModifyMeetingForm = props => {
   }; */
   useEffect(async () => {
     const result = await axios(
-        "https://tbkmeet-backend.herokuapp.com/meeting/getEmails",
+        "http://localhost:81/meeting/getEmails",
+        {withCredentials: true}
     );
       setUser(result.data.data)
   },[]);
 /*   const loadTopic = async values => {
-    const url = "https://tbkmeet-backend.herokuapp.com/topic/getTopic";
+    const url = "http://localhost:81/topic/getTopic";
     try {
       const result = await fetch(url);
       const data = await result.json();
@@ -171,7 +173,8 @@ const ModifyMeetingForm = props => {
   }; */
   useEffect(async () => {
     const result = await axios(
-        "https://tbkmeet-backend.herokuapp.com/topic/getTopic",
+        "http://localhost:81/topic/getTopic",
+        {withCredentials: true}
     );
       setTopic(result.data.data)
       topic.map((val)=>{
@@ -272,14 +275,14 @@ const ModifyMeetingForm = props => {
     };
     const options = {
       method: "POST",
-   
+      credentials:"include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       },
       body: JSON.stringify(body)
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/modifyMeeting/"+meetingId;
+    const url = "http://localhost:81/meeting/modifyMeeting/"+meetingId;
     console.log(url)
     try {
       const response = await fetch(url, options);
@@ -292,6 +295,7 @@ const ModifyMeetingForm = props => {
         clearForm();
         setSelectionModelParticipant([]);
         setSelectionModelTopic([]);
+        navigate('/meetings')
   
       } else {
         console.log(text.message);
@@ -308,7 +312,8 @@ const ModifyMeetingForm = props => {
 
 useEffect(async () => {
     const result = await axios(
-        "https://tbkmeet-backend.herokuapp.com/meeting/getMeetings/"+meetingId,
+        "http://localhost:81/meeting/getMeetings/"+meetingId,
+        {withCredentials: true}
     );
  
 setMeeting(result.data.data);

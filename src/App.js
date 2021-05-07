@@ -7,11 +7,13 @@ import { ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/components/GlobalStyles';
 import theme from 'src/theme';
 import routes from 'src/routes';
-import { useSelector } from 'react-redux';
-import { selectUser } from './features/userSlice';
 function App() {
-  const user = useSelector(selectUser);
-  const routing = useRoutes(routes(user));
+ // localStorage.setItem(loggedIn, false)
+  const loggedIn = localStorage.getItem('loggedIn')
+  const user = JSON.parse(localStorage.getItem('user'));
+  console.log(user)
+  console.log(loggedIn)
+  const routing = useRoutes(routes(loggedIn));
   //console.log(user)
   return (
     <ThemeProvider theme={theme}>
