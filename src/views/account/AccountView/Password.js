@@ -65,7 +65,7 @@ const Password = ({ className, ...rest }) => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/auth/updatePassword";
+    const url = "https://tbkmeet-backend.herokuapp.com/auth/updatePassword";
     try {
       const response = await fetch(url, options);
       const text = await response.json();

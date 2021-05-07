@@ -80,7 +80,7 @@ const ForgotPassword = props => {
         body: JSON.stringify(body)
 
       };
-      const url = "http://localhost:81/auth/resetTokenClicked";
+      const url = "https://tbkmeet-backend.herokuapp.com/auth/resetTokenClicked";
      
       try {
         const response = await fetch(url, options);
@@ -120,7 +120,7 @@ const ForgotPassword = props => {
         body: JSON.stringify(body)
 
       };
-      const url = "http://localhost:81/auth/newPassword";
+      const url = "https://tbkmeet-backend.herokuapp.com/auth/newPassword";
       await setTokenState(resetTokenClicked);
       if(tokenState){
       try {
@@ -166,7 +166,7 @@ const ForgotPassword = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/auth/passwordreset";
+    const url = "https://tbkmeet-backend.herokuapp.com/auth/passwordreset";
    
     try {
       const response = await fetch(url, options);

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 /* 
 const deneme=(async res=>{
-const url="http://localhost:81/topic/getTopic";
+const url="https://tbkmeet-backend.herokuapp.com/topic/getTopic";
 response = await fetch(url);
 const data = await response.json();
 console.log(data);}) */
@@ -104,7 +104,7 @@ const TopicList = ({ className,  ...rest }) => {
       method: "GET",
       credentials: 'include',
     };
-    const url = "http://localhost:81/topic/getTopic";
+    const url = "https://tbkmeet-backend.herokuapp.com/topic/getTopic";
     try {
       const result = await fetch(url,options);
       const data = await result.json();
