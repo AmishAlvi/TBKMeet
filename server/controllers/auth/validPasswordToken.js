@@ -9,7 +9,7 @@ module.exports = async (req,res,next) =>{
        await User.findOne({_id:token1._userId}).then((user)=>{
            if(!user)return res.status(409).json({message:"no user with this one"});
            req.session.userpass = user;
-           res.send("ok");
+           res.status(200).send({status:"success",msg:"link clicked"});
         });
        
     });
