@@ -391,8 +391,12 @@ const Room = (props) => {
                 );
             })}
             {
-            <div className="card">
-			<form onSubmit={onMessageSubmit}>
+      <div className="card">
+			<div className="render-chat">
+				<h1>Chat Log</h1>
+				{renderChat()}
+			</div>
+      <form onSubmit={onMessageSubmit}>
 				<h1>Messenger</h1>
 				<div>
 					<TextField
@@ -406,10 +410,6 @@ const Room = (props) => {
 				</div>
 				<button>Send Message</button>
 			</form>
-			<div className="render-chat">
-				<h1>Chat Log</h1>
-				{renderChat()}
-			</div>
 		</div> }
 
     
