@@ -5,10 +5,10 @@ const {requireAuthentication,validateJson} = require("../middleware");
 
 const router = Router();
 
-router.post("/topicSave", [topic]);
-router.get("/getTopic", [getTopic]);
-router.get("/getTopic/:id",[getOneTopic]);
-router.post("/modifyTopic/:id",[modifyTopic]);
+router.post("/topicSave", [requireAuthentication,topic]);
+router.get("/getTopic/:id",[requireAuthentication,getOneTopic]);
+router.get("/getTopic", [requireAuthentication,getTopic]);
+router.post("/modifyTopic/:id",[requireAuthentication,modifyTopic]);
 
 
 module.exports = router;

@@ -100,9 +100,13 @@ const TopicList = ({ className,  ...rest }) => {
     setPage(newPage);
   };
   const getTopics = async values => {
+    const options = {
+      method: "GET",
+      credentials: 'include',
+    };
     const url = "http://localhost:81/topic/getTopic";
     try {
-      const result = await fetch(url);
+      const result = await fetch(url,options);
       const data = await result.json();
       // console.log(data)
 

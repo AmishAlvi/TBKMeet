@@ -100,9 +100,7 @@ const clearForm = () => {
     };
     const options = {
       method: "POST",
-      xhrFields: {
-        withCredentials: true
-    },
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"

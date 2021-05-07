@@ -105,9 +105,7 @@ const handleClose = (event, reason) => {
     };
     const options = {
       method: "POST",
-      xhrFields: {
-        withCredentials: true
-    },
+     credentials:'include',
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -146,6 +144,7 @@ const handleClose = (event, reason) => {
   useEffect(async () => {
     const result = await axios(
         "http://localhost:81/topic/getTopic/"+topicId,
+        {withCredentials: true}
     );
   
   setTopic(result.data.data);
