@@ -40,14 +40,14 @@ const Account = () => {
           >
             <Profile />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             lg={8}
             md={6}
             xs={12}
           >
             <ProfileDetails />
-          </Grid>
+          </Grid> */}
           <Grid
             item
             lg={4}
