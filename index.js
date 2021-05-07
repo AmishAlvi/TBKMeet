@@ -4,36 +4,11 @@ const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const PORT = process.env.PORT || 4000
 
-let users = []
-
 io.on('connection', socket => {
-  socket.on('join server', (userID) => {
-    const user = {
-      userID, 
-      id: socket.id,
-    };
-    users.push(user);
-    io.emit("new user", users)
-  });
-
-  socket.on('join room', (roomID) => {
-    socket.join(roomID);
-    //cb(messages[roomID]);
-    socket.emit('joined room', "hello");
+  socket.on('message', ({ name, message }) => {
+    io.emit('message', { name, message })
   })
-
-  socket.on('send message', ({content, to, sender}) => {
-    const payload = {
-      content,
-      sender,
-    };
-    socket.to(to).emit('new message', payload)
-  })
-
-  socket.on('disconnect', () => {
-      users = users.filter(u => u.id !== socket.id);
-      io.emit('new user', users)
-  })
+  socket.emit('chat-message', 'hello world')
 })
 
 //server.listen(process.env.PORT || 8000, () => console.log('server is running on port 8000'));
