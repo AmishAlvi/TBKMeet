@@ -79,6 +79,9 @@ const TopBar = ({
             onClick={onMobileNavOpen}
           >
             <MenuIcon />
+            </IconButton>
+          <IconButton color="inherit"  onClick= {Logout}>
+            <InputIcon />
           </IconButton>
         </Hidden>
       </Toolbar>

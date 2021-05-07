@@ -115,7 +115,7 @@ const Room = (props) => {
     },[]);
 
   
-    const duration = meetingData.duration * 60000
+    const duration = meetingData
     console.log(duration)
 
 
