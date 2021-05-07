@@ -1,10 +1,11 @@
 const {Router} = require("express");
 const http = require("http");
-const {meeting,getMeeting,getOneMeeting,getEmails,startMeeting,modifyMeeting,endMeeting,getEndedMeetings} = require("../controllers/meeting");
+const {meeting,getMeeting,getOneMeeting,getEmails,startMeeting,modifyMeeting,endMeeting,getEndedMeetings,deleteMeeting} = require("../controllers/meeting");
 const {requireAuthentication,validateJson} = require("../middleware");
 
 const router = Router();
 
+router.get("/deleteMeeting/:id",[requireAuthentication,deleteMeeting])
 router.post("/meetingSave",[requireAuthentication,meeting]);
 router.get("/getMeetings/:id",[requireAuthentication,getOneMeeting]);
 router.get("/getMeetings",[requireAuthentication,getMeeting]);
