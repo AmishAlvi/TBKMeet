@@ -8,7 +8,6 @@ io.on('connection', socket => {
   socket.on('message', ({ name, message }) => {
     io.emit('message', { name, message })
   })
-  socket.emit('chat-message', 'hello world')
 })
 
 //server.listen(process.env.PORT || 8000, () => console.log('server is running on port 8000'));
