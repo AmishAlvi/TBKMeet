@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(
   cors({
     credentials: true,
-    origin: /.*/
+    origin: 'https://tbkMeet.herokuapp.com'
   })
 );
 app.use(
