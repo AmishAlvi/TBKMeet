@@ -19,11 +19,11 @@ module.exports = async (req, res, _next) => {
         topic.description = !description ? topic.title:title;
         topic.totalTime = !totalTime ? topic.totalTime:totalTime;
         topic.category = !category ? topic.category:category;
-        topic.decision = !decision ? topic.decision:category;
+        topic.decision = decision;
         topic.information = !information ? topic.information:information;
 
         await topic.save(async  (err) => {
-            if (err) { return res.status(500).send({ msg: err.message }); }
+            if (err) { return res.status(500).send({ message: err.message }); }
             else{return res.status(200).json({status:"success",message:"The topic is modified"});}
         });
     });
