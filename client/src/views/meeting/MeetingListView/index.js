@@ -47,9 +47,9 @@ const MeetingListView = () => {
         try {
           const result = await fetch(url,options);
           //console.log(data)  
-          if (data.status == "success") {
+          if (result.status == "success") {
             // console.log("success");
-            setMeeting(data.data)
+            setMeeting(result.data)
            // console.log(meeting)
             
           } else {
