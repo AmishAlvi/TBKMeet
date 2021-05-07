@@ -9,11 +9,13 @@ module.exports = async (req, res, _next) => {
     totalTime,
     category,
     decision,
-    information
+    information,
+    owner
   } = req.fields;
 
 
   const topic = new Topic({title,description,totalTime,category,decision,information});
+  topic.owner = req.session.user.userid;
   try {
 
     await topic.save(async  (err) => {
