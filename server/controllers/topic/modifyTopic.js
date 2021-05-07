@@ -15,12 +15,12 @@ module.exports = async (req, res, _next) => {
 
   try {
     Topic.findOne({_id:req.params.id}).then(async (topic) =>{
-        topic.title = title;
-        topic.description = description;
-        topic.totalTime = totalTime;
-        topic.category = category;
-        topic.decision = decision;
-        topic.information = information;
+        topic.title = !title ? topic.title:title;
+        topic.description = !description ? topic.title:title;
+        topic.totalTime = !totalTime ? topic.totalTime:totalTime;
+        topic.category = !category ? topic.category:category;
+        topic.decision = !decision ? topic.decision:category;
+        topic.information = !information ? topic.information:information;
 
         await topic.save(async  (err) => {
             if (err) { return res.status(500).send({ msg: err.message }); }
