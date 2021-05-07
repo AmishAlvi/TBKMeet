@@ -22,7 +22,7 @@ module.exports = async (req, res, _next) => {
 
 
   const meeting = new Meeting({title,description,duration,location,date,topic,members,notes,owner,isActive});
-  meeting.owner = req.session.user._id;
+  meeting.owner = req.session.user.userid;
   try {
     await meeting.save(async  (err) => {
       if (err) { return res.status(500).send({ msg: err.message }); }
