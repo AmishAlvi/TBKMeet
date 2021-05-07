@@ -8,6 +8,7 @@ const validPasswordToken = require("./validPasswordToken");
 const newPassword = require("./newPassword");
 const isLoggedIn = require("./isLoggedIn");
 const updatePassword = require("./updatePassword");
+const resetTokenClicked = require("./checkPasswordTokenConfirmed");
 
 module.exports = {
   login,
@@ -19,5 +20,6 @@ module.exports = {
   validPasswordToken,
   newPassword,
   isLoggedIn,
-  updatePassword
+  updatePassword,
+  resetTokenClicked
 };

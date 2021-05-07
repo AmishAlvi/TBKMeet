@@ -121,7 +121,7 @@ const Results = ({ className, meetings, ...rest }) => {
     {
       return(
       
-                  <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meeting_id}`, {id: meeting_id})}>
+                  <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meeting_id}`, {id: meeting_id}, { replace: true })}>
                   Start Meeting </Button>
       
       )

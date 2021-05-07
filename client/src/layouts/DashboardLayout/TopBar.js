@@ -29,9 +29,24 @@ const TopBar = ({
   const Logout = () => {
     //dispatch(logout());
     localStorage.removeItem('user')
-    localStorage.removeItem('loggedIn')
-    navigate('/login', { replace: true });
-  }
+    localStorage.removeItem('loggedIn')   
+      const options = {
+        method: "GET",
+       credentials:"include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }
+      };
+      const url = "http://localhost:81/auth/logout";
+      try {
+        const response = fetch(url, options);
+      } catch (error) {
+        console.error(error);
+      }
+
+      navigate('/login', { replace: true });
+    }
 
   return (
     <AppBar

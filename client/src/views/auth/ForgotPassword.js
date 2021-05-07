@@ -30,13 +30,32 @@ const ForgotPassword = props => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   var [errorMessage,setErrorMessage]=useState("");
+  var [tokenState,setTokenState]= useState("");
+  var [isClicked,setIsClicked]= useState(false);
 
   //Alert Function 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  function validationHandle()
+  {
+    if(isClicked)
+    {
+      return(
+        Yup.object().shape({
+          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          password: Yup.string().min(8, 'Password must be at least 8 characters').required('password is required'),
+          confirmPassword: Yup.string().min(8, 'Password must be at least 8 characters').required('password is required').oneOf([Yup.ref('password'), null], 'Passwords must match')
+        })
+      )
+    }
+    else{
+      return(Yup.object().shape({
+        email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+      }))
+    }
   }
 //Close func for closing the alert
   const handleClose = (event, reason) => {
@@ -46,14 +65,96 @@ const ForgotPassword = props => {
     setOpen(false);
   };
 
+    const resetTokenClicked= async values =>{
+      const { email } = values;
+      var body = {
+        email: email
+      };
+      const options = {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(body)
 
+      };
+      const url = "http://localhost:81/auth/resetTokenClicked";
+     
+      try {
+        const response = await fetch(url, options);
+        const text = await response.json();
+        const head = await response.headers
+        console.log( head)
+        const user = text.data
+  
+        if (text.status == "success") {
+          console.log("success")
+          console.log(text)
+          return true;
+          
+        } else {
+          console.log(text.message);
+            
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      return false;
+    }
+
+    const resetPassword= async values =>{
+      const { email,password } = values;
+      var body = {
+        email: email,
+        password:password
+      };
+      const options = {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify(body)
+
+      };
+      const url = "http://localhost:81/auth/newPassword";
+      await setTokenState(resetTokenClicked);
+      if(tokenState){
+      try {
+        const response = await fetch(url, options);
+        const text = await response.json();
+        const head = await response.headers
+        console.log( head)
+        const user = text.data
+  
+        if (text.status == "success") {
+          console.log("success")
+          console.log(text)
+          navigate('/login')
+          
+        } else {
+          console.log(text.message);
+          setErrorMessage("Password change failed")
+          setOpen(true);    
+        }
+      } catch (error) {
+        console.error(error);
+      }
+     }
+     else{
+      setErrorMessage("Please verify from your email")
+      setOpen(true);  
+     }
+    }
   // The function that handles the logic when submitting the form
   const handleSubmit = async values => {
     // This function received the values from the form
     // The line below extract the two fields from the values object.
-    const { email, password } = values;
+    const { email } = values;
     var body = {
-      password: password,
       email: email
     };
     const options = {
@@ -65,31 +166,31 @@ const ForgotPassword = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/auth/login";
+    const url = "http://localhost:81/auth/passwordreset";
    
     try {
       const response = await fetch(url, options);
       const text = await response.json();
       const head = await response.headers
-      console.log( head)
+      //console.log( head)
       const user = text.data
 
       if (text.status == "success") {
-        console.log("success")
-        localStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('loggedIn', true)
-        navigate('/app/dashboard', { replace: true });
+       // console.log("success")
+    
         
       } else {
-        console.log(text.message);
+        //console.log(text.message);
         setErrorMessage(text.message)
         setOpen(true);    
       }
     } catch (error) {
-      console.error(error);
+     // console.error(error);
     }
+    setIsClicked(true);
+    console.log(isClicked)
   };
-
+ 
   // Returning the part that should be rendered
   // Just set handleSubmit as the handler for the onSubmit call.
   return (
@@ -110,14 +211,9 @@ const ForgotPassword = props => {
         email: '',
         password: ''
       }}
-      onSubmit={handleSubmit}
-
       //********Using Yup for validation********/
-
-      validationSchema={Yup.object().shape({
-        email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-        password: Yup.string().max(255).required('Password is required')
-      })}
+      onSubmit={resetPassword}
+      validationSchema={validationHandle()}
     >
       {props => {
         const {
@@ -129,7 +225,6 @@ const ForgotPassword = props => {
           isSubmitting,
           handleChange,
           handleBlur,
-          handleSubmit
         } = props;
         return (
           <>
@@ -157,30 +252,70 @@ const ForgotPassword = props => {
                 variant="outlined"
                 //className={errors.email && touched.email && "error"}
               />
-              <TextField
-                error={Boolean(touched.password && errors.password)}
-                fullWidth
-                helperText={touched.password && errors.password}
-                label="Password"
-                margin="normal"
-                name="password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                type="password"
-                value={values.password}
-                variant="outlined"
-              />
               
+              {(() => {
+        if (isClicked) {
+          return (
+            <TextField
+            fullWidth
+            error={Boolean(touched.password && errors.password)}
+            helperText={touched.password && errors.password}
+            label="Password"
+            margin="normal"
+            name="password"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            type="password"
+            value={values.password}
+            variant="outlined"
+          />
+          )
+           }
+      })()}
+              
+                
+                 
+                {(() => {
+        if (isClicked) {
+          return (
+            <TextField
+                   fullWidth
+                   error={Boolean(touched.confirmPassword && errors.confirmPassword)}
+                   helperText={touched.confirmPassword && errors.confirmPassword}
+                   label="Confirm password"
+                   margin="normal"
+                   name="confirmPassword"
+                   onChange={handleChange}
+                   onBlur={handleBlur}
+                   type="password"
+                   value={values.confirmPassword}
+                   variant="outlined"
+                 />
+          )
+           }
+      })()} 
               <Box my={2}>
-                <Button 
-                className={linearGradient().root}
-                    disabled={isSubmitting}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained" >
-                      Reset Password
-                </Button>
+                {isClicked
+                   ?<Button 
+                   className={linearGradient().root}
+                       disabled={isSubmitting}
+                       fullWidth
+                       /* type="submit" */
+                       size="large"
+                       onClick={()=>{resetPassword(values)}}
+                       variant="contained" >
+                         Reset Password
+                   </Button> 
+                   : <Button 
+                   className={linearGradient().root}
+                       disabled={isSubmitting}
+                       fullWidth
+                       size="large"
+                       onClick={()=>{handleSubmit(values)}}
+                       variant="contained" >
+                         Send Password Reset Request
+                   </Button>
+                }                        
               </Box>
             </form>
           </>
