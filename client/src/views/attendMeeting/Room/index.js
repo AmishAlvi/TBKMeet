@@ -142,36 +142,7 @@ const Room = (props) => {
 
     const fileInput = useRef(null)
     const [duration, setDuration] = useState();
-    const [isOwner, setOwner] = useState(false);
-
-
-
-    //console.log("room id: " , params.roomID)
-
-    /*useEffect(async () => {
-
-    },[]);*/
-
-   // console.log("meeting data: " ,meetingData)
-  
-  /* const duration = meetingData.duration
-   const hours = Math.floor(duration/60)
-   const minutes = duration - (hours*60)*/
-
-   /* console.log("topics: " , meetingTopicIDs)
-    console.log("date: ", duration.date)
-    const mildate = new Date(duration.date)
-*/
-    //msToTime(duration)
-
-    //setCurrentTime(Date.now())
-   /* const meetingDuration = mildate.getTime() - currentTime
-    msToTime(mildate.getTime())
-
-    console.log("meeting duration: " , msToTime(meetingDuration))
-    console.log("date: ", meetingDuration)*/
-
-
+    const [isOwner, setIsOwner] = useState(false);
 
     useEffect(
 		() => {
@@ -195,6 +166,16 @@ const Room = (props) => {
 		setState({ message: "", name })
 	}
 
+  const handleEndMeeting = (e) => {
+		console.log('meeting ended')
+    let url = `http://localhost:81/meeting/endMeeting/${roomID}`;
+
+    axios.post(url)
+      .then(res => { // then print response status
+          console.log(res);
+      })
+	}
+
 	const renderChat = () => {
 		return chat.map(({ name, message }, index) => (
 			
@@ -213,24 +194,16 @@ const Room = (props) => {
 		))
 	}
 
-  /*   function Footer({ children }) {
-        return (
-          
-            <div className={classes.phantomStyle} />
-            
-          
-        );
-      } */
-
      useEffect( async () => {
         let url = `http://localhost:81/meeting/getMeetings/${roomID}`;
          await axios.get(url, {withCredentials: true})
         .then(res => { // then print response status
           setMeeting(res.data.data)
           setTopicIDs(res.data.data.topic)
-          console.log(res.data)
-          console.log(user._id)
+          //console.log(res.data.data.owner)
+          console.log(user._id === res.data.data.owner)
           setDuration(res.data.data.duration)
+          setIsOwner(user._id === res.data.data.owner)
         })
       }, [] );
 
@@ -475,14 +448,14 @@ const Room = (props) => {
         {camButtonRender()}
 
         </div>
-        {duration ? <Timer initialMinute = {duration} /> : <span>loading time</span>}
+        {isOwner && duration ? <Timer initialMinute = {duration} /> : <span></span>} 
         <div style={{alignItems: 'flex-end'}}>
         <input type="file" name="fileName"   style={{ display: 'none' }}
         ref={fileInput}
         onChange={(event) => setFile(event.target.files[0])}/>
 
         <Button className={classes.button }   
-        onClick={() => fileInput.current.click()} >
+        onClick={() => fileInput.current.click()}>
         <AttachFileIcon style={{ fontSize: 40 }}></AttachFileIcon>
         
         </Button>
@@ -492,6 +465,7 @@ const Room = (props) => {
                 <CloudUploadIcon   style={{ fontSize: 40 }}/>
         </Button>
         <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
+        {isOwner ? <Button variant="contained" className={classes.exitButton} onClick={handleEndMeeting}> EndMeeting</Button> : <span></span> }
     </div>
     </div>
     </Container>
