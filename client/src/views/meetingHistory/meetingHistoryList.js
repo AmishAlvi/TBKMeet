@@ -52,6 +52,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   // const [meetingId,  setMeetingId] = useState();
   const user = JSON.parse(localStorage.getItem('user'));
   const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
+  const [currentMeetingId, setCurrentMeeting] = useState()
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -67,18 +68,73 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
 
   },[]);
 
-  useEffect(async (meetingId) => {
+  /*useEffect(async (meetingId) => {
     const result = await axios(
         "http://localhost:81/getFiles/"+meetingId,
         {withCredentials: true}
     ); 
     setMeetingFiles(result.data.data)
-    console.log(result)
-  },[]);
+    console.log("result: " , result)
+  },[]);*/
+
+  /*const GetmeetingFiles = async meetingId =>{
+    const options = {
+      method: "GET",
+      credentials: 'include',
+    };
+    const url = "http://localhost:81/getFiles/"+meetingId;
+   
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      //const head = await response.headers
+      //console.log( head)
+      //const user = text.data
+
+      if (text.status == "success") {
+        setMeetingFiles(text.data.data)
+        console.log(text.data.data)
+       console.log("success")
+      } else {
+        //console.log(text.message);
+
+        //setErrorMessage(text.message)
+
+        //setOpen(true);    
+      }
+    } catch (error) {
+     // console.error(error);
+    }
+
+    //window.location.reload();
+  };*/
+
+  async function getMeetingFiles(meetingId) {
+    const options = {
+      method: "GET",
+      credentials: 'include',
+    };
+    const url =  "http://localhost:81/getFiles/"+meetingId;
+   
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      const user = text.data
+
+      if (text.status == "success") {
+        console.log("success")
+        
+      } else {
+        console.log(text.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   function handleUpload(e, meetingId){
-    // console.log('tmp')
-    const data = new FormData() 
+    console.log('tmp')
+   /* const data = new FormData() 
     data.append('fileName', selectedFile)
     data.append('meetingId', meetingId)
     console.log(selectedFile);
@@ -94,13 +150,15 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
         // e.preventDefault()
         setState({ message: "", name })
 
-    })
+    })*/
 
   }
 
   function handleExit(e){
     window.close()
   }
+
+ // GetmeetingFiles()
   
   return (
     <Card
@@ -133,12 +191,12 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
             </TableHead>
             <TableBody>
                {endedMeeting.slice( page* limit, page * limit + limit).map((meeting) => (
+                 
                 <TableRow
                   hover
                  key={meeting._id}
                  className={classes.tableRow}
-                >
-                 
+                >                 
                   <TableCell>
                     <Box
                       alignItems="center"
@@ -155,12 +213,14 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                   </TableCell>
                   <TableCell>
                   {moment(meeting.date).format('DD MMM YYYY')} 
+
                   </TableCell>
                   <TableCell>
                   {moment(meeting.date).format('LT')}
                   </TableCell>
                   <TableCell>
-
+                    {/*getMeetingFiles(meeting._id)*/}
+                    <Async promiseFn={getMeetingFiles(meeting._id)}> </Async>
                   </TableCell>
 
                   <TableCell>
