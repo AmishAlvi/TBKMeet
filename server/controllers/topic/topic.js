@@ -14,7 +14,7 @@ module.exports = async (req, res, _next) => {
   } = req.fields;
 
 
-  const topic = new Topic({title,description,totalTime,category,decision,information});
+  const topic = new Topic({title,description,totalTime,category,decision,information,owner});
   topic.owner = req.session.user.userid;
   try {
 

@@ -68,11 +68,7 @@ const items = [
     icon: UserIcon,
     title: 'Account'
   },
-  {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'Settings'
-  },
+
 
 ];
 
@@ -92,14 +88,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const name = " Syed Amish Alvi ";
 
 const NavBar = ({onMobileClose, openMobile}) => {
   const classes = useStyles();
   const location = useLocation();
-  //console.log(name)
-  
-
+  const user = JSON.parse(localStorage.getItem('user'));
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -119,12 +112,6 @@ const NavBar = ({onMobileClose, openMobile}) => {
         flexDirection="column"
         p={2}
       >
-        <Avatar
-          className={classes.avatar}s
-          component={RouterLink}
-          src={staticInfo.avatar}
-          to="/app/account"
-        />
         <Typography
           className={classes.name}
           color="textPrimary"
@@ -136,7 +123,7 @@ const NavBar = ({onMobileClose, openMobile}) => {
           color="textSecondary"
           variant="body2"
         >
-         "Syed Amish Alvi"
+         {user.firstName+ " " + user.lastName} 
         </Typography>
       </Box>
       <Divider />

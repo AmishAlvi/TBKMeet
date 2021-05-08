@@ -26,8 +26,8 @@ module.exports = async (req, res, _next) => {
         meeting.duration = !duration ? meeting.duration : duration;
         meeting.location = !location ? meeting.location : location;
         meeting.date = !date ? meeting.date:date;
-        meeting.topic = !topic ? meeting.topic:topic;
-        meeting.members = !members ? meeting.members : members;
+        meeting.topic = !topic[0] ? meeting.topic:topic;
+        meeting.members = !members[0] ? meeting.members : members;
         meeting.notes = !notes ? meeting.notes:notes;
         meeting.isActive = !isActive ? meeting.isActive : isActive;
         await meeting.save(async  (err) => {

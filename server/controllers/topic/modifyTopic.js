@@ -19,7 +19,7 @@ module.exports = async (req, res, _next) => {
         topic.description = !description ? topic.title:title;
         topic.totalTime = !totalTime ? topic.totalTime:totalTime;
         topic.category = !category ? topic.category:category;
-        topic.decision = !decision ? topic.decision:category;
+        topic.decision = decision;
         topic.information = !information ? topic.information:information;
 
         await topic.save(async  (err) => {
