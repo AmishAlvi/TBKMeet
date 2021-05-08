@@ -2,11 +2,19 @@ require('dotenv').config();
 const express = require("express");
 const http = require("http");
 const app = express();
+const cors = require("cors");
 const server = http.createServer(app);
 const socket = require("socket.io");
 const io = socket(server);
 const PORT = process.env.PORT || 8000
 
+app.use(express.static(path.join(__dirname, '../')));
+app.use(
+    cors({
+      credentials: true,
+      origin: /.*/
+    })
+  );
 const users = {};
 
 const socketToRoom = {};
