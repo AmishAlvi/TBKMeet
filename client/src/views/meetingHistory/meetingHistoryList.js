@@ -188,8 +188,8 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
      handleClickOpen();
   };
 
-  function handleUpload(e, meetingId){
-    /*console.log('tmp')
+  function handleUpload( meetingId){
+    console.log('tmp')
     const data = new FormData() 
     data.append('fileName', selectedFile)
     data.append('meetingId', meetingId)
@@ -206,7 +206,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
         // e.preventDefault()
         setState({ message: "", name })
 
-    })*/
+    })
 
   }
 
@@ -292,7 +292,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                     onClick={() => fileInput.current.click()} >
                     <AttachFileIcon style={{ fontSize: 30 }}></AttachFileIcon>
                     </Button>
-                    <Button onClick={handleUpload(meeting._id)}  className={classes.button} >
+                    <Button onClick={(e) => handleUpload(meeting._id)}  className={classes.button} >
                       <CloudUploadIcon   style={{ fontSize: 30 }}/>
                     </Button>
                   </TableCell>
