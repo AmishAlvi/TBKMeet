@@ -324,9 +324,12 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
         </DialogTitle>
         <DialogContent dividers>
           {meetingFile.map((file)=>
+          <div>
            <Button href="" color="primary" onClick={() => window.open(file.fileName,{ replace: true })}>
            {file.name}
          </Button>
+         <br></br>
+         </div>
 /*           <Link to={file.fileName} replace={true}></Link>
  */         )} 
         </DialogContent>
