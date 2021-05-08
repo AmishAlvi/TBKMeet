@@ -47,6 +47,11 @@ io.on('connection', socket => {
         socket.broadcast.emit('user disconnected', socket.id);
     });
 
+    socket.on('meeting ended', () => {
+        //const roomID = socketToRoom[socket.id];
+        socket.broadcast.emit('meeting over', socket.id)
+    })
+
 
 });
 
