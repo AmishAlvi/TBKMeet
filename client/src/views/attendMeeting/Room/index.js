@@ -158,6 +158,16 @@ const Room = (props) => {
 		setState({ message: "", name })
 	}
 
+  const handleEndMeeting = (e) => {
+		console.log('meeting ended')
+    let url = `http://localhost:81/meeting/endMeeting/${roomID}`;
+
+    axios.post(url)
+      .then(res => { // then print response status
+          console.log(res);
+      })
+	}
+
 	const renderChat = () => {
 		return chat.map(({ name, message }, index) => (
 			
@@ -437,6 +447,7 @@ const Room = (props) => {
                 <CloudUploadIcon   style={{ fontSize: 40 }}/>
         </Button>
         <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
+        {isOwner ? <Button variant="contained" className={classes.exitButton} onClick={handleEndMeeting}> EndMeeting</Button> : <span></span> }
     </div>
     </div>
     </Container>
