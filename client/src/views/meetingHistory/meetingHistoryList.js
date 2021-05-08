@@ -22,10 +22,16 @@ import { CompareArrowsOutlined } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import moment from "moment";
 import axios from 'axios';
+import Dialog from '@material-ui/core/Dialog';
+import { withStyles } from '@material-ui/core/styles';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import {useParams} from 'react-router-dom';
-
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles((theme) => ({
   root: {},
   button: { borderRadius: 50},
@@ -34,7 +40,47 @@ const useStyles = makeStyles((theme) => ({
     height: 30
   }, */
 }));
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+    width:500,
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
 
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
 const MeetingHistoryList = ({ className,  ...rest }) => {
   const classes = useStyles();
   const [limit, setLimit] = useState(10);
@@ -52,8 +98,15 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   // const [meetingId,  setMeetingId] = useState();
   const user = JSON.parse(localStorage.getItem('user'));
   const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
-  const [currentFile, setCurrentFile] = useState("")
+  const [meetingFile, setMeetingFile] = useState([])
+  const [open, setOpen] = React.useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -123,15 +176,8 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
 
       if (text.status == "success") {
         console.log("success")
-        console.log(text.data[0].fileName)
-        for(i = 0; i < text.data.length; i++)
-        {
-          if(text.data[i].fileName !== undefined)
-          {
-            window.open(text.data[i].fileName)
-            console.log("text :" , text.data[i])
-          }
-        }
+        setMeetingFile(text.data)
+        console.log(text.data)
 
       } else {
         console.log(text.message);
@@ -139,11 +185,11 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     } catch (error) {
       console.error(error);
     }
-
+     handleClickOpen();
   };
 
-  function handleUpload(e, meetingId){
-    /*console.log('tmp')
+  function handleUpload( meetingId){
+    console.log('tmp')
     const data = new FormData() 
     data.append('fileName', selectedFile)
     data.append('meetingId', meetingId)
@@ -160,7 +206,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
         // e.preventDefault()
         setState({ message: "", name })
 
-    })*/
+    })
 
   }
 
@@ -246,7 +292,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                     onClick={() => fileInput.current.click()} >
                     <AttachFileIcon style={{ fontSize: 30 }}></AttachFileIcon>
                     </Button>
-                    <Button onClick={handleUpload(meeting._id)}  className={classes.button} >
+                    <Button onClick={(e) => handleUpload(meeting._id)}  className={classes.button} >
                       <CloudUploadIcon   style={{ fontSize: 30 }}/>
                     </Button>
                   </TableCell>
@@ -272,6 +318,27 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 25]}
       />
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Meeting Outputs
+        </DialogTitle>
+        <DialogContent dividers>
+          {meetingFile.map((file)=>
+          <div>
+           <Button href="" color="primary" onClick={() => window.open(file.fileName,{ replace: true })}>
+           {file.name}
+         </Button>
+         <br></br>
+         </div>
+/*           <Link to={file.fileName} replace={true}></Link>
+ */         )} 
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };
