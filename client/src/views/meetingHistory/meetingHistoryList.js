@@ -123,16 +123,23 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
 
       if (text.status == "success") {
         console.log("success")
-        console.log(text.data)
-        if(text.data.fileName) {
-          setCurrentFile(text.data.fileName)
-        }   
+        console.log(text.data[0].fileName)
+        for(i = 0; i < text.data.length; i++)
+        {
+          if(text.data[i].fileName !== undefined)
+          {
+            window.open(text.data[i].fileName)
+            console.log("text :" , text.data[i])
+          }
+        }
+
       } else {
         console.log(text.message);
       }
     } catch (error) {
       console.error(error);
     }
+
   };
 
   function handleUpload(e, meetingId){
@@ -223,8 +230,11 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                   </TableCell>
                   <TableCell>
                     {/*getMeetingFiles(meeting._id)*/}
+                    {/*}
                     <Async promiseFn={getMeetingFiles(meeting._id)}> </Async>
-                    <Link to={currentFile}> download </Link>
+                    {/*console.log(currentFile)}
+                    <Link to={currentFile}> download </Link>*/}
+                    <Button onClick={(e) => getMeetingFiles(meeting._id)}>get files</Button>
                   </TableCell>
 
                   <TableCell>
