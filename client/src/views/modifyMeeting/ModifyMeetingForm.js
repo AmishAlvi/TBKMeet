@@ -295,7 +295,7 @@ const ModifyMeetingForm = props => {
         clearForm();
         setSelectionModelParticipant([]);
         setSelectionModelTopic([]);
-        navigate('/meetings')
+        navigate('/app/meetings')
   
       } else {
         console.log(text.message);

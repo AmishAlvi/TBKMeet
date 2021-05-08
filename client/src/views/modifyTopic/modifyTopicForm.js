@@ -121,7 +121,7 @@ const handleClose = (event, reason) => {
       if (text.status == "success") {
         setSuccessMessage(text.message);
         setOpen(true);
-        navigate('/topics')
+        navigate('/app/topics')
 
         //console.log("success")
         /* const history = useHistory()    

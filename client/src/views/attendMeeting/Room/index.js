@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
+import linearGradient from 'src/components/linearGradient';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField"
 import {useParams} from 'react-router-dom';
 import { id } from "date-fns/esm/locale";
-import { Button } from "@material-ui/core";
+import { Button,Input,Grid,Box,Container } from "@material-ui/core";
 import VideocamRoundedIcon from '@material-ui/icons/VideocamRounded';
 import VideocamOffRoundedIcon from '@material-ui/icons/VideocamOffRounded';
 import MicRoundedIcon from '@material-ui/icons/MicRounded';
@@ -15,16 +18,21 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import axios from 'axios';
 import Countdown from "react-countdown";
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import SendIcon from '@material-ui/icons/Send';
 import Timer from './timer'
+import ChatIcon from '@material-ui/icons/Chat';
 
-const Container = styled.div`
+/* const Container = styled.div`
     padding: 20px;
     display: flex;
     height: 100vh;
     width: 90%;
     margin: auto;
     flex-wrap: wrap;
-`;
+`; */
 
 const StyledVideo = styled.video`
     background: black;
@@ -74,17 +82,32 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     left: "0",
     display:"flex",
-    justifyContent:"flex-end",
     bottom: "0",
     height: "10%x",
-    width: "99%"  
+    width: "100%",
+    justifyContent: "space-between",  
    },
    phantomStyle: {
     display: "block",
     padding: "20px",
     height: "1000px",
     width: "100%"
-   }
+   },
+  Content:
+{
+  height:"224px",
+  overflow:"auto",
+  
+},
+FixedHeightContainer:
+{
+  float:"right",
+  height: "250px",
+  width:"250px",
+  padding:"1px",
+  overflow:"auto",
+
+}
   }));
 
 
@@ -108,8 +131,11 @@ const Room = (props) => {
     //const [currentTime, setCurrentTime] = useState();
     const [selectedFile, setFile] = useState();
     const [meetingTopicIDs, setTopicIDs] = useState();
+
+    const fileInput = useRef(null)
     const [duration, setDuration] = useState();
     const [isOwner, setOwner] = useState(false);
+
 
 
     //console.log("room id: " , params.roomID)
@@ -163,7 +189,8 @@ const Room = (props) => {
 
 	const renderChat = () => {
 		return chat.map(({ name, message }, index) => (
-			<div key={index}>
+			
+      <div key={index}  >
 				<h3>
         {message.startsWith("http") ? ( <span>
         {name} : <a href={message}  class="active"> Click here to download attachment </a></span>
@@ -379,47 +406,77 @@ const Room = (props) => {
     }
 
     return (
-        <Container style={{width:"100%"}}>
+      <Container>
+        <Grid container>
+        <Grid item xs={6}>
+        <Container style={{width:"100%"}} >
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
             {peers.map((peer) => {
                 return (
                     <Video key={peer.peerID} peer={peer.peer} />
                 );
             })}
-            {
-      <div className="card">
-			<div className="render-chat">
+            </Container>
+            </Grid>
+      <Grid item alignItems="stretch" style={{ display: "flex" }} >
+      <Card className={classes.root} variant="outlined">
+      <CardContent>
+
 				<h1>Chat Log</h1>
+        <div className={classes.FixedHeightContainer}>
 				{renderChat()}
-			</div>
+        </div>
+        
       <form onSubmit={onMessageSubmit}>
-				<h1>Messenger</h1>
-				<div>
+      <Grid container>
+      <Grid item>
 					<TextField
 						name="message"
 						onChange={(e) => onTextChange(e)}
 						value={state.message}
 						id="outlined-multiline-static"
 						variant="outlined"
-						label="Message"
+						placeholder="Enter your Message"
 					/>
-				</div>
-				<button>Send Message</button>
+				</Grid>
+        <Grid item alignItems="stretch" style={{ display: "flex" }}>
+        <Button type="submit" className={classes.button} >
+                <SendIcon  color='secondary'  style={{ fontSize: 30 }} />
+            </Button>
+            </Grid>
+      </Grid>
 			</form>
-		</div> }
-
-    
+      </CardContent>
+    </Card>
+    </Grid>
+    </Grid>
 
     <div className={classes.footerStyle}>
+      <div>
         {muteButtonRender()}
         {camButtonRender()}
+
+        </div>
         {duration ? <Timer initialMinute = {duration} /> : <span>loading time</span>}
-        <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
-        <input type="file" name="fileName" onChange={(event) => setFile(event.target.files[0])}/>
+        <div style={{alignItems: 'flex-end'}}>
+        <input type="file" name="fileName"   style={{ display: 'none' }}
+        ref={fileInput}
+        onChange={(event) => setFile(event.target.files[0])}/>
+
+        <Button className={classes.button }   
+        onClick={() => fileInput.current.click()}
+        <AttachFileIcon style={{ fontSize: 40 }}></AttachFileIcon>
+        
+        </Button>
+
         {console.log(selectedFile)}
-        <button type="button" class="btn btn-success btn-block" onClick={handleUpload}>Upload</button> 
+        <Button onClick={handleUpload}  className={classes.button} >
+                <CloudUploadIcon   style={{ fontSize: 40 }}/>
+        </Button>
+        <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
     </div>
-        </Container>
+    </div>
+    </Container>
 
         
     );
