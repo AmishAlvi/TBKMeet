@@ -13,7 +13,6 @@ module.exports = async(req,res)=>{
         console.log('File Error', err);
     });
     var fileType = (req.files.fileName.name).split(".");
-    console.log(req.files.fileName.name);
     AWS.config.credentials = {
         "accessKeyId": 'AKIAYC64MUG3SG576255',
         "secretAccessKey":'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'
@@ -33,10 +32,7 @@ module.exports = async(req,res)=>{
             return res.status(400).send({msg: err.message});
         }
         else{
-            const {
-                _meetingId
-            
-              } = req.fields.meetingId;
+            const _meetingId = req.fields.meetingId;
               const name = req.files.fileName.name;
               fileName = data.Location;
             const meetingFile = new MeetingFile({_meetingId,fileName,name});
