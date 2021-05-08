@@ -101,12 +101,20 @@ const useStyles = makeStyles((theme) => ({
 },
 FixedHeightContainer:
 {
-  float:"right",
+  
   height: "250px",
   width:"250px",
   padding:"1px",
   overflow:"auto",
 
+},
+FixedChat:
+{
+  float:"fixed",
+  height: "400px",
+  width:"400px",
+  padding:"1px",
+  overflow:"auto",
 }
   }));
 
@@ -158,6 +166,18 @@ const Room = (props) => {
 		setState({ message: "", name })
 	}
 
+  const handleEndMeeting = (e) => {
+		console.log('meeting ended')
+    let url = `http://localhost:81/meeting/endMeeting/${roomID}`;
+
+    axios.post(url)
+      .then(res => { // then print response status
+          console.log(res);
+      })
+    socketRef.current.emit('meeting ended');
+    window.close()
+	}
+
 	const renderChat = () => {
 		return chat.map(({ name, message }, index) => (
 			
@@ -177,7 +197,7 @@ const Room = (props) => {
 	}
 
      useEffect( async () => {
-        let url = `https://tbkmeet-backend.herokuapp.com/meeting/getMeetings/${roomID}`;
+        let url = `http://localhost:81/meeting/getMeetings/${roomID}`;
          await axios.get(url, {withCredentials: true})
         .then(res => { // then print response status
           setMeeting(res.data.data)
@@ -188,6 +208,16 @@ const Room = (props) => {
           setIsOwner(user._id === res.data.data.owner)
         })
       }, [] );
+
+      // useEffect( async () => {
+      //   let url = `http://localhost:81/meeting/startMeeting/${roomID}`;
+      //    await axios.get(url, {withCredentials: true}s)
+      //    .then(res => {
+      //      console.log("ldjaslkdalsd");
+      //    console.log(res.data.data)
+      //    // then print response state
+      //    })
+      // }, [] );
 
       
 
@@ -288,6 +318,17 @@ const Room = (props) => {
                 peersRef.current = peers;
                 setPeers(peers);
             })
+
+            socketRef.current.on('meeting over', id =>{
+              const peerObj = peersRef.current.find(p => p.peerID === id);
+              if(peerObj) {
+                  peerObj.peer.destroy();
+              }
+              const peers = peersRef.current.filter(p => p.peerID !== id);
+              peersRef.current = peers;
+              setPeers(peers);
+              window.close()
+            })
         })
 
     }, []);
@@ -347,7 +388,7 @@ const Room = (props) => {
       data.append('fileName', selectedFile)
       data.append('meetingId', roomID)
       console.log(selectedFile);
-      let url = "https://tbkmeet-backend.herokuapp.com/fileupload";
+      let url = "http://localhost:81/fileupload";
 
       axios.post(url, data, {withCredentials: true , headers: 
         {"Content-Type": "multipart/form-data",} 
@@ -371,7 +412,7 @@ const Room = (props) => {
     return (
       <Container>
         <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs = {4}>
         <Container style={{width:"100%"}} >
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
             {peers.map((peer) => {
@@ -381,8 +422,8 @@ const Room = (props) => {
             })}
             </Container>
             </Grid>
-      <Grid item alignItems="stretch" style={{ display: "flex" }} >
-      <Card className={classes.root} variant="outlined">
+      <Grid item alignItems="stretch" style={{ display: "flex" }} xs={6} >
+      <Card className={classes.root, classes.FixedChat}  variant="outlined">
       <CardContent>
 
 				<h1>Chat Log</h1>
@@ -437,6 +478,7 @@ const Room = (props) => {
                 <CloudUploadIcon   style={{ fontSize: 40 }}/>
         </Button>
         <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
+        {isOwner ? <Button variant="contained" className={classes.exitButton} onClick={handleEndMeeting}> EndMeeting</Button> : <span></span> }
     </div>
     </div>
     </Container>
