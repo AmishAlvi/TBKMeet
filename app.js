@@ -17,6 +17,7 @@ app.use(express.static(path.join(__dirname, '../')));
 
 app.use(helmet());
 
+app.set("trust proxy",1);
 app.use(
   cors({
     credentials: true,
@@ -34,6 +35,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secret: sessionSecret,
+    sameSite:'none',
     // store: new MongoStore({mongooseConnection: mongoose.connection}),
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000, // one week
