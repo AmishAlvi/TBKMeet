@@ -29,31 +29,10 @@ const Account = () => {
       <Container maxWidth="lg">
         <Grid
           container
-          spacing={3}
+          spacing={0}
         >
         {/* item is a class name which provides padding */}
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xs={12}
-          >
-            <Profile />
-          </Grid>
-          <Grid
-            item
-            lg={8}
-            md={6}
-            xs={12}
-          >
-            <ProfileDetails />
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xs={12}
-          > </Grid>
+
           <Grid 
           item
           lg={8}

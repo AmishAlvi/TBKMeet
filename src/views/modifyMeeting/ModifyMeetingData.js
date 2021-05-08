@@ -130,7 +130,7 @@ const ModifyMeetingForm = props => {
       method: "GET",
       credentials: 'include',
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/getEmails";
+    const url = "http://localhost:81/meeting/getEmails";
     try {
       const result = await fetch(url,options);
       const data = await result.json();
@@ -149,36 +149,13 @@ const ModifyMeetingForm = props => {
       console.error(error);
     } 
   };
-/*   const loadUser = async values => {
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/getEmails";
-    try {
-      const result = await fetch(url,options);
-      const data = await result.json();
-      console.log(data)
 
-      if (data.status == "success") {
-        console.log("success");
-        setUser(data.data)
-        console.log(user)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  }; */
   const loadTopic = async values => {
     const options = {
       method: "GET",
       credentials: "include",
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/topic/getTopic";
+    const url = "http://localhost:81/topic/getTopic";
     try {
       const result = await fetch(url,options);
       const data = await result.json();
@@ -277,7 +254,7 @@ const ModifyMeetingForm = props => {
 
 useEffect(async () => {
     const result = await axios(
-      `https://tbkmeet-backend.herokuapp.com/meeting/getMeetings/${meetingId}`,
+      `http://localhost:81/meeting/getMeetings/${meetingId}`,
         {withCredentials: true}
     );
  

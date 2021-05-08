@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import 'date-fns';
@@ -38,6 +38,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,54 +127,24 @@ const CreateMeetingForm = props => {
   const[selectionModelTopic,setSelectionModelTopic]=useState([]);
   const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
-  const loadUser = async values => {
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/getEmails";
-    try {
-      const result = await fetch(url,options);
-      const data = await result.json();
-      console.log(data)
 
-      if (data.status == "success") {
-        console.log("success");
-        setUser(data.data)
-        console.log(user)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  };
-  const loadTopic = async values => {
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "https://tbkmeet-backend.herokuapp.com/topic/getTopic";
-    try {
-      const result = await fetch(url,options);
-      const data = await result.json();
-      //console.log(data)
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getEmails",
+        {withCredentials: true}
+    );
+    setUser(result.data.data)
 
-      if (data.status == "success") {
-        console.log("success");
-        setTopic(data.data)
-        //console.log(topic)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  };
+  },[]);
+  
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/topic/getTopic",
+        {withCredentials: true}
+    );
+      setTopic(result.data.data)
+
+  },[]);
 
       //function for displaying alert
       function Alert(props) {
@@ -181,14 +152,11 @@ const CreateMeetingForm = props => {
       }
 //Open Participants Dialog
   const handleClickOpen = () => {
-    loadUser();
     setOpen(true);
     
   };
   
   const handleClickOpenTopic =()=>{
-    loadTopic();
-    console.log(topic);
     setOpenTopic(true);
   }
   const handleClose = () => {
@@ -298,7 +266,7 @@ const CreateMeetingForm = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/meetingSave";
+    const url = "http://localhost:81/meeting/meetingSave";
     try {
       const response = await fetch(url, options);
       const text = await response.json();

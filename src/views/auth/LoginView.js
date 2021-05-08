@@ -65,7 +65,7 @@ const LoginView = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/auth/login";
+    const url = "http://localhost:81/auth/login";
    
     try {
       const response = await fetch(url, options);

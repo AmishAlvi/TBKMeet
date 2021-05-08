@@ -38,7 +38,7 @@ const TopBar = ({
           Accept: "application/json"
         }
       };
-      const url = "https://tbkmeet-backend.herokuapp.com/auth/logout";
+      const url = "http://localhost:81/auth/logout";
       try {
         const response = fetch(url, options);
       } catch (error) {
@@ -61,13 +61,7 @@ const TopBar = ({
         <Box flexGrow={1} />
         <Hidden mdDown>
           <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
+         
           </IconButton>
           <IconButton color="inherit"  onClick= {Logout}>
             <InputIcon />

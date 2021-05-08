@@ -130,60 +130,41 @@ const ModifyMeetingForm = props => {
   const[selectionModelTopic,setSelectionModelTopic]=useState([]);
   const[selectionModelParticipant,setSelectionModelParticipant]=useState([]);
 
- /*  const loadUser = async values => {
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/getEmails";
-    try {
-      const result = await fetch(url);
-      const data = await result.json();
-
-      if (data.status == "success") {
-        setUser(data.data)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  }; */
+ 
   useEffect(async () => {
     const result = await axios(
-        "https://tbkmeet-backend.herokuapp.com/meeting/getEmails",
+        "http://localhost:81/meeting/getEmails",
         {withCredentials: true}
     );
       setUser(result.data.data)
+      setMember(result.data.data)
+      member.map((val)=>{
+        // console.log(val._id)
+        selectParticipats.forEach(element => {
+           console.log(element[0]);
+      if (val._id==element[0])
+      {
+        setParticipantsArr([val])
+      }});
+      });
   },[]);
-/*   const loadTopic = async values => {
-    const url = "https://tbkmeet-backend.herokuapp.com/topic/getTopic";
-    try {
-      const result = await fetch(url);
-      const data = await result.json();
 
-      if (data.status == "success") {
-        setTopic(data.data)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  }; */
   useEffect(async () => {
     const result = await axios(
-        "https://tbkmeet-backend.herokuapp.com/topic/getTopic",
+        "http://localhost:81/topic/getTopic",
         {withCredentials: true}
     );
       setTopic(result.data.data)
-      topic.map((val)=>{
-        console.log(val._id)
+      topic.forEach((val)=>{
+        // console.log(val._id)
+        console.log(selectedTopic)
         selectedTopic.forEach(element => {
-          console.log(element[0]);
-      if (val._id==element[0])
+          console.log(element._id)
+      if (val._id==element._id)
       {
         setTopicsArr([val])
+        // console.log(val)
+        // console.log(topicsArr)
       }});
       });
   },[]);
@@ -200,7 +181,6 @@ const ModifyMeetingForm = props => {
   };
   
   const handleClickOpenTopic =()=>{
-    //loadTopic();
     setOpenTopic(true);
   }
   const handleClose = () => {
@@ -237,24 +217,24 @@ const ModifyMeetingForm = props => {
     setErrorMessage("");
     const {title, description, duration} = values;
     var participantsTmp=[];
-    var topicsTmp=[];
+    // var topicsTmp=[];
 
     participantsArr.map((val)=>
     participantsTmp.push(val._id)
     );
-    topicsArr.map((val)=>
-    topicsTmp.push(val._id)
-    );
+    // topicsArr.map((val)=>
+    // topicsTmp.push(val._id)
+    // );
    
-    if (!topicsTmp.length)
+    if (!topicsArr.length)
     {
       setErrorMessage("Please select at least one topic");
-         setOpenAlert(true); 
+      setOpenAlert(true); 
     }
     else if(!participantsTmp.length)
     {
-         setErrorMessage("Please select at least one participant");
-         setOpenAlert(true); 
+      setErrorMessage("Please select at least one participant");
+      setOpenAlert(true); 
     }
      else if (location.length==0)
     {
@@ -266,7 +246,7 @@ const ModifyMeetingForm = props => {
     var body = {
       title: title,
       description: description,
-      topic: topicsTmp,
+      topic: topicsArr,
       members:participantsTmp,
       date: selectedDate,
       //time: selectedDate.toLocaleTimeString(),
@@ -282,7 +262,7 @@ const ModifyMeetingForm = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/modifyMeeting/"+meetingId;
+    const url = "http://localhost:81/meeting/modifyMeeting/"+meetingId;
     console.log(url)
     try {
       const response = await fetch(url, options);
@@ -305,28 +285,25 @@ const ModifyMeetingForm = props => {
     } catch (error) {
       console.error(error);
     } 
- /*  console.log(selectedTime.toLocaleDateString());
-  console.log(selectedTime.toLocaleTimeString()); */
   }   
 };
 
 useEffect(async () => {
-    const result = await axios(
-        "https://tbkmeet-backend.herokuapp.com/meeting/getMeetings/"+meetingId,
-        {withCredentials: true}
-    );
- 
+  const result = await axios(
+      "http://localhost:81/meeting/getMeetings/"+meetingId,
+      {withCredentials: true}
+  );
+
 setMeeting(result.data.data);
 setSelectedDate(result.data.data.date)
 setSelectionModelTopic(result.data.data.topic)
 setSelectionModelParticipant(result.data.data.members)
 setLocation(result.data.data.location)
-setSelectedTopic([result.data.data.topic])
+ setSelectedTopic(result.data.data.topic)
+// setTopicsArr(result.data.data.topic)
 setParticipantsArr(result.data.data.members)
-  },[]);
+},[]);
 
-
-  
 
 
  //update date
