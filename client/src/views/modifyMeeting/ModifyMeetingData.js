@@ -149,30 +149,7 @@ const ModifyMeetingForm = props => {
       console.error(error);
     } 
   };
-/*   const loadUser = async values => {
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "http://localhost:81/meeting/getEmails";
-    try {
-      const result = await fetch(url,options);
-      const data = await result.json();
-      console.log(data)
 
-      if (data.status == "success") {
-        console.log("success");
-        setUser(data.data)
-        console.log(user)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  }; */
   const loadTopic = async values => {
     const options = {
       method: "GET",

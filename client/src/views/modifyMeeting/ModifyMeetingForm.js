@@ -156,14 +156,15 @@ const ModifyMeetingForm = props => {
     );
       setTopic(result.data.data)
       topic.forEach((val)=>{
+        // console.log(val._id)
+        console.log(selectedTopic)
         selectedTopic.forEach(element => {
-          console.log(topicsArr)
-          console.log(val._id)
           console.log(element._id)
       if (val._id==element._id)
       {
         setTopicsArr([val])
-        console.log("sdal")
+        // console.log(val)
+        // console.log(topicsArr)
       }});
       });
   },[]);
@@ -298,8 +299,8 @@ setSelectedDate(result.data.data.date)
 setSelectionModelTopic(result.data.data.topic)
 setSelectionModelParticipant(result.data.data.members)
 setLocation(result.data.data.location)
-// setSelectedTopic(result.data.data.topic)
-setTopicsArr(result.data.data.topic)
+ setSelectedTopic(result.data.data.topic)
+// setTopicsArr(result.data.data.topic)
 setParticipantsArr(result.data.data.members)
 },[]);
 

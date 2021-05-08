@@ -97,6 +97,8 @@ const Results = ({ className, meetings, ...rest }) => {
   const [meetingState, setMeetingState] = useState({date: moment().toDate(),  title: "", _id: "",
   description:"", location: "", topic: "", members: ""});
   var [errorMessage,setErrorMessage]=useState("");
+  const user = JSON.parse(localStorage.getItem('user'));
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -220,20 +222,32 @@ const Results = ({ className, meetings, ...rest }) => {
                   </TableCell>
                   <TableCell>
 
-                   {/*<Link to="ModifyMeeting" params={{ meetingId: meetings._id }}>*/} 
-                     <Link to={{pathname: `/app/modifyMeeting/${meetings._id}`}}
-                     style={{ textDecoration: 'none',color:"initial" }}
-                     > 
-                      <EditIcon
-                      style={{ cursor: "pointer" }}
-                      />
-                    </Link>
 
-                    
-                      <DeleteIcon onClick={()=>{deleteSubmit(meetings._id)}}
-                      style={{ cursor: "pointer" }}
-                      />
-                    
+                  {(() => {
+                    if (user._id==meetings.owner) {
+                      return (
+                        <Link to={{pathname: `/app/modifyMeeting/${meetings._id}`}}
+                        style={{ textDecoration: 'none',color:"initial" }}
+                        > 
+                         <EditIcon
+                         style={{ cursor: "pointer" }}
+                         />
+                       </Link>
+   
+                      )
+                    } 
+                  })()}
+                   
+                  {(() => {
+                    if (user._id== meetings.owner) {
+                      return (
+                        <DeleteIcon onClick={()=>{deleteSubmit(meetings._id)}}
+                        style={{ cursor: "pointer" }}
+                        />
+      
+                      )
+                    } 
+                  })()}
 
                     <InfoIcon
                     style={{ cursor: "pointer" }}
