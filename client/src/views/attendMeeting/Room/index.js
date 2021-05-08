@@ -464,7 +464,7 @@ const Room = (props) => {
         onChange={(event) => setFile(event.target.files[0])}/>
 
         <Button className={classes.button }   
-        onClick={() => fileInput.current.click()}
+        onClick={() => fileInput.current.click()} >
         <AttachFileIcon style={{ fontSize: 40 }}></AttachFileIcon>
         
         </Button>

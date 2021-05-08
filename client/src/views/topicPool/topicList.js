@@ -98,6 +98,8 @@ const TopicList = ({ className,  ...rest }) => {
   const emptyRows = limit - Math.min(limit, topic.length - page * limit);
   const [open, setOpen] = React.useState(false);
   var [errorMessage,setErrorMessage]=useState("");
+  const user = JSON.parse(localStorage.getItem('user'));
+  
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -218,7 +220,33 @@ const TopicList = ({ className,  ...rest }) => {
                  
                   </TableCell>
                   <TableCell>
-                  <Link to={{pathname: `/app/modifyTopic/${topic._id}`}}
+
+                  {(() => {
+                    if (user._id==topic.owner) {
+                      return (
+                        <Link to={{pathname: `/app/modifyTopic/${topic._id}`}}
+                   style={{ textDecoration: 'none',color:"initial" }}
+                  >
+                         <EditIcon
+                         style={{ cursor: "pointer" }}
+                         />
+                       </Link>
+   
+                      )
+                    } 
+                  })()}
+                   
+                  {(() => {
+                    if (user._id== topic.owner) {
+                      return (
+                        <DeleteIcon onClick={()=>{deleteSubmit(topic._id)}}
+                        style={{ cursor: "pointer" }}
+                        />
+      
+                      )
+                    } 
+                  })()}
+                  {/* <Link to={{pathname: `/app/modifyTopic/${topic._id}`}}
                    style={{ textDecoration: 'none',color:"initial" }}
                    
                   > 
@@ -228,7 +256,7 @@ const TopicList = ({ className,  ...rest }) => {
                     </Link>
                     <DeleteIcon onClick={()=>{deleteSubmit(topic._id)}}
                     style={{ cursor: "pointer" }}
-                    />
+                    /> */}
                     <InfoIcon
                     style={{ cursor: "pointer" }}
                     onClick={() => {
