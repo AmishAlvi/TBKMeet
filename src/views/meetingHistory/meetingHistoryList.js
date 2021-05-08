@@ -114,7 +114,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
 
   useEffect(async () => {
     const result = await axios(
-        "http://localhost:81/meeting/getEndedMeetings",
+        "https://tbkmeet-backend.herokuapp.com/meeting/getEndedMeetings",
         {withCredentials: true}
     );
     setEndedMeeting(result.data.data)
@@ -167,7 +167,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
       method: "GET",
       credentials: 'include',
     };
-    const url =  "http://localhost:81/getFiles/"+meetingId;
+    const url =  "https://tbkmeet-backend.herokuapp.com/getFiles/"+meetingId;
    
     try {
       const response = await fetch(url, options);
@@ -195,7 +195,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     data.append('meetingId', meetingId)
     console.log(selectedFile);
     console.log(meetingId);
-    let url = "http://localhost:81/fileupload";
+    let url = "https://tbkmeet-backend.herokuapp.com/fileupload";
     axios.post(url, data, {withCredentials: true , headers: 
       {"Content-Type": "multipart/form-data",} 
     },)

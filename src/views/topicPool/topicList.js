@@ -106,7 +106,7 @@ const TopicList = ({ className,  ...rest }) => {
 
   useEffect(async () => {
     const result = await axios(
-        "http://localhost:81/topic/getTopic",
+        "https://tbkmeet-backend.herokuapp.com/topic/getTopic",
         {withCredentials: true}
     );
       setTopic(result.data.data)
@@ -130,7 +130,7 @@ const TopicList = ({ className,  ...rest }) => {
         Accept: "application/json"
       },
     };
-    const url = "http://localhost:81/topic/deleteTopic/"+topicId;
+    const url = "https://tbkmeet-backend.herokuapp.com/topic/deleteTopic/"+topicId;
    
     try {
       const response = await fetch(url, options);

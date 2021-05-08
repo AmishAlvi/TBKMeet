@@ -63,7 +63,7 @@ const UpcomingMeetings = ({ className, ...rest }) => {
   useEffect(async () => {
     const result = await axios(
 
-        "http://localhost:81/meeting/getMeetings",
+        "https://tbkmeet-backend.herokuapp.com/meeting/getMeetings",
         {withCredentials: true}
 
     );

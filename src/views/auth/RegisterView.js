@@ -81,7 +81,7 @@ const RegisterView = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "http://localhost:81/auth/signup";
+    const url = "https://tbkmeet-backend.herokuapp.com/auth/signup";
     try {
       const response = await fetch(url, options);
       const text = await response.json();

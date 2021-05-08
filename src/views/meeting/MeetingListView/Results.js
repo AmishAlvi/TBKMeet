@@ -114,7 +114,7 @@ const Results = ({ className, meetings, ...rest }) => {
         Accept: "application/json"
       },
     };
-    const url = "http://localhost:81/meeting/deleteMeeting/"+meetingId;
+    const url = "https://tbkmeet-backend.herokuapp.com/meeting/deleteMeeting/"+meetingId;
    
     try {
       const response = await fetch(url, options);

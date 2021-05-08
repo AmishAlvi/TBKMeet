@@ -133,7 +133,7 @@ const ModifyMeetingForm = props => {
  
   useEffect(async () => {
     const result = await axios(
-        "http://localhost:81/meeting/getEmails",
+        "https://tbkmeet-backend.herokuapp.com/meeting/getEmails",
         {withCredentials: true}
     );
       setUser(result.data.data)
@@ -151,7 +151,7 @@ const ModifyMeetingForm = props => {
 
   useEffect(async () => {
     const result = await axios(
-        "http://localhost:81/topic/getTopic",
+        "https://tbkmeet-backend.herokuapp.com/topic/getTopic",
         {withCredentials: true}
     );
       setTopic(result.data.data)
