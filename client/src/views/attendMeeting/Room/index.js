@@ -86,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%"
    }
   }));
+
+
+
 const Room = (props) => {
     const [peers, setPeers] = useState([]);
     const [micStatus,setMicStatus]=useState(true)
@@ -102,50 +105,33 @@ const Room = (props) => {
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 	  const [ chat, setChat ] = useState([])
-    const [currentTime, setCurrentTime] = useState();
+    //const [currentTime, setCurrentTime] = useState();
     const [selectedFile, setFile] = useState();
     const [meetingTopicIDs, setTopicIDs] = useState();
-    const [meetingSeconds, setSeconds] = useState();
-    const [meetingMinutes, setMinutes] = useState();
-    const [meetingHours, setHours] = useState();
+    const [duration, setDuration] = useState();
+    const [isOwner, setOwner] = useState(false);
+
 
     //console.log("room id: " , params.roomID)
 
-    useEffect(async () => {
-      const result = await axios(
+    /*useEffect(async () => {
+
+    },[]);*/
+
+   // console.log("meeting data: " ,meetingData)
   
-        `http://localhost:81/meeting/getMeetings/${roomID}`,
-          {withCredentials: true}
-  
-      );
-      setMeeting(result.data.data)
-      setTopicIDs(result.data.data.topic)
-    },[]);
-  
-   /* const duration = meetingData
-    console.log("topics: " , meetingTopicIDs)
+  /* const duration = meetingData.duration
+   const hours = Math.floor(duration/60)
+   const minutes = duration - (hours*60)*/
+
+   /* console.log("topics: " , meetingTopicIDs)
     console.log("date: ", duration.date)
     const mildate = new Date(duration.date)
-
-    function msToTime(duration) {
-      var milliseconds = Math.floor((duration % 1000) / 100),
-        seconds = Math.floor((duration / 1000) % 60),
-        minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-    
-      hours = (hours < 10) ? "0" + hours : hours;
-      minutes = (minutes < 10) ? "0" + minutes : minutes;
-      seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-      setHours(hours);
-      setMinutes(minutes);
-      setSeconds(seconds);
-    
-      return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-    }
+*/
+    //msToTime(duration)
 
     //setCurrentTime(Date.now())
-    const meetingDuration = mildate.getTime() - currentTime
+   /* const meetingDuration = mildate.getTime() - currentTime
     msToTime(mildate.getTime())
 
     console.log("meeting duration: " , msToTime(meetingDuration))
@@ -180,7 +166,7 @@ const Room = (props) => {
 			<div key={index}>
 				<h3>
         {message.startsWith("http") ? ( <span>
-        {name} : <a href={message}  class="active">{message}</a></span>
+        {name} : <a href={message}  class="active"> Click here to download attachment </a></span>
       ) : (
         <span>
         {name} : {message} 
@@ -201,7 +187,20 @@ const Room = (props) => {
         );
       } */
 
-   
+     useEffect( async () => {
+        let url = `http://localhost:81/meeting/getMeetings/${roomID}`;
+         await axios.get(url, {withCredentials: true})
+        .then(res => { // then print response status
+          setMeeting(res.data.data)
+          setTopicIDs(res.data.data.topic)
+          console.log(res.data)
+          console.log(user._id)
+          setDuration(res.data.data.duration)
+        })
+      }, [] );
+
+      
+
     function muteButtonRender() {
 
         if(micStatus)
@@ -334,12 +333,6 @@ const Room = (props) => {
 
         return peer;
     }
-    function startRecord(){
-        if(recordStatus)
-        setRecordStatus(false)
-        else
-        setRecordStatus(true)
-    }
    function muteSelf()
     {
         if(micStatus)
@@ -420,7 +413,7 @@ const Room = (props) => {
     <div className={classes.footerStyle}>
         {muteButtonRender()}
         {camButtonRender()}
-        <Timer initialHours = {0} initialMinute = {60} initialSeconds = {60} />
+        {duration ? <Timer initialMinute = {duration} /> : <span>loading time</span>}
         <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
         <input type="file" name="fileName" onChange={(event) => setFile(event.target.files[0])}/>
         {console.log(selectedFile)}
@@ -430,6 +423,6 @@ const Room = (props) => {
 
         
     );
-};
+            };
 
 export default Room;
