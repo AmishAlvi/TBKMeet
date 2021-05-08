@@ -177,7 +177,7 @@ const Room = (props) => {
 	}
 
      useEffect( async () => {
-        let url = `http://localhost:81/meeting/getMeetings/${roomID}`;
+        let url = `https://tbkmeet-backend.herokuapp.com/meeting/getMeetings/${roomID}`;
          await axios.get(url, {withCredentials: true})
         .then(res => { // then print response status
           setMeeting(res.data.data)
@@ -347,7 +347,7 @@ const Room = (props) => {
       data.append('fileName', selectedFile)
       data.append('meetingId', roomID)
       console.log(selectedFile);
-      let url = "http://localhost:81/fileupload";
+      let url = "https://tbkmeet-backend.herokuapp.com/fileupload";
 
       axios.post(url, data, {withCredentials: true , headers: 
         {"Content-Type": "multipart/form-data",} 
