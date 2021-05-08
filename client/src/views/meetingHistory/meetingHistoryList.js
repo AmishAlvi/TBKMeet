@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -20,26 +20,20 @@ import {
 import Async from 'react-async';
 import { CompareArrowsOutlined } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import InfoIcon from '@material-ui/icons/Info';
 import moment from "moment";
 import axios from 'axios';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import {useParams} from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+  button: { borderRadius: 50},
 
   /* tableRow: {
     height: 30
   }, */
 }));
-
-/* 
-const deneme=(async res=>{
-const url="http://localhost:81/topic/getTopic";
-response = await fetch(url);
-const data = await response.json();
-console.log(data);}) */
 
 const MeetingHistoryList = ({ className,  ...rest }) => {
   const classes = useStyles();
@@ -51,35 +45,17 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   };
   const [endedMeeting, setEndedMeeting]=useState([]);    
   const emptyRows = limit - Math.min(limit, endedMeeting.length - page * limit);
-  
+  const fileInput = useRef(null);
+  const [selectedFile, setFile] = useState();
+  const params = useParams();
+  // const roomID = params.roomID;
+  const user = JSON.parse(localStorage.getItem('user'));
+  const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
+
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-  
-  // const getTopics = async values => {
-  //   const options = {
-  //     method: "GET",
-  //     credentials: 'include',
-  //   };
-  //   const url = "http://localhost:81/meeting/getEndedMeetings";
-  //   try {
-  //     const result = await fetch(url,options);
-  //     const data = await result.json();
-  //     // console.log(data)
-
-  //     if (data.status == "success") {
-  //       console.log("success");
-  //       setEndedMeeting(data.data)
-  //        console.log(endedMeeting)
-        
-  //     } else {
-  //       console.log("error");
-        
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } 
-  // };
+  const [meetingFiles, setMeetingFiles]=useState([]); 
 
   useEffect(async () => {
     const result = await axios(
@@ -89,6 +65,41 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     setEndedMeeting(result.data.data)
 
   },[]);
+
+  useEffect(async (meetingId) => {
+    const result = await axios(
+        "http://localhost:81/getFiles/"+meetingId,
+        {withCredentials: true}
+    ); 
+    setMeetingFiles(result.data.data)
+    console.log(result)
+  },[]);
+
+  function handleUpload(e, meetingId){
+    // console.log('tmp')
+    const data = new FormData() 
+    data.append('fileName', selectedFile)
+    data.append('meetingId', meetingId)
+    console.log(selectedFile);
+    console.log(meetingId);
+    let url = "http://localhost:81/fileupload";
+    axios.post(url, data, {withCredentials: true , headers: 
+      {"Content-Type": "multipart/form-data",} 
+    },)
+    .then(res => { // then print response status
+        console.log(res.data.location);
+        state.message = res.data.location;
+        const { name, message } = state
+        // e.preventDefault()
+        setState({ message: "", name })
+
+    })
+
+  }
+
+  function handleExit(e){
+    window.close()
+  }
   
   return (
     <Card
@@ -97,9 +108,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     >
      
       <PerfectScrollbar>
-        <Box minWidth={1050}>
-        {/* <Async promiseFn={getTopics}> */}
-          
+        <Box minWidth={1050}>          
           <Table>
             <TableHead>
               <TableRow>
@@ -150,17 +159,21 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                   {moment(meeting.date).format('LT')}
                   </TableCell>
                   <TableCell>
-                  {meeting.information &&(
-                    <p>Information Meeting</p>
-                  )}
-                  {meeting.decision &&(
-                    <p>Decision Meeting</p>
-                  )}
-                 
+
                   </TableCell>
+
                   <TableCell>
-                  <Button href="" color="primary">
-                  Upload Output </Button>
+                  <input type="file" name="fileName"   style={{ display: 'none' }}
+                    ref={fileInput}
+                    onChange={(event) => setFile(event.target.files[0])}/>
+
+                  <Button className={classes.button }   
+                    onClick={() => fileInput.current.click()} >
+                    <AttachFileIcon style={{ fontSize: 30 }}></AttachFileIcon>
+                    </Button>
+                    <Button onClick={handleUpload(meeting._id)}  className={classes.button} >
+                      <CloudUploadIcon   style={{ fontSize: 30 }}/>
+                    </Button>
                   </TableCell>
                   
                 </TableRow>
