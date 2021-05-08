@@ -131,7 +131,7 @@ const CreateMeetingForm = props => {
       method: "GET",
       credentials: 'include',
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/getEmails";
+    const url = "http://localhost:81/meeting/getEmails";
     try {
       const result = await fetch(url,options);
       const data = await result.json();
@@ -155,7 +155,7 @@ const CreateMeetingForm = props => {
       method: "GET",
       credentials: 'include',
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/topic/getTopic";
+    const url = "http://localhost:81/topic/getTopic";
     try {
       const result = await fetch(url,options);
       const data = await result.json();
@@ -298,7 +298,7 @@ const CreateMeetingForm = props => {
       },
       body: JSON.stringify(body)
     };
-    const url = "https://tbkmeet-backend.herokuapp.com/meeting/meetingSave";
+    const url = "http://localhost:81/meeting/meetingSave";
     try {
       const response = await fetch(url, options);
       const text = await response.json();

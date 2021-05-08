@@ -43,7 +43,7 @@ const MeetingListView = () => {
           method: "GET",
           credentials: 'include',
         };
-        const url = "https://tbkmeet-backend.herokuapp.com/meeting/getMeetings";
+        const url = "http://localhost:81/meeting/getMeetings";
         try {
           
           const result = await fetch(url,options);

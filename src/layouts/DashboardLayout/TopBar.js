@@ -38,7 +38,7 @@ const TopBar = ({
           Accept: "application/json"
         }
       };
-      const url = "https://tbkmeet-backend.herokuapp.com/auth/logout";
+      const url = "http://localhost:81/auth/logout";
       try {
         const response = fetch(url, options);
       } catch (error) {

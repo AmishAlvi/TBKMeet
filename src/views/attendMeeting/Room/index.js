@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
+import linearGradient from 'src/components/linearGradient';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField"
 import {useParams} from 'react-router-dom';
 import { id } from "date-fns/esm/locale";
-import { Button } from "@material-ui/core";
+import { Button,Input,Grid,Box,Container } from "@material-ui/core";
 import VideocamRoundedIcon from '@material-ui/icons/VideocamRounded';
 import VideocamOffRoundedIcon from '@material-ui/icons/VideocamOffRounded';
 import MicRoundedIcon from '@material-ui/icons/MicRounded';
@@ -15,16 +18,21 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import axios from 'axios';
 import Countdown from "react-countdown";
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import SendIcon from '@material-ui/icons/Send';
 import Timer from './timer'
+import ChatIcon from '@material-ui/icons/Chat';
 
-const Container = styled.div`
+/* const Container = styled.div`
     padding: 20px;
     display: flex;
     height: 100vh;
     width: 90%;
     margin: auto;
     flex-wrap: wrap;
-`;
+`; */
 
 const StyledVideo = styled.video`
     background: black;
@@ -74,18 +82,36 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     left: "0",
     display:"flex",
-    justifyContent:"flex-end",
     bottom: "0",
     height: "10%x",
-    width: "99%"  
+    width: "100%",
+    justifyContent: "space-between",  
    },
    phantomStyle: {
     display: "block",
     padding: "20px",
     height: "1000px",
     width: "100%"
-   }
+   },
+  Content:
+{
+  height:"224px",
+  overflow:"auto",
+  
+},
+FixedHeightContainer:
+{
+  float:"right",
+  height: "250px",
+  width:"250px",
+  padding:"1px",
+  overflow:"auto",
+
+}
   }));
+
+
+
 const Room = (props) => {
     const [peers, setPeers] = useState([]);
     const [micStatus,setMicStatus]=useState(true)
@@ -102,56 +128,13 @@ const Room = (props) => {
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 	  const [ chat, setChat ] = useState([])
-    const [currentTime, setCurrentTime] = useState();
+    //const [currentTime, setCurrentTime] = useState();
     const [selectedFile, setFile] = useState();
     const [meetingTopicIDs, setTopicIDs] = useState();
-    const [meetingSeconds, setSeconds] = useState();
-    const [meetingMinutes, setMinutes] = useState();
-    const [meetingHours, setHours] = useState();
 
-    //console.log("room id: " , params.roomID)
-
-    useEffect(async () => {
-      const result = await axios(
-  
-        `https://tbkmeet-backend.herokuapp.com/meeting/getMeetings/${roomID}`,
-          {withCredentials: true}
-  
-      );
-      setMeeting(result.data.data)
-      setTopicIDs(result.data.data.topic)
-    },[]);
-  
-   /* const duration = meetingData
-    console.log("topics: " , meetingTopicIDs)
-    console.log("date: ", duration.date)
-    const mildate = new Date(duration.date)
-
-    function msToTime(duration) {
-      var milliseconds = Math.floor((duration % 1000) / 100),
-        seconds = Math.floor((duration / 1000) % 60),
-        minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-    
-      hours = (hours < 10) ? "0" + hours : hours;
-      minutes = (minutes < 10) ? "0" + minutes : minutes;
-      seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-      setHours(hours);
-      setMinutes(minutes);
-      setSeconds(seconds);
-    
-      return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-    }
-
-    //setCurrentTime(Date.now())
-    const meetingDuration = mildate.getTime() - currentTime
-    msToTime(mildate.getTime())
-
-    console.log("meeting duration: " , msToTime(meetingDuration))
-    console.log("date: ", meetingDuration)*/
-
-
+    const fileInput = useRef(null)
+    const [duration, setDuration] = useState();
+    const [isOwner, setIsOwner] = useState(false);
 
     useEffect(
 		() => {
@@ -177,10 +160,11 @@ const Room = (props) => {
 
 	const renderChat = () => {
 		return chat.map(({ name, message }, index) => (
-			<div key={index}>
+			
+      <div key={index}  >
 				<h3>
         {message.startsWith("http") ? ( <span>
-        {name} : <a href={message}  class="active">{message}</a></span>
+        {name} : <a href={message}  class="active"> Click here to download attachment </a></span>
       ) : (
         <span>
         {name} : {message} 
@@ -192,16 +176,21 @@ const Room = (props) => {
 		))
 	}
 
-  /*   function Footer({ children }) {
-        return (
-          
-            <div className={classes.phantomStyle} />
-            
-          
-        );
-      } */
+     useEffect( async () => {
+        let url = `http://localhost:81/meeting/getMeetings/${roomID}`;
+         await axios.get(url, {withCredentials: true})
+        .then(res => { // then print response status
+          setMeeting(res.data.data)
+          setTopicIDs(res.data.data.topic)
+          //console.log(res.data.data.owner)
+          console.log(user._id === res.data.data.owner)
+          setDuration(res.data.data.duration)
+          setIsOwner(user._id === res.data.data.owner)
+        })
+      }, [] );
 
-   
+      
+
     function muteButtonRender() {
 
         if(micStatus)
@@ -334,12 +323,6 @@ const Room = (props) => {
 
         return peer;
     }
-    function startRecord(){
-        if(recordStatus)
-        setRecordStatus(false)
-        else
-        setRecordStatus(true)
-    }
    function muteSelf()
     {
         if(micStatus)
@@ -364,7 +347,7 @@ const Room = (props) => {
       data.append('fileName', selectedFile)
       data.append('meetingId', roomID)
       console.log(selectedFile);
-      let url = "https://tbkmeet-backend.herokuapp.com/fileupload";
+      let url = "http://localhost:81/fileupload";
 
       axios.post(url, data, {withCredentials: true , headers: 
         {"Content-Type": "multipart/form-data",} 
@@ -386,50 +369,80 @@ const Room = (props) => {
     }
 
     return (
-        <Container style={{width:"100%"}}>
+      <Container>
+        <Grid container>
+        <Grid item xs={6}>
+        <Container style={{width:"100%"}} >
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
             {peers.map((peer) => {
                 return (
                     <Video key={peer.peerID} peer={peer.peer} />
                 );
             })}
-            {
-      <div className="card">
-			<div className="render-chat">
+            </Container>
+            </Grid>
+      <Grid item alignItems="stretch" style={{ display: "flex" }} >
+      <Card className={classes.root} variant="outlined">
+      <CardContent>
+
 				<h1>Chat Log</h1>
+        <div className={classes.FixedHeightContainer}>
 				{renderChat()}
-			</div>
+        </div>
+        
       <form onSubmit={onMessageSubmit}>
-				<h1>Messenger</h1>
-				<div>
+      <Grid container>
+      <Grid item>
 					<TextField
 						name="message"
 						onChange={(e) => onTextChange(e)}
 						value={state.message}
 						id="outlined-multiline-static"
 						variant="outlined"
-						label="Message"
+						placeholder="Enter your Message"
 					/>
-				</div>
-				<button>Send Message</button>
+				</Grid>
+        <Grid item alignItems="stretch" style={{ display: "flex" }}>
+        <Button type="submit" className={classes.button} >
+                <SendIcon  color='secondary'  style={{ fontSize: 30 }} />
+            </Button>
+            </Grid>
+      </Grid>
 			</form>
-		</div> }
-
-    
+      </CardContent>
+    </Card>
+    </Grid>
+    </Grid>
 
     <div className={classes.footerStyle}>
+      <div>
         {muteButtonRender()}
         {camButtonRender()}
-        <Timer initialHours = {0} initialMinute = {60} initialSeconds = {60} />
-        <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
-        <input type="file" name="fileName" onChange={(event) => setFile(event.target.files[0])}/>
+
+        </div>
+        {isOwner && duration ? <Timer initialMinute = {duration} /> : <span></span>} 
+        <div style={{alignItems: 'flex-end'}}>
+        <input type="file" name="fileName"   style={{ display: 'none' }}
+        ref={fileInput}
+        onChange={(event) => setFile(event.target.files[0])}/>
+
+        <Button className={classes.button }   
+        onClick={() => fileInput.current.click()}>
+        <AttachFileIcon style={{ fontSize: 40 }}></AttachFileIcon>
+        
+        </Button>
+
         {console.log(selectedFile)}
-        <button type="button" class="btn btn-success btn-block" onClick={handleUpload}>Upload</button> 
+        <Button onClick={handleUpload}  className={classes.button} >
+                <CloudUploadIcon   style={{ fontSize: 40 }}/>
+        </Button>
+        <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
     </div>
-        </Container>
+    </div>
+    </Container>
 
         
     );
-};
+            };
 
 export default Room;
