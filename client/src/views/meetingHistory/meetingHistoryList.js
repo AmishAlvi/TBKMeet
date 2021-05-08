@@ -52,7 +52,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   // const [meetingId,  setMeetingId] = useState();
   const user = JSON.parse(localStorage.getItem('user'));
   const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
-  const [currentMeetingId, setCurrentMeeting] = useState()
+  const [currentFile, setCurrentFile] = useState("")
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -119,11 +119,14 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     try {
       const response = await fetch(url, options);
       const text = await response.json();
-      const user = text.data
+      //const user = text.data
 
       if (text.status == "success") {
         console.log("success")
-        
+        console.log(text.data)
+        if(text.data.fileName) {
+          setCurrentFile(text.data.fileName)
+        }   
       } else {
         console.log(text.message);
       }
@@ -133,8 +136,8 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   };
 
   function handleUpload(e, meetingId){
-    console.log('tmp')
-   /* const data = new FormData() 
+    /*console.log('tmp')
+    const data = new FormData() 
     data.append('fileName', selectedFile)
     data.append('meetingId', meetingId)
     console.log(selectedFile);
@@ -221,6 +224,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                   <TableCell>
                     {/*getMeetingFiles(meeting._id)*/}
                     <Async promiseFn={getMeetingFiles(meeting._id)}> </Async>
+                    <Link to={currentFile}> download </Link>
                   </TableCell>
 
                   <TableCell>
