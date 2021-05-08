@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -17,6 +17,7 @@ import Results from './Results';
 import Toolbar from './Toolbar';
 import CalendarView from './calendarView';
 import { Search as SearchIcon } from 'react-feather';
+import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -38,30 +39,16 @@ const MeetingListView = () => {
         setState({ ...state, [event.target.name]: event.target.checked });
         console.log(state);
       };
-      const getMeetings = async values => {
-        const options = {
-          method: "GET",
-          credentials: 'include',
-        };
-        const url = "http://localhost:81/meeting/getMeetings";
-        try {
-          
-          const result = await fetch(url,options);
-          const data = await result.json();
-          //console.log(data)  
-          if (data.status == "success") {
-            // console.log("success");
-            setMeeting(data.data)
-            // console.log(meeting)
-          } else {
-            console.log("error");
-            
-          }
-        } catch (error) {
-          console.error(error);
-        } 
-      };
-      getMeetings();
+
+      useEffect(async () => {
+        const result = await axios(
+            "http://localhost:81/meeting/getMeetings",
+            {withCredentials: true}
+        );
+        setMeeting(result.data.data);
+      },[]);
+
+      
       var meetingArr=[];
       meetingArr.push(meeting);
   return (

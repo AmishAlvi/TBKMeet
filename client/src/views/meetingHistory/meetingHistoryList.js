@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -24,6 +24,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import InfoIcon from '@material-ui/icons/Info';
 import moment from "moment";
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -55,32 +56,39 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     setPage(newPage);
   };
   
-  const getTopics = async values => {
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "http://localhost:81/meeting/getEndedMeetings";
-    try {
-      const result = await fetch(url,options);
-      const data = await result.json();
-      // console.log(data)
+  // const getTopics = async values => {
+  //   const options = {
+  //     method: "GET",
+  //     credentials: 'include',
+  //   };
+  //   const url = "http://localhost:81/meeting/getEndedMeetings";
+  //   try {
+  //     const result = await fetch(url,options);
+  //     const data = await result.json();
+  //     // console.log(data)
 
-      if (data.status == "success") {
-        console.log("success");
-        setEndedMeeting(data.data)
-         console.log(endedMeeting)
+  //     if (data.status == "success") {
+  //       console.log("success");
+  //       setEndedMeeting(data.data)
+  //        console.log(endedMeeting)
         
-      } else {
-        console.log("error");
+  //     } else {
+  //       console.log("error");
         
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  };
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } 
+  // };
 
-   
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/meeting/getEndedMeetings",
+        {withCredentials: true}
+    );
+    setEndedMeeting(result.data.data)
+
+  },[]);
   
   return (
     <Card
@@ -90,7 +98,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
      
       <PerfectScrollbar>
         <Box minWidth={1050}>
-        <Async promiseFn={getTopics}>
+        {/* <Async promiseFn={getTopics}> */}
           
           <Table>
             <TableHead>
@@ -164,7 +172,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
               )}
             </TableBody>
           </Table>
-          </Async>
+          {/* </Async> */}
         </Box>
       </PerfectScrollbar>
       <TablePagination

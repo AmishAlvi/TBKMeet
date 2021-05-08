@@ -96,34 +96,61 @@ const Results = ({ className, meetings, ...rest }) => {
   const [open, setOpen] = React.useState(false);
   const [meetingState, setMeetingState] = useState({date: moment().toDate(),  title: "", _id: "",
   description:"", location: "", topic: "", members: ""});
-
+  var [errorMessage,setErrorMessage]=useState("");
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const deleteSubmit= async meetingId =>{
+    const options = {
+      method: "GET",
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+    };
+    const url = "http://localhost:81/meeting/deleteMeeting/"+meetingId;
+   
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      const head = await response.headers
+      //console.log( head)
+      const user = text.data
 
+      if (text.status == "success") {
+       console.log("success")
+      } else {
+        //console.log(text.message);
+        setErrorMessage(text.message)
+        //setOpen(true);    
+      }
+    } catch (error) {
+     // console.error(error);
+    }
+
+    window.location.reload();
+  };
+  
 
   function MeetingButtonRender(status, meeting_id) {
     //console.log(id)
     if(status)
     {
       return (
-        
-                    <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meeting_id}`, {id: meeting_id}, { replace: true })}>
-                      Attend Meeting
-                    </Button>
-        
+        <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meeting_id}`, {id: meeting_id}, { replace: true })}>
+          Attend Meeting
+        </Button>
       )
     }
     else
     {
       return(
-      
-                  <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meeting_id}`, {id: meeting_id}, { replace: true })}>
-                  Start Meeting </Button>
-      
+        <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meeting_id}`, {id: meeting_id}, { replace: true })}>
+        Start Meeting </Button>      
       )
     }
   }
@@ -171,11 +198,9 @@ const Results = ({ className, meetings, ...rest }) => {
                       alignItems="center"
                       display="flex"
                     >
-                      
                       <Typography
                         color="textPrimary"
                         variant="body1"
-
                       >
                         <a>{meetings.title}</a>
                       </Typography>
@@ -194,17 +219,22 @@ const Results = ({ className, meetings, ...rest }) => {
                     {moment(meetings.date).format('LT')}
                   </TableCell>
                   <TableCell>
+
                    {/*<Link to="ModifyMeeting" params={{ meetingId: meetings._id }}>*/} 
                      <Link to={{pathname: `/app/modifyMeeting/${meetings._id}`}}
                      style={{ textDecoration: 'none',color:"initial" }}
                      > 
-                    <EditIcon
-                    style={{ cursor: "pointer" }}
-                    />
+                      <EditIcon
+                      style={{ cursor: "pointer" }}
+                      />
                     </Link>
-                    <DeleteIcon
-                    style={{ cursor: "pointer" }}
-                    />
+
+                    
+                      <DeleteIcon onClick={()=>{deleteSubmit(meetings._id)}}
+                      style={{ cursor: "pointer" }}
+                      />
+                    
+
                     <InfoIcon
                     style={{ cursor: "pointer" }}
                      onClick={() => {
@@ -248,6 +278,7 @@ const Results = ({ className, meetings, ...rest }) => {
             {MeetingButtonRender(meetingState.isStarted, meetingState._id)}
             </DialogActions>
           </Dialog>
+
 
         </Box>
       </PerfectScrollbar>
