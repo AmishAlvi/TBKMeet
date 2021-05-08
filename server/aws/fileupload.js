@@ -37,8 +37,9 @@ module.exports = async(req,res)=>{
                 _meetingId
             
               } = req.fields.meetingId;
+              const name = req.files.fileName.name;
               fileName = data.Location;
-            const meetingFile = new MeetingFile({_meetingId,fileName});
+            const meetingFile = new MeetingFile({_meetingId,fileName,name});
             meetingFile.save((err)=>{
                 if(err){return res.status(400).send({msg:err.message})}
                 else{
