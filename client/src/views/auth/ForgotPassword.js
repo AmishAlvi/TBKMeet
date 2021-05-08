@@ -15,8 +15,6 @@ import {
 import MuiAlert from '@material-ui/lab/Alert';
 import Page from 'src/components/Page';
 import linearGradient from 'src/components/linearGradient';
-import { Alert } from '@material-ui/lab';
-import Cookies from 'js-cookie'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -172,13 +170,10 @@ const ForgotPassword = props => {
       const response = await fetch(url, options);
       const text = await response.json();
       const head = await response.headers
-      //console.log( head)
       const user = text.data
 
       if (text.status == "success") {
        // console.log("success")
-    
-        
       } else {
         //console.log(text.message);
         setErrorMessage(text.message)
@@ -272,9 +267,7 @@ const ForgotPassword = props => {
           )
            }
       })()}
-              
-                
-                 
+                      
                 {(() => {
         if (isClicked) {
           return (

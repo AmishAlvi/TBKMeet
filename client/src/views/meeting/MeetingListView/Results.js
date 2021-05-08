@@ -289,9 +289,7 @@ const Results = ({ className, meetings, ...rest }) => {
               <p>Date: {moment( meetingState.date).format('DD MMM YYYY')}</p>
               <p>Time: {moment( meetingState.date).format('LT')}</p>
               <p>Location: {meetingState.location}</p>
-              {/* <p>Topics: {meetingState.topic}</p>
-              <p>Participants: {meetingState.members}</p> */}
-              
+
             </DialogContent>
             <DialogActions>
             <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meetings._id}`, {id: meetings._id}, { replace: true })}> 

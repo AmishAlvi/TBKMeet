@@ -35,10 +35,6 @@ import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles((theme) => ({
   root: {},
   button: { borderRadius: 50},
-
-  /* tableRow: {
-    height: 30
-  }, */
 }));
 const styles = (theme) => ({
   root: {
@@ -93,9 +89,6 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   const emptyRows = limit - Math.min(limit, endedMeeting.length - page * limit);
   const fileInput = useRef(null);
   const [selectedFile, setFile] = useState();
-  // const params = useParams();
-  // const roomID = params.roomID;
-  // const [meetingId,  setMeetingId] = useState();
   const user = JSON.parse(localStorage.getItem('user'));
   const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
   const [meetingFile, setMeetingFile] = useState([])
@@ -120,47 +113,6 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     setEndedMeeting(result.data.data)
 
   },[]);
-
-  /*useEffect(async (meetingId) => {
-    const result = await axios(
-        "http://localhost:81/getFiles/"+meetingId,
-        {withCredentials: true}
-    ); 
-    setMeetingFiles(result.data.data)
-    console.log("result: " , result)
-  },[]);*/
-
-  /*const GetmeetingFiles = async meetingId =>{
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "http://localhost:81/getFiles/"+meetingId;
-   
-    try {
-      const response = await fetch(url, options);
-      const text = await response.json();
-      //const head = await response.headers
-      //console.log( head)
-      //const user = text.data
-
-      if (text.status == "success") {
-        setMeetingFiles(text.data.data)
-        console.log(text.data.data)
-       console.log("success")
-      } else {
-        //console.log(text.message);
-
-        //setErrorMessage(text.message)
-
-        //setOpen(true);    
-      }
-    } catch (error) {
-     // console.error(error);
-    }
-
-    //window.location.reload();
-  };*/
 
   async function getMeetingFiles(meetingId) {
     const options = {
@@ -214,7 +166,6 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
     window.close()
   }
 
- // GetmeetingFiles()
   
   return (
     <Card
@@ -275,11 +226,6 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
                   {moment(meeting.date).format('LT')}
                   </TableCell>
                   <TableCell>
-                    {/*getMeetingFiles(meeting._id)*/}
-                    {/*}
-                    <Async promiseFn={getMeetingFiles(meeting._id)}> </Async>
-                    {/*console.log(currentFile)}
-                    <Link to={currentFile}> download </Link>*/}
                     <Button onClick={(e) => getMeetingFiles(meeting._id)}>get files</Button>
                   </TableCell>
 
@@ -306,7 +252,6 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
               )}
             </TableBody>
           </Table>
-          {/* </Async> */}
         </Box>
       </PerfectScrollbar>
       <TablePagination
@@ -330,8 +275,7 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
          </Button>
          <br></br>
          </div>
-/*           <Link to={file.fileName} replace={true}></Link>
- */         )} 
+        )} 
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

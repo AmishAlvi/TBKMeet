@@ -1,5 +1,4 @@
 import React,{useState, useEffect} from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns'; //instal this version npm i @date-io/date-fns@1.3.13
@@ -9,7 +8,6 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { Formik } from 'formik';
-import Async from "react-async"
 import {
   Box,
   Button,
@@ -173,16 +171,6 @@ const CreateMeetingForm = props => {
     }
     setOpenAlert(false);
   };
- /*  const addId=(data)=>{
-    var ln = data.length;
-    console.log("add id starts")
-    for(var i=0; i<ln;i++)
-    {
-      console.log(i);
-      data[i].id=i;
-    }
-    return data;
-  } */
   const SaveParticipants=()=>
   {
     setParticipantsArr(member);
@@ -198,7 +186,6 @@ const CreateMeetingForm = props => {
      console.log(selectionModelTopic)
      console.log(topicsArr)
     handleCloseTopic();
-    //console.log(calculateTotalDuration())
     
   }
   const calculateTotalDuration=()=>{
@@ -227,7 +214,6 @@ const CreateMeetingForm = props => {
     topicsArr.map((val)=>
     topicsTmp.push(val._id)
     );
-    //console.log(topicsTmp);
     console.log(participantsTmp);
      if (!topicsTmp.length)
     {
@@ -253,7 +239,6 @@ const CreateMeetingForm = props => {
       topic: topicsTmp,
       members:participantsTmp,
       date: selectedDate,
-      //time: selectedDate.toLocaleTimeString(),
       location: location,
       duration: duration.toString()
     };
@@ -289,8 +274,6 @@ const CreateMeetingForm = props => {
     } catch (error) {
       console.error(error);
     } 
- /*  console.log(selectedTime.toLocaleDateString());
-  console.log(selectedTime.toLocaleTimeString()); */
   }  
 };
 
@@ -384,7 +367,6 @@ return (
         </DialogTitle>
         <DialogContent dividers> 
              <div style={{ height: 400, width: '100%' }}> 
-             {/* {console.log(topicsArr)} */}
                 <DataGrid 
                   
                   rows={topic}
@@ -402,11 +384,7 @@ return (
                      )} }
                   
                 />   
-                      
-                    
-  
-            </div>
-            
+            </div>         
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={SaveTopics} color="primary">
@@ -414,9 +392,6 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
-
-    {/* </div>  */}
-
 
         {/* Meeting Description */}
         <TextField
@@ -545,10 +520,7 @@ return (
                       
                     )} }            
                       />  
-                      
-       
-  
-            </div>
+         </div>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={SaveParticipants} color="primary">

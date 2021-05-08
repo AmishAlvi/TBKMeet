@@ -103,7 +103,6 @@ const MeetingListView = () => {
         }
         label="Calendar View"
       />
-     {/*  <EventIcon></EventIcon> */}
       </Box>
       </Grid>
           </CardContent>

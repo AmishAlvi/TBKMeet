@@ -246,17 +246,6 @@ const TopicList = ({ className,  ...rest }) => {
                       )
                     } 
                   })()}
-                  {/* <Link to={{pathname: `/app/modifyTopic/${topic._id}`}}
-                   style={{ textDecoration: 'none',color:"initial" }}
-                   
-                  > 
-                    <EditIcon
-                    style={{ cursor: "pointer" }}
-                    />
-                    </Link>
-                    <DeleteIcon onClick={()=>{deleteSubmit(topic._id)}}
-                    style={{ cursor: "pointer" }}
-                    /> */}
                     <InfoIcon
                     style={{ cursor: "pointer" }}
                     onClick={() => {
@@ -301,9 +290,6 @@ const TopicList = ({ className,  ...rest }) => {
               <p>Duration: { topicState.totalTime} Minutes</p>
               <br/>
               <p>Category: { topicState.category}</p>
-              {/*<p>Location: {topicState.location}</p>
-               <p>Topics: {meetingState.topic}</p>
-              <p>Participants: {meetingState.members}</p> */}
               
             </DialogContent>
             <DialogActions>

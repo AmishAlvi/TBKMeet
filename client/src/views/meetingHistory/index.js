@@ -16,10 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MeetingHistoryView = () => {
-  const classes = useStyles();
-  
-    
-      
+  const classes = useStyles();  
   return (
     <Page
       className={classes.root}
