@@ -463,7 +463,7 @@ const Room = (props) => {
         ref={fileInput}
         onChange={(event) => setFile(event.target.files[0])}/>
 
-        <Button className={classes.button }   
+        <Button className={classes.button }>
         onClick={() => fileInput.current.click()}
         <AttachFileIcon style={{ fontSize: 40 }}></AttachFileIcon>
         
