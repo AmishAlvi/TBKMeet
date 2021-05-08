@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
@@ -10,8 +9,7 @@ import {
   Divider,
   TextField,
   makeStyles,
-  Snackbar,
-  FormControl
+  Snackbar
 } from '@material-ui/core';
 import * as Yup from 'yup';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -26,12 +24,6 @@ const Password = ({ className, ...rest }) => {
   var [errorMessage,setErrorMessage]=useState("");
   var [successMessage,setSuccessMessage]=useState("");
 
- /*  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  }; */
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -95,28 +87,9 @@ const Password = ({ className, ...rest }) => {
       password: '',
       confirmPassword: '',
     }}
- /*    onSubmit={(e) => {
-      e.preventDefault();
-      handleSubmit();
-    }} */
-
-    //********Using Yup for validation********/
-  /*   validationSchema: Yup.object({
-      password: Yup.string().required('Password is required'),
-      passwordConfirmation: Yup.string()
-         .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    }); */
 
     validationSchema={Yup.object().shape({
       password: Yup.string().min(8, 'Password must be at least 8 characters').required('password is required'),
-   /*    password:Yup.lazy(
-        value =>
-          !value
-            ? Yup.string()
-            : Yup.string()
-                .min(6, 'Password must be at least 6 characters')
-                .required('Password is required'),
-      ), */
       confirmPassword: Yup.string().min(8, 'Password must be at least 8 characters').required('password is required').oneOf([Yup.ref('password'), null], 'Passwords must match')
       
     })}
@@ -185,11 +158,6 @@ const Password = ({ className, ...rest }) => {
             color="primary"
             variant="contained"
             disabled={isSubmitting}
-            /* onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }} */
-            /* disabled={isSubmitting} */
           >
             Update
           </Button>

@@ -9,7 +9,6 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { Formik } from 'formik';
-import Async from "react-async"
 import {
   Box,
   Button,
@@ -163,8 +162,6 @@ const ModifyMeetingForm = props => {
       if (val._id==element._id)
       {
         setTopicsArr([val])
-        // console.log(val)
-        // console.log(topicsArr)
       }});
       });
   },[]);
@@ -175,7 +172,6 @@ const ModifyMeetingForm = props => {
       }
 //Open Participants Dialog
   const handleClickOpen = () => {
-    //loadUser();
     setOpen(true);
     
   };
@@ -222,10 +218,7 @@ const ModifyMeetingForm = props => {
     participantsArr.map((val)=>
     participantsTmp.push(val._id)
     );
-    // topicsArr.map((val)=>
-    // topicsTmp.push(val._id)
-    // );
-   
+ 
     if (!topicsArr.length)
     {
       setErrorMessage("Please select at least one topic");
@@ -354,7 +347,6 @@ const SaveTopics=()=>
       value => {
         return value >= calculateTotalDuration();
       })
-      // location: Yup.string().ensure().required("Location is required")
   })}
   >
     
@@ -430,9 +422,6 @@ const SaveTopics=()=>
                      )} }
                   
                 />   
-                      
-                    
-  
             </div>
             
         </DialogContent>
@@ -442,9 +431,6 @@ const SaveTopics=()=>
           </Button>
         </DialogActions>
       </Dialog>
-
-    {/* </div>  */}
-
 
         {/* Meeting Description */}
         <TextField

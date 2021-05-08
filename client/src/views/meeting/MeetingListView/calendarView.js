@@ -91,16 +91,6 @@ function create() {
     const id = uuid();
     navigate(`/app/room/${id}`, {id: id});
 }
-    //const {meetings}= this.props.meetings;
-    // console.log(moment()
-    // .add(1, "days")
-    // .toDate())
- /*   for(let i=1;i<this.props.meetings.length-1;i++)
-  {
-    this.state.eventss[i].start=Date.parse(this.props.meetings[i].date);
-    this.state.eventss[i].end=Date.parse(this.props.meetings[i].date);
-    this.state.eventss[i].title=this.props.meetings[i].title;
-  }  */
   const newEvents = meetings.map(event => ({
     start:event.date,
     end:event.date,
@@ -118,26 +108,21 @@ function create() {
     if(status)
     {
       return (
-        
-                    <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
-                      Attend Meeting
-                    </Button>
-        
+        <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+          Attend Meeting
+        </Button> 
       )
     }
     else
     {
       return(
-      
-                  <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
-                  Start Meeting </Button>
-      
+        <Button href="" color="primary" onClick={() => navigate(`/app/room/${meeting_id}`, {id: meeting_id})}>
+        Start Meeting </Button>
       )
     }
   }
   console.log(eventState);
     return (
-
       <Card>
       <div className="App">
       
@@ -147,9 +132,6 @@ function create() {
           defaultView="month"
           events={newEvents}
           views={['month']}
-          // onSelectEvent={()=>{
-          //   console.log(newEvents);
-          // }}
           onSelectEvent={event => {
             handleClickOpen()
             setEventState( event);
@@ -168,8 +150,6 @@ function create() {
               <p>Date: {moment(eventState.start).format('DD MMM YYYY')}</p>
               <p>Time: {moment(eventState.start).format('LT')}</p>
               <p>Location: {eventState.location}</p>
-{/*               <p>Topics: {this.state.eventState.topic}</p>
-              <p>Participants: {this.state.eventState.members}</p> */}
             </DialogContent>
             <DialogActions>
             {MeetingButtonRender(eventState.isStarted, eventState._id)}
@@ -178,10 +158,6 @@ function create() {
 
       </Card>
     );
-  
 };
-
-
-
 
 export default CalendarView;

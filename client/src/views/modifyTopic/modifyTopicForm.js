@@ -1,6 +1,5 @@
 import React,{useState, useEffect} from 'react';
 import { Link, useNavigate, useLocation,useHistory} from 'react-router-dom';
-import { Redirect} from 'react-router';
 import * as Yup from 'yup';
 import axios from 'axios';
 
@@ -49,13 +48,10 @@ const ModifyTopicForm = props => {
   var [errorMessage,setErrorMessage]=useState("");
   var [successMessage,setSuccessMessage]=useState("");
   const [category, setCategory] = React.useState('');
-/*   const [category, setCategory] = React.useState();
-  const [category, setCategory] = React.useState(''); */
   const [state, setState] = React.useState({
     checkedDecision: false,
     checkedInfo: false,
   });
-  //const { checkedDecision, checkedInfo } = state;
   const error = [state.checkedDecision, state.checkedInfo].filter((v) => v).length < 1;
   
   //Alert Function
@@ -123,12 +119,6 @@ const handleClose = (event, reason) => {
         setOpen(true);
         navigate('/app/topics')
 
-        //console.log("success")
-        /* const history = useHistory()    
-        history.push('/app/topics') */
-       // <Redirect path to='/app/topics/'/>
-
-        
       } else {
         console.log(text.message);
         setErrorMessage(text.message);

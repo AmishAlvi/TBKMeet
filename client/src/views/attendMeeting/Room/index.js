@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
-import linearGradient from 'src/components/linearGradient';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField"
 import {useParams} from 'react-router-dom';
-import { id } from "date-fns/esm/locale";
 import { Button,Input,Grid,Box,Container } from "@material-ui/core";
 import VideocamRoundedIcon from '@material-ui/icons/VideocamRounded';
 import VideocamOffRoundedIcon from '@material-ui/icons/VideocamOffRounded';
@@ -15,24 +13,11 @@ import MicRoundedIcon from '@material-ui/icons/MicRounded';
 import MicOffRoundedIcon from '@material-ui/icons/MicOffRounded';
 import { makeStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import axios from 'axios';
-import Countdown from "react-countdown";
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import SendIcon from '@material-ui/icons/Send';
 import Timer from './timer'
-import ChatIcon from '@material-ui/icons/Chat';
-
-/* const Container = styled.div`
-    padding: 20px;
-    display: flex;
-    height: 100vh;
-    width: 90%;
-    margin: auto;
-    flex-wrap: wrap;
-`; */
 
 const StyledVideo = styled.video`
     background: black;
@@ -136,7 +121,6 @@ const Room = (props) => {
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 	  const [ chat, setChat ] = useState([])
-    //const [currentTime, setCurrentTime] = useState();
     const [selectedFile, setFile] = useState();
     const [meetingTopicIDs, setTopicIDs] = useState();
 
@@ -208,17 +192,6 @@ const Room = (props) => {
           setIsOwner(user._id === res.data.data.owner)
         })
       }, [] );
-
-      // useEffect( async () => {
-      //   let url = `http://localhost:81/meeting/startMeeting/${roomID}`;
-      //    await axios.get(url, {withCredentials: true}s)
-      //    .then(res => {
-      //      console.log("ldjaslkdalsd");
-      //    console.log(res.data.data)
-      //    // then print response state
-      //    })
-      // }, [] );
-
       
 
     function muteButtonRender() {
@@ -256,19 +229,16 @@ const Room = (props) => {
                 />
 
             </Button>
-            
           )
         }
         else
         {
           return(
-          
             <Button onClick={closeCamera} className={classes.button}>
                 <VideocamOffRoundedIcon
                  style={{ fontSize: 40 }}
                 />
         </Button>
-          
           )
         }
       }
@@ -478,7 +448,7 @@ const Room = (props) => {
                 <CloudUploadIcon   style={{ fontSize: 40 }}/>
         </Button>
         <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
-        {isOwner ? <Button variant="contained" className={classes.exitButton} onClick={handleEndMeeting}> EndMeeting</Button> : <span></span> }
+        {isOwner ? <Button variant="contained" className={classes.exitButton} onClick={handleEndMeeting} style={{ marginLeft: 20 }}> EndMeeting</Button> : <span></span> }
     </div>
     </div>
     </Container>
