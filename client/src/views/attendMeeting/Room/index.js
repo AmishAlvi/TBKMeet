@@ -13,6 +13,10 @@ import MicOffRoundedIcon from '@material-ui/icons/MicOffRounded';
 import { makeStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import axios from 'axios';
+import Countdown from "react-countdown";
+import Timer from './timer'
+
 const Container = styled.div`
     padding: 20px;
     display: flex;
@@ -87,15 +91,66 @@ const Room = (props) => {
     const [micStatus,setMicStatus]=useState(true)
     const [camStatus,setCamStatus]=useState(true)
     const [recordStatus,setRecordStatus]=useState(false)
+    const [meetingData ,setMeeting]=useState([]);
     const socketRef = useRef();
     const chatSocketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const roomID = Room[id];
+    const params = useParams();
+    const roomID = params.roomID;
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('user'));
     const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
-	const [ chat, setChat ] = useState([])
+	  const [ chat, setChat ] = useState([])
+    const [currentTime, setCurrentTime] = useState();
+    const [selectedFile, setFile] = useState();
+    const [meetingTopicIDs, setTopicIDs] = useState();
+    const [meetingSeconds, setSeconds] = useState();
+    const [meetingMinutes, setMinutes] = useState();
+    const [meetingHours, setHours] = useState();
+
+    //console.log("room id: " , params.roomID)
+
+    useEffect(async () => {
+      const result = await axios(
+  
+        `http://localhost:81/meeting/getMeetings/${roomID}`,
+          {withCredentials: true}
+  
+      );
+      setMeeting(result.data.data)
+      setTopicIDs(result.data.data.topic)
+    },[]);
+  
+   /* const duration = meetingData
+    console.log("topics: " , meetingTopicIDs)
+    console.log("date: ", duration.date)
+    const mildate = new Date(duration.date)
+
+    function msToTime(duration) {
+      var milliseconds = Math.floor((duration % 1000) / 100),
+        seconds = Math.floor((duration / 1000) % 60),
+        minutes = Math.floor((duration / (1000 * 60)) % 60),
+        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+    
+      hours = (hours < 10) ? "0" + hours : hours;
+      minutes = (minutes < 10) ? "0" + minutes : minutes;
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+      setHours(hours);
+      setMinutes(minutes);
+      setSeconds(seconds);
+    
+      return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    }
+
+    //setCurrentTime(Date.now())
+    const meetingDuration = mildate.getTime() - currentTime
+    msToTime(mildate.getTime())
+
+    console.log("meeting duration: " , msToTime(meetingDuration))
+    console.log("date: ", meetingDuration)*/
+
 
 
     useEffect(
@@ -124,7 +179,14 @@ const Room = (props) => {
 		return chat.map(({ name, message }, index) => (
 			<div key={index}>
 				<h3>
-					{name}: <span>{message}</span>
+        {message.startsWith("http") ? ( <span>
+        {name} : <a href={message}  class="active">{message}</a></span>
+      ) : (
+        <span>
+        {name} : {message} 
+        </span>
+      )}
+					
 				</h3>
 			</div>
 		))
@@ -185,34 +247,6 @@ const Room = (props) => {
             <Button onClick={closeCamera} className={classes.button}>
                 <VideocamOffRoundedIcon
                  style={{ fontSize: 40 }}
-                />
-        </Button>
-          
-          )
-        }
-      }
-      function recordButtonRender() {
-        //console.log(id)
-        if(recordStatus)
-        {
-          return (
-            
-            <Button onClick={startRecord} className={classes.button} style={{ color:"#d32f2f"}}>
-                <FiberManualRecordIcon
-                 style={{ fontSize: 40 }}
-                />
-
-        </Button>
-            
-          )
-        }
-        else
-        {
-          return(
-          
-            <Button onClick={startRecord} className={classes.button} style={{ alignItems:"center"}}  >
-                <FiberManualRecordIcon
-                 style={{ fontSize: 40  }}
                 />
         </Button>
           
@@ -324,6 +358,33 @@ const Room = (props) => {
         userVideo.current.srcObject.getVideoTracks()[0].enabled = !userVideo.current.srcObject.getVideoTracks()[0].enabled;
     }
 
+    function handleUpload(e){
+      console.log('tmp')
+      const data = new FormData() 
+      data.append('fileName', selectedFile)
+      data.append('meetingId', roomID)
+      console.log(selectedFile);
+      let url = "http://localhost:81/fileupload";
+
+      axios.post(url, data, {withCredentials: true , headers: 
+        {"Content-Type": "multipart/form-data",} 
+      },)
+      .then(res => { // then print response status
+          console.log(res.data.location);
+          state.message = res.data.location;
+          const { name, message } = state
+		      chatSocketRef.current.emit("message", { name, message })
+		      e.preventDefault()
+		      setState({ message: "", name })
+
+      })
+
+    }
+
+    function handleExit(e){
+      window.close()
+    }
+
     return (
         <Container style={{width:"100%"}}>
             <StyledVideo muted ref={userVideo} autoPlay playsInline />
@@ -333,8 +394,12 @@ const Room = (props) => {
                 );
             })}
             {
-            <div className="card">
-			<form onSubmit={onMessageSubmit}>
+      <div className="card">
+			<div className="render-chat">
+				<h1>Chat Log</h1>
+				{renderChat()}
+			</div>
+      <form onSubmit={onMessageSubmit}>
 				<h1>Messenger</h1>
 				<div>
 					<TextField
@@ -348,17 +413,18 @@ const Room = (props) => {
 				</div>
 				<button>Send Message</button>
 			</form>
-			<div className="render-chat">
-				<h1>Chat Log</h1>
-				{renderChat()}
-			</div>
 		</div> }
+
+    
 
     <div className={classes.footerStyle}>
         {muteButtonRender()}
         {camButtonRender()}
-        {recordButtonRender()}
-        <Button variant="contained" className={classes.exitButton}> Exit</Button>
+        <Timer initialHours = {0} initialMinute = {60} initialSeconds = {60} />
+        <Button variant="contained" className={classes.exitButton} onClick={handleExit}> Exit</Button>
+        <input type="file" name="fileName" onChange={(event) => setFile(event.target.files[0])}/>
+        {console.log(selectedFile)}
+        <button type="button" class="btn btn-success btn-block" onClick={handleUpload}>Upload</button> 
     </div>
         </Container>
 
