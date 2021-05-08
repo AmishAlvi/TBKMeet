@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -28,6 +28,7 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import axios from 'axios';
 
 const styles = (theme) => ({
   root: {
@@ -96,39 +97,57 @@ const TopicList = ({ className,  ...rest }) => {
   const [topic, setTopic]=useState([]);    
   const emptyRows = limit - Math.min(limit, topic.length - page * limit);
   const [open, setOpen] = React.useState(false);
+  var [errorMessage,setErrorMessage]=useState("");
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-  const getTopics = async values => {
-    const options = {
-      method: "GET",
-      credentials: 'include',
-    };
-    const url = "http://localhost:81/topic/getTopic";
-    try {
-      const result = await fetch(url,options);
-      const data = await result.json();
-      // console.log(data)
 
-      if (data.status == "success") {
-        // console.log("success");
-        setTopic(data.data)
-        // console.log(topic)
-        
-      } else {
-        console.log("error");
-        
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  };
+  useEffect(async () => {
+    const result = await axios(
+        "http://localhost:81/topic/getTopic",
+        {withCredentials: true}
+    );
+      setTopic(result.data.data)
+
+  },[]);
+
   const handleClose = () => {
     setOpen(false);
   };
    
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const deleteSubmit= async topicId =>{
+    const options = {
+      method: "GET",
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+    };
+    const url = "http://localhost:81/topic/deleteTopic/"+topicId;
+   
+    try {
+      const response = await fetch(url, options);
+      const text = await response.json();
+      const head = await response.headers
+      //console.log( head)
+      const user = text.data
+
+      if (text.status == "success") {
+       // console.log("success")
+      } else {
+        //console.log(text.message);
+        setErrorMessage(text.message)
+        //setOpen(true);    
+      }
+    } catch (error) {
+     // console.error(error);
+    }
+    window.location.reload();
   };
   return (
     <Card
@@ -138,7 +157,7 @@ const TopicList = ({ className,  ...rest }) => {
      
       <PerfectScrollbar>
         <Box minWidth={1050}>
-        <Async promiseFn={getTopics}>
+        {/* <Async promiseFn={getTopics}> */}
           
           <Table>
             <TableHead>
@@ -207,7 +226,7 @@ const TopicList = ({ className,  ...rest }) => {
                     style={{ cursor: "pointer" }}
                     />
                     </Link>
-                    <DeleteIcon
+                    <DeleteIcon onClick={()=>{deleteSubmit(topic._id)}}
                     style={{ cursor: "pointer" }}
                     />
                     <InfoIcon
@@ -230,7 +249,7 @@ const TopicList = ({ className,  ...rest }) => {
               )}
             </TableBody>
           </Table>
-          </Async>
+          {/* </Async> */}
         </Box>
       </PerfectScrollbar>
       <TablePagination
