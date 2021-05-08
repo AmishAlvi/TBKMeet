@@ -249,6 +249,8 @@ const Results = ({ className, meetings, ...rest }) => {
                     } 
                   })()}
 
+
+
                     <InfoIcon
                     style={{ cursor: "pointer" }}
                      onClick={() => {
@@ -260,7 +262,10 @@ const Results = ({ className, meetings, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
-                  {MeetingButtonRender(meetings.isStarted, meetings._id)}
+                  {/* {MeetingButtonRender(meetings.isStarted, meetings._id)} */}
+                  <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meetings._id}`, {id: meetings._id}, { replace: true })}> 
+                    Attend Meeting 
+                  </Button>
 
                   </TableCell>
                 </TableRow>
@@ -289,7 +294,9 @@ const Results = ({ className, meetings, ...rest }) => {
               
             </DialogContent>
             <DialogActions>
-            {MeetingButtonRender(meetingState.isStarted, meetingState._id)}
+            <Button href="" color="primary" onClick={() => window.open(`/meetings/room/${meetings._id}`, {id: meetings._id}, { replace: true })}> 
+                    Attend Meeting 
+            </Button>
             </DialogActions>
           </Dialog>
 

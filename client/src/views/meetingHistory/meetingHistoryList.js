@@ -47,8 +47,9 @@ const MeetingHistoryList = ({ className,  ...rest }) => {
   const emptyRows = limit - Math.min(limit, endedMeeting.length - page * limit);
   const fileInput = useRef(null);
   const [selectedFile, setFile] = useState();
-  const params = useParams();
+  // const params = useParams();
   // const roomID = params.roomID;
+  // const [meetingId,  setMeetingId] = useState();
   const user = JSON.parse(localStorage.getItem('user'));
   const [ state, setState ] = useState({ message: "", name: user.firstName + " " + user.lastName })
 
